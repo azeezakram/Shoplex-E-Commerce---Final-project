@@ -1,0 +1,339 @@
+* {
+    font-family: Raleway, Arial;
+}
+
+body, html {
+    background-color: rgb(33, 11, 94);
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.box {
+    background-color: rgb(255, 255, 255);
+    padding: 50px 50px;
+    height: 100vh;   
+}
+
+.main-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;  
+}
+
+.logo-container {
+    display: flex;
+    justify-content: start;
+    width: 100%;
+}
+
+.logo-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-box .logo {
+    width: 170px;
+}
+
+.register-container, .signin-container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+.register-box, .signin-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    color: rgb(29, 28, 28);
+    font-size: 40px;
+    font-weight: 700;
+    margin-bottom: 50px;
+}
+
+.signin-box, .register-box {
+    width: 670px;
+    margin-bottom: 100px;
+    margin-top: 60px;
+}
+
+form .input-box {
+    height: 80px;
+    position: relative;
+}
+
+form .name-box, form .password-box {
+    display: flex;
+}
+
+form input {
+    width: 300px;
+    font-size: 17px;
+    color: rgb(29, 28, 28);
+    padding: 9px 6px;   
+    margin-bottom: 8px;
+    border-width: 0 0 1px 0;
+    border-color: rgb(29, 28, 28);
+    margin-right: 20px;
+    background: none;
+    transition: 0.15s;   
+}
+
+.input-box #lName, .input-box #cPassword, .input-box #email {
+    margin-right: 0;
+}
+
+.signin-box .input-box #password {
+    margin-right: 0;
+}
+
+.eye {
+    position: absolute;
+    left: 280px;
+    top: 10px;
+    color: rgb(180, 180, 180);
+}
+
+.eye:hover {
+    cursor: pointer;
+    color: rgb(33, 11, 94);
+}
+
+.message {
+    font-size: 11px;
+    color: red;
+    padding: 0px 6px;
+    margin: 0 0 20px 0;
+}
+
+form input::placeholder {
+    color: rgb(179, 179, 179);
+}
+
+form input:hover {
+    border-color: rgb(102, 57, 228);
+}
+
+form input:focus {
+    outline: none;
+    border-color: rgb(102, 57, 228);
+    border-width: 0 0 1.8px 0;
+}
+
+.signin-btn, .register-btn {
+    font-size: 17px;
+    font-weight: 500;
+    padding: 10px 30px;
+    background-color: rgb(29, 28, 28);
+    color: white;
+    margin-top: 12px;
+    border-radius: 49px;
+    transition: 0.45s;
+    border: none;
+}
+
+.signin-btn:hover, .register-btn:hover {
+    opacity: 0.8;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.success-msg {
+    background-color: rgb(187, 240, 187);
+    display: inline-block;
+    color: green;
+    padding: 12px;
+    border: 1px solid green;
+    border-radius: 4px;
+}
+
+.popup {
+    visibility: hidden;
+    min-width: 250px;
+    background-color: #4CAF50; 
+    color: white;
+    text-align: center;
+    border-radius: 4px;
+    padding: 16px;
+    position: fixed;
+    left: 50%;
+    bottom: 30px;
+    transform: translateX(-50%); 
+    z-index: 1;
+    font-size: 17px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transition: opacity 0.5s, visibility 0.5s;
+}
+
+.show {
+    visibility: visible;
+    opacity: 1;
+}
+
+.signin-text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    color: gray;
+    width: 260px;
+}
+
+.signin-text a {
+    text-decoration: none;
+    margin-left: 5px;
+    color: black;
+    font-weight: 500;
+    transition: 0.20s;
+}
+
+.signin-text a:hover {
+    font-weight: 600;
+}
+
+/* Responsive Styles */
+
+/* For tablets and small desktops (min-width: 768px) */
+@media (max-width: 768px) {
+    .box {
+        padding: 40px; /* Reduce padding for smaller screens */
+    }
+
+    form input::placeholder {
+        font-size: 13px;
+    }
+
+    .logo-box .logo {
+        width: 130px; /* Smaller logo for smaller screens */
+    }
+
+    .register-container, .signin-container {
+        height: auto; /* Allow height to adjust based on content */
+        margin-top: 20px; /* Reduce margin */
+    }
+
+    .register-box, .signin-box {
+        width: 90%; /* Full width with some margin */
+        max-width: 500px; /* Limit max width */
+    }
+
+    label {
+        font-size: 32px; /* Smaller font size */
+        margin-bottom: 30px; /* Reduce margin */
+    }
+
+    form input {
+        width: 100%; /* Full width input fields */
+        font-size: 15px; /* Smaller font size */
+        padding: 8px; /* Adjust padding */
+    }
+
+    form .input-box {
+        height: 70px;
+    }
+
+    .eye {
+        left: 100%; /* Adjust position */
+        transform: translateX(-100%); /* Center the eye icon */
+    }
+
+    .signin-btn, .register-btn {
+        font-size: 15px; /* Smaller button font size */
+        padding: 8px 20px; /* Adjust padding */
+    }
+
+    .message {
+        font-size: 10px; /* Smaller font size for messages */
+    }
+
+    .signin-text {
+        width: 100%; /* Full width text */
+        font-size: 14px; /* Smaller font size */
+    }
+
+    .name-box {
+        flex-direction: column;
+    }
+
+    .password-box {
+        flex-direction: column;
+    }
+}
+
+/* For mobile devices (max-width: 480px) */
+@media (max-width: 480px) {
+    .box {
+        padding: 35px; /* Further reduce padding */
+    }
+
+    form input::placeholder {
+        font-size: 11px;
+    }
+
+    .logo-box .logo {
+        width: 100px; /* Smaller logo */
+    }
+
+    .register-container, .signin-container {
+        height: auto; /* Allow height to adjust based on content */
+        margin-top: 10px; /* Further reduce margin */
+    }
+
+    form .input-box {
+        height: 60px;
+    }
+
+    .register-box, .signin-box {
+        width: 95%; /* Almost full width */
+        max-width: none; /* Remove max-width */
+    }
+
+    label {
+        font-size: 24px; /* Smaller font size */
+        margin-bottom: 20px; /* Reduce margin */
+    }
+
+    form input {
+        width: 100%; /* Full width input fields */
+        font-size: 14px; /* Smaller font size */
+        padding: 6px; /* Adjust padding */
+    }
+
+    .eye {
+        left: 100%; /* Adjust position for small screens */
+        height: 10px;
+        transform: translateX(-100%); /* Center the eye icon */
+    }
+
+    .signin-btn, .register-btn {
+        font-size: 14px; /* Smaller button font size */
+        padding: 6px 15px; /* Adjust padding */
+    }
+
+    .message {
+        font-size: 9px; /* Smaller font size for messages */
+    }
+
+    .signin-text {
+        width: 100%; /* Full width text */
+        font-size: 12px; /* Smaller font size */
+    }
+}
