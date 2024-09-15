@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,8 +17,56 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
         integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- css links -->
+    <link rel="stylesheet" href="css/general.css">
+    <link rel="stylesheet" href="css/home-page.css">
 </head>
+
 <body>
+
+    <nav>
+        <div class="top-navbar">
+            <div class="logo-box">
+                <a href="home-page.html"><img class="nav-logo" src="images/logo/black-logo.png" alt="logo"></a>
+            </div>
     
+            <div class="links-box">
+                <ul>
+                    <li><a href="home-page.html">Home</a></li>
+                    <li><a href="#">Products</a></li>
+                    <li class="category-link">
+                        <a href="#">Categories</a>
+                        <div class="category-dropdown">
+                            <ul>
+                                <li><a href="">Electric</a></li>
+                                <li><a href="">Electric</a></li>
+                                <li><a href="">Electric</a></li>
+                                <li><a href="">Electric</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">About</a></li>
+                </ul>
+            </div>
+    
+            <div class="search-box">
+                <input type="search" name="searchbar" id="search-bar" placeholder="Search products">
+                <img class="search-ic" src="images/icons/search.png">
+            </div>
+    
+            <div class="cart-profile-box">
+                <div class="cart-bax">
+                    <a href=""><img  class="cart-ic"  src="images/icons/cart.png"></a>
+                </div>
+                <div class="profile-box">
+                    <a href=""><img class="profile-ic" src="images/icons/profile.png"></a>
+                </div>
+            </div>
+        </div>
+    </nav>        
+
 </body>
+
 </html>

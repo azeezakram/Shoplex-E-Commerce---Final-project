@@ -1,0 +1,154 @@
+body {
+    margin-bottom: 3000px;
+}
+
+.top-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: lightblue;
+    flex-wrap: wrap; 
+    height: 100px;
+    padding: 0 50px; 
+    z-index: 1000;
+}
+
+.logo-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 30px;
+}
+
+.logo-box img {
+    height: 45px;
+}
+
+.links-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    min-width: 200px;
+}
+
+.links-box ul {
+    display: flex;
+    list-style: none;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
+}
+
+.links-box ul li {
+    margin: 0 17px; 
+}
+
+.links-box ul li a {
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+}
+
+.search-box {
+    display: flex;
+    width: 400px;
+    justify-content: end;
+    align-items: center;
+    margin-left: 30px; 
+}
+
+.search-box input {
+    display: flex;
+    flex: 1;
+    height: 40px;
+    border-radius: 20px;
+    border: none;
+    padding: 20px;
+    position: relative;
+    font-size: 13px;
+}
+
+.search-box img {
+    position: absolute;
+    right: 160px;
+    height: 30px;
+}
+
+.cart-profile-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 30px; 
+}
+
+.cart-profile-box .cart-ic {
+    height: 30px;
+}
+
+.cart-profile-box .profile-ic {
+    height: 35px;
+}
+
+.cart-profile-box .cart-box {
+    margin-right: 100px;
+    margin-left: 50px;
+}
+
+
+.links-box .category-link {
+    position: relative;
+}
+
+.links-box .category-link .category-dropdown {
+    display: flex;
+    flex-direction: column;
+    background-color: lightblue;
+    position: absolute;
+    padding: 10px;
+    justify-content: start;
+    top: 25px;
+    border-radius: 10px;
+    border: 1px solid rgb(76, 167, 197);
+    opacity: 0;
+}
+
+.links-box .category-link .category-dropdown:hover {
+    opacity: 100%;
+}
+
+
+
+.category-dropdown ul {
+    display: flex;
+    flex-direction: column;
+}
+
+@media (max-width: 768px) {
+    .top-navbar {
+        flex-direction: column; 
+        height: auto; 
+        padding: 10px;
+    }
+
+    .logo-box, .links-box, .search-box, .cart-profile-box {
+        margin-left: 0;
+        margin-right: 0;
+        flex: none; 
+        width: 100%; 
+        justify-content: center; 
+    }
+
+    .links-box ul {
+        flex-direction: column; 
+        margin: 10px 0;
+    }
+
+    .links-box ul li {
+        margin: 5px 0; 
+    }
+
+    .search-box {
+        margin: 10px 0;
+    }
+}
