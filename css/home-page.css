@@ -6,7 +6,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: lightblue;
+    background-color: rgb(241, 225, 51);
     flex-wrap: wrap; 
     height: 100px;
     padding: 0 50px; 
