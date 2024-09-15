@@ -84,6 +84,7 @@ form .name-box, form .password-box {
 }
 
 form input {
+    border-radius: 10px;
     width: 300px;
     font-size: 17px;
     color: rgb(29, 28, 28);
@@ -94,6 +95,12 @@ form input {
     margin-right: 20px;
     background: none;
     transition: 0.15s;   
+
+    
+}
+input:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .input-box #lName, .input-box #cPassword, .input-box #email {
