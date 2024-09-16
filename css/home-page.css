@@ -2,15 +2,25 @@ body {
     margin-bottom: 3000px;
 }
 
+.nav-bar {
+    display: flex;
+    flex-direction: column;
+}
+
 .top-navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: lightblue;
-    flex-wrap: wrap; 
-    height: 100px;
-    padding: 0 50px; 
+    flex-wrap: wrap;
+    height: 60px;
+    padding: 0 50px;
     z-index: 1000;
+}
+
+.category-bar {
+    display: flex;
+    background-color: lightpink;
 }
 
 .logo-box {
@@ -21,10 +31,11 @@ body {
 }
 
 .logo-box img {
-    height: 45px;
+    height: 37px;
 }
 
 .links-box {
+    /* min-width: 469px; */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -41,13 +52,85 @@ body {
 }
 
 .links-box ul li {
-    margin: 0 17px; 
+    margin: 0 17px;
 }
 
 .links-box ul li a {
-    text-decoration: none;
+    position: relative;
     color: black;
     font-weight: 500;
+    text-decoration: none;
+    padding: 5px 0;
+    transition: color 0.3s ease;
+}
+
+.links-box ul li a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 2px;
+    background-color: darkblue;
+    transition: width 0.3s ease;
+}
+
+.links-box ul li a:hover {
+    color: darkblue;
+}
+
+.links-box ul li a:hover::after {
+    width: 100%;
+}
+
+/* Dropdown list */
+.links-box .category-link {
+    position: relative;
+}
+
+.links-box .category-link .category-dropdown {
+    display: none; /* Initially hidden */
+    position: absolute;
+    top: 100%; /* Position it below the parent */
+    left: 0;
+    background-color: lightblue;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    transition: opacity 0.3s ease;
+    opacity: 0; /* Hide it using opacity */
+    visibility: hidden; /* Hide it from being clicked */
+}
+
+.links-box .category-link:hover .category-dropdown {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+}
+
+.category-dropdown ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.category-dropdown ul li {
+    margin: 10px 0;
+}
+
+.category-dropdown ul li a {
+    text-decoration: none;
+    color: black;
+    padding: 5px;
+    display: block;
+    transition: background-color 0.3s ease;
+}
+
+.category-dropdown ul li a:hover {
+    background-color: darkblue;
+    color: white;
+    border-radius: 5px;
 }
 
 .search-box {
@@ -55,7 +138,8 @@ body {
     width: 400px;
     justify-content: end;
     align-items: center;
-    margin-left: 30px; 
+    margin-left: 30px;
+    margin-right: 5px;
 }
 
 .search-box input {
@@ -71,15 +155,17 @@ body {
 
 .search-box img {
     position: absolute;
-    right: 160px;
+    right: 190px;
     height: 30px;
+    opacity: 0.5;
 }
 
 .cart-profile-box {
     display: flex;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
-    margin-left: 30px; 
+    margin-left: 30px;
 }
 
 .cart-profile-box .cart-ic {
@@ -90,62 +176,32 @@ body {
     height: 35px;
 }
 
-.cart-profile-box .cart-box {
-    margin-right: 100px;
-    margin-left: 50px;
-}
-
-
-.links-box .category-link {
-    position: relative;
-}
-
-.links-box .category-link .category-dropdown {
-    display: flex;
-    flex-direction: column;
-    background-color: lightblue;
-    position: absolute;
-    padding: 10px;
-    justify-content: start;
-    top: 25px;
-    border-radius: 10px;
-    border: 1px solid rgb(76, 167, 197);
-    opacity: 0;
-}
-
-.links-box .category-link .category-dropdown:hover {
-    opacity: 100%;
-}
-
-
-
-.category-dropdown ul {
-    display: flex;
-    flex-direction: column;
+.cart-profile-box .profile-box {
+    margin-left: 30px;
 }
 
 @media (max-width: 768px) {
     .top-navbar {
-        flex-direction: column; 
-        height: auto; 
+        flex-direction: column;
+        height: auto;
         padding: 10px;
     }
 
     .logo-box, .links-box, .search-box, .cart-profile-box {
         margin-left: 0;
         margin-right: 0;
-        flex: none; 
-        width: 100%; 
-        justify-content: center; 
+        flex: none;
+        width: 100%;
+        justify-content: center;
     }
 
     .links-box ul {
-        flex-direction: column; 
+        flex-direction: column;
         margin: 10px 0;
     }
 
     .links-box ul li {
-        margin: 5px 0; 
+        margin: 5px 0;
     }
 
     .search-box {
