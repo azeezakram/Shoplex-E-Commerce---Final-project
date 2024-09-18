@@ -277,7 +277,7 @@
 }
 
 .bottom-bar {
-    background-color: rgb(0, 0, 0);
+    background-color: rgb(49, 49, 49);
     display: flex;
     flex-direction: row;
     height: 59px;
@@ -326,27 +326,22 @@
 }
 
 .shortcut-links a:hover {
-    background-color: white;
-    color: black;
+    background-color: rgba(202, 202, 202, 0.40);
 }
-
-.profile-popup {
+.right-button .profile-popup {
     position: absolute;
-    display: flex;
+    display: none;
     flex-direction: column;
     background-color: white;
-    box-shadow: 5px, 10px 10px rgba(0, 0, 0, 0.16);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     top: 40px;
     right: 5px;
     padding: 20px;
     border-radius: 15px;
-    opacity: 0;
-    
+    cursor: auto;
 }
 
-.current-user-picture:hover .profile-popup {
-    opacity: 1;
-}
+
 
 .profile-popup .top-section {
     display: flex;
@@ -388,10 +383,13 @@
 }
 
 .profile-popup .profile-mid-section div {
+    width: 100%;
     display: flex;
     align-items: center;
-    justify-content: center;
-    margin-bottom: 8px;
+    justify-content: start;
+    padding: 0px 5px;
+    transition: 0.15s;
+    cursor: pointer;
 }
 
 .profile-popup .profile-mid-section img{
@@ -403,8 +401,20 @@
     text-decoration: none;
     color: black;
     font-size: 15px;
+    padding: 10px;
+    text-wrap: nowrap;
 }
 
 .profile-popup .profile-mid-section div:hover {
-    background-color: blue;
+    background-color: rgb(235, 235, 235);
+    border-radius: 5px;
+}
+
+.side-navbar {
+    display: flex;
+    width: 300px;
+    flex-direction: column;
+    justify-content: start;
+    z-index: 2000;
+    background-color: rgb(108, 170, 185);
 }

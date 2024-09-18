@@ -25,22 +25,50 @@
 </head>
 
 <body>
-
+    <div class="side-navbar" id="sideNavBar">
+        <div class="sidenav-mid-section">
+            <div>
+                <img src="images/icons/profile-p.png">
+                <a href="#">Profile</a>
+            </div>
+            <div>
+                <img src="images/icons/cart.png">
+                <a href="#">Cart</a>
+            </div>
+            <div>
+                <img src="images/icons/order.png">
+                <a href="#">Orders</a>
+            </div>
+            <div>
+                <img src="images/icons/payment.png">
+                <a href="#">Payment</a>
+            </div>
+            <div>
+                <img src="images/icons/message-center.png">
+                <a href="#">Message Center</a>
+            </div>
+            <div>
+                <img src="images/icons/message-center.png">
+                <a href="#">About</a>
+            </div>
+        </div>
+    </div>
     <header class="nav-bar">
         <div class="top-bar">
             <div class="left-section">
                 <button class="hamburger-button">
                     <img class="hamburger-menu" src="images/icons/hamburger-menu.png">
                 </button>
+
                 <img class="comp-logo" src="images/logo/black-logo.png">
             </div>
             <div class="mid-section">
                 <input class="search-bar" type="text" placeholder="Search" />
-                <button  class="search-button">
+                <button class="search-button">
                     <img src="images/icons/search.png">
                     <div class="tooltip">Search</div>
                 </button>
-                
+
 
                 <div class="image-search-button" onclick="toggleUploadBox()">
                     <img src="images/icons/image-search.png" alt="Upload Icon">
@@ -61,12 +89,11 @@
                     <img class="notfications-icon" src="images/icons/notification.png">
                     <div class="notfication-count">5</div>
                 </div>
-                <div class="right-button">
-                    <a href="signin-page.html">
-                        <img class="current-user-picture" src="images/icons/profile.png">
-                    </a>
+                <div class="right-button" id="profileButton">
 
-                    <div class="profile-popup">
+                    <img class="current-user-picture" src="images/icons/profile.png" onclick="toggleProfilePopupBox()">
+
+                    <div class="profile-popup" id="profilePopup">
                         <div class="top-section">
                             <a href="signin-page.html">
                                 <button class="sigin-btn">Sign in</button>
@@ -97,22 +124,25 @@
                                 <img src="images/icons/message-center.png">
                                 <a href="#">Message Center</a>
                             </div>
-                            
+                            <div>
+                                <img src="images/icons/message-center.png">
+                                <a href="#">About</a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>   
+        </div>
 
         <div class="bottom-bar">
-            <div class="dropdown-box">  
+            <div class="dropdown-box">
                 <select name="category" id="category-dropdown">
                     <option value="" disabled selected>All Categories</option>
                     <option value="electronics">Electronics</option>
                     <option value="home">Home</option>
                     <option value="fashion">Fashion</option>
                     <img class="dropdown-logo" src="images/icons/category.png">
-                </select>         
+                </select>
             </div>
 
             <div class="shortcut-links">
@@ -121,7 +151,7 @@
                         Today's Deals
                     </div>
                 </a>
-    
+
                 <a href="#">
                     <div>
                         Customer Service
@@ -135,9 +165,9 @@
                 </a>
             </div>
         </div>
-    </header>   
+    </header>
 
-    <script src="javascript/home-page.js"></script>
+    <script src="javascript/header.js"></script>
 
 </body>
 
