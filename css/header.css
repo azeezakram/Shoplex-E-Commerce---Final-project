@@ -37,6 +37,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
     transition: 0.16s;
 }
 
@@ -46,6 +47,11 @@
 
 .hamburger-button:hover {
     background-color: rgb(238, 238, 238);
+}
+
+.left-section a {
+    display: flex;
+    align-items: center;
 }
 
 .comp-logo {
@@ -125,7 +131,6 @@
     opacity: 1;
 }
 
-/* Same styles as before */
 .image-search-button {
     height: 40px;
     width: 40px;
@@ -147,7 +152,7 @@
 }
 
 .image-upload-box {
-    display: none; /* Hidden by default */
+    display: none; 
     position: absolute;
     top: 50px;
     left: -80px;
@@ -177,9 +182,6 @@
 .image-search-button:active {
     background-color: rgb(206, 206, 206);
 }
-
-
-
 
 .tooltip input {
     width: 100px;
@@ -291,15 +293,11 @@
 }
 
 .dropdown-box select {
-    width: 250px;
-    padding: 11px 22px;
-    border-radius: 25px;
-    position: relative;
-    border: none;
-    background-color: rgba(202, 202, 202, 0.40);
+    padding: 12px 20px;
+    background-color: #333;
     color: white;
-    font-size: 14px;
-    cursor: pointer;
+    border: none;
+    border-radius: 25px;
 }
 
 .dropdown-box select option {
@@ -328,6 +326,7 @@
 .shortcut-links a:hover {
     background-color: rgba(202, 202, 202, 0.40);
 }
+
 .right-button .profile-popup {
     position: absolute;
     display: none;
@@ -340,8 +339,6 @@
     border-radius: 15px;
     cursor: auto;
 }
-
-
 
 .profile-popup .top-section {
     display: flex;
@@ -378,43 +375,190 @@
 .profile-popup .profile-mid-section {
     display: flex;
     flex-direction: column;
-    align-items: start;
+    align-items: center;
     padding-top: 10px;
 }
 
 .profile-popup .profile-mid-section div {
-    width: 100%;
     display: flex;
     align-items: center;
-    justify-content: start;
-    padding: 0px 5px;
+    margin-left: 5px;
+}
+
+.profile-popup .profile-mid-section img{
+    height: 24px;
+}
+
+.profile-popup .profile-mid-section a {
+    width: 100%;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    text-decoration: none;
+    color: black;
+    padding: 7px;
+    font-size: 15px;
     transition: 0.15s;
     cursor: pointer;
 }
 
-.profile-popup .profile-mid-section img{
-    height: 28px;
-    margin-right: 5px;
-}
-
-.profile-popup .profile-mid-section a {
-    text-decoration: none;
-    color: black;
-    font-size: 15px;
-    padding: 10px;
-    text-wrap: nowrap;
-}
-
-.profile-popup .profile-mid-section div:hover {
+.profile-popup .profile-mid-section a:hover {
     background-color: rgb(235, 235, 235);
     border-radius: 5px;
 }
 
 .side-navbar {
+    position: fixed;
+    top: 0;
+    left: -360px; 
+    width: 360px;
+    height: 100%;
+    background-color: #333;
+    color: white;
+    overflow-x: hidden;
+    transition: transform 0.4s ease, left 0.4s ease; 
+    z-index: 200;
+}
+
+.side-navbar.open {
+    left: 0; 
+}
+
+.sidebar-logo {
+    position: absolute;
+    height: 38px;
+    top: 48px;
+    left: 24px;
+}
+
+.sidenav-category-section, 
+.sidenav-setting-section,
+.sidenav-program-section{
     display: flex;
-    width: 300px;
+    justify-content: center;
     flex-direction: column;
-    justify-content: start;
-    z-index: 2000;
-    background-color: rgb(108, 170, 185);
+    border-bottom: 1px solid rgb(68, 67, 67);
+}
+
+.sidenav-category-section {
+    padding-top: 130px;
+    padding-bottom: 15px;
+}
+
+.sidenav-setting-section {
+    border: none;
+}
+
+.sidenav-setting-section, 
+.sidenav-program-section {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.side-navbar label {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 12px 25px;  
+}
+
+.sidenav-category-section input[type="search"] {
+    margin: 25px;
+    margin-bottom: 13px;
+    margin-top: 10px;
+    background: none;
+    border: none;
+    border-bottom: 1px solid rgb(117, 117, 117);
+    font-size: 14px;
+}
+
+.sidenav-category-section input[type="search"]::placeholder {
+    color: rgb(117, 117, 117);
+}
+
+
+
+.sidenav-category-section .subject , 
+.sidenav-setting-section .subject,
+.sidenav-program-section .subject{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 12px 25px;  
+    text-decoration: none;
+    font-size: 14px;
+    color: white;
+    display: block;
+    transition: 0.16s;
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+.sidenav-setting-section #greeting p {
+    display: inline-block;
+    font-size: 15px;
+}
+
+.sidenav-setting-section #greeting .user-name {
+    font-weight: 800;
+    
+}
+
+.sidenav-category-section .subject:hover,
+.sidenav-setting-section .subject:hover,
+.sidenav-program-section .subject:hover {
+    background-color: #575757;
+}
+
+.close-btn {
+    position: absolute;
+    height: 30px;
+    top: 20px;
+    right: 20px;
+    font-size: 30px;
+    color: white;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    color: red;
+}
+
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 100;
+    display: none; 
+    transition: 0.1s;
+}
+
+
+
+
+
+
+
+
+@media (max-width: 768px) {
+    .top-bar, .bottom-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .mid-section {
+        margin-left: 0;
+        max-width: 100%;
+    }
+    .right-section {
+        margin-left: 0;
+        justify-content: center;
+    }
+
+    .side-navbar {
+        width: 100%;
+        left: -100%;
+    }
 }

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - Shoplex official page</title>
+    <title>Shoplex - All Your Favourites in One Place</title>
     <link rel="apple-touch-icon" sizes="180x180" href="images/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="192x192" href="images/favicon/android-chrome-192x192.png">
     <link rel="icon" type="image/png" sizes="32x32" href="images/favicon/favicon-32x32.png">
@@ -19,153 +19,201 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <!-- css links -->
-    <link rel="stylesheet" href="css/general.css">
-    <link rel="stylesheet" href="css/home-page.css">
-    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
-    <div class="side-navbar" id="sideNavBar">
-        <div class="sidenav-mid-section">
-            <div>
-                <img src="images/icons/profile-p.png">
-                <a href="#">Profile</a>
+    <nav>
+        <div class="side-navbar" id="sideNavBar">
+            <!-- <span class="close-btn" id="closeBtn">&times;</span> -->
+            <img src="images/icons/close.svg" class="close-btn" id="closeBtn">
+            <a href="home-pagec.html">
+                <img class="sidebar-logo" src="images/logo/white-logo.png">
+            </a>
+            <div class="sidenav-category-section">
+                <!-- <input type="search" name="search" id="search-bar" 
+                    class="search-bar-side" placeholder="Search"> -->
+                <label for="categories">Categories</label>
+                <a href="#" class="subject">
+                    <div>All</div>
+                </a>
+
+                <a href="#" class="subject">
+                    <div>Electrical</div>
+                </a>
+
+                <a href="#" class="subject">
+                    <div>Home ware</div>
+                </a>
+
+                <a href="#" class="subject">
+                    <div>Fashion</div>
+                </a>
             </div>
-            <div>
-                <img src="images/icons/cart.png">
-                <a href="#">Cart</a>
+
+            <div class="sidenav-program-section">
+                <label for="Programs & Events">Programs & Events</label>
+                <a href="#" class="subject">
+                    <div>All</div>
+                </a>
+
+                <a href="#" class="subject">
+                    <div>Electrical</div>
+                </a>
+
+                <a href="#" class="subject">
+                    <div>Home ware</div>
+                </a>
+
+                <a href="#" class="subject">
+                    <div>Fashion</div>
+                </a>
             </div>
-            <div>
-                <img src="images/icons/order.png">
-                <a href="#">Orders</a>
-            </div>
-            <div>
-                <img src="images/icons/payment.png">
-                <a href="#">Payment</a>
-            </div>
-            <div>
-                <img src="images/icons/message-center.png">
-                <a href="#">Message Center</a>
-            </div>
-            <div>
-                <img src="images/icons/message-center.png">
-                <a href="#">About</a>
+
+            
+
+            <div class="sidenav-setting-section">
+                <label for="categories">Settings & Helps</label>
+                <a href="#" class="subject" id="greeting">
+                    <p class="hi-txt">Hi,&#xA0;</p>       
+                    <p class="user-name"> Abdul Azeez</p>
+                </a>
+                <a href="#" class="subject">
+                    <div>Profile</div>
+                </a>
+                <a href="#" class="subject">
+                    <div>Cart</div>
+                </a>
+                <a href="#" class="subject">
+                    <div>Orders</div>
+                </a>
+                <a href="#" class="subject">
+                    <div>Log out</div>
+                </a>
             </div>
         </div>
-    </div>
-    <header class="nav-bar">
-        <div class="top-bar">
-            <div class="left-section">
-                <button class="hamburger-button">
-                    <img class="hamburger-menu" src="images/icons/hamburger-menu.png">
-                </button>
 
-                <img class="comp-logo" src="images/logo/black-logo.png">
-            </div>
-            <div class="mid-section">
-                <input class="search-bar" type="text" placeholder="Search" />
-                <button class="search-button">
-                    <img src="images/icons/search.png">
-                    <div class="tooltip">Search</div>
-                </button>
+        <div id="overlay" class="overlay"></div>
 
 
-                <div class="image-search-button" onclick="toggleUploadBox()">
-                    <img src="images/icons/image-search.png" alt="Upload Icon">
-                    <div class="image-upload-box" id="uploadBox">
-                        <p>Search by image</p>
-                        <input type="file" accept="image/*">
-                    </div>
+        <div class="nav-bar">
+            <div class="top-bar">
+                <div class="left-section">
+                    <button class="hamburger-button">
+                        <img class="hamburger-menu" src="images/icons/hamburger-menu.png">
+                    </button>
+
+                    <a href="home-pagec.html">
+                        <img class="comp-logo" src="images/logo/black-logo.png">
+                    </a>
                 </div>
-            </div>
-            <div class="right-section">
-                <div class="right-button" id="cart-button">
-                    <img class="cart-icon" src="images/icons/cart.png">
-                </div>
-                <div class="right-button" id="order-button">
-                    <img class="order-icon" src="images/icons/order.png">
-                </div>
-                <div class="right-button" id="notfication-button">
-                    <img class="notfications-icon" src="images/icons/notification.png">
-                    <div class="notfication-count">5</div>
-                </div>
-                <div class="right-button" id="profileButton">
 
-                    <img class="current-user-picture" src="images/icons/profile.png" onclick="toggleProfilePopupBox()">
+                <div class="mid-section">
+                    <input class="search-bar" type="text" placeholder="Search" />
+                    <button class="search-button">
+                        <img src="images/icons/search.png">
+                        <div class="tooltip">Search</div>
+                    </button>
 
-                    <div class="profile-popup" id="profilePopup">
-                        <div class="top-section">
-                            <a href="signin-page.html">
-                                <button class="sigin-btn">Sign in</button>
-                            </a>
-                            <a class="register" href="register-page.html">
-                                Register
-                            </a>
-                        </div>
-
-                        <div class="profile-mid-section">
-                            <div>
-                                <img src="images/icons/profile-p.png">
-                                <a href="#">Profile</a>
-                            </div>
-                            <div>
-                                <img src="images/icons/cart.png">
-                                <a href="#">Cart</a>
-                            </div>
-                            <div>
-                                <img src="images/icons/order.png">
-                                <a href="#">Orders</a>
-                            </div>
-                            <div>
-                                <img src="images/icons/payment.png">
-                                <a href="#">Payment</a>
-                            </div>
-                            <div>
-                                <img src="images/icons/message-center.png">
-                                <a href="#">Message Center</a>
-                            </div>
-                            <div>
-                                <img src="images/icons/message-center.png">
-                                <a href="#">About</a>
-                            </div>
+                    <div class="image-search-button" onclick="toggleUploadBox()">
+                        <img src="images/icons/image-search.png" alt="Upload Icon">
+                        <div class="image-upload-box" id="uploadBox">
+                            <p>Search by image</p>
+                            <input type="file" accept="image/*">
                         </div>
                     </div>
                 </div>
+
+                <div class="right-section">
+                    <div class="right-button" id="cart-button">
+                        <img class="cart-icon" src="images/icons/cart.png">
+                    </div>
+                    <div class="right-button" id="order-button">
+                        <img class="order-icon" src="images/icons/order.png">
+                    </div>
+                    <div class="right-button" id="notfication-button">
+                        <img class="notfications-icon" src="images/icons/notification.png">
+                        <div class="notfication-count">5</div>
+                    </div>
+                    <div class="right-button" id="profileButton">
+
+                        <img class="current-user-picture" src="images/icons/profile.png"
+                            onclick="toggleProfilePopupBox()">
+
+                        <div class="profile-popup" id="profilePopup">
+                            <div class="top-section">
+                                <a href="signin-page.html">
+                                    <button class="sigin-btn">Sign in</button>
+                                </a>
+                                <a class="register" href="register-page.html">
+                                    Register
+                                </a>
+                            </div>
+
+                            <div class="profile-mid-section">
+
+
+                                <a href="signin-page.html">
+                                    <img src="images/icons/profile-p.png">
+                                    <div>Profile</div>
+                                </a>
+
+                                <a href="#">
+                                    <img src="images/icons/cart.png">
+                                    <div>Cart</div>
+                                </a>
+                                <a href="#">
+                                    <img src="images/icons/order.png">
+                                    <div>My Orders</div>
+                                </a>
+                                <a href="#">
+                                    <img src="images/icons/payment.png">
+                                    <div>Payment</div>
+                                </a>
+                                <a href="#">
+                                    <img src="images/icons/message-center.png">
+                                    <div>Message Center</div>
+                                </a>
+                                <a href="#">
+                                    <img src="images/icons/message-center.png">
+                                    <div>About</div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-bar">
+                <div class="dropdown-box">
+                    <select name="category" id="category-dropdown">
+                        <!-- <option value="" disabled selected>All Categories</option> -->
+                        <option value="all-categories">All Categories</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="home">Home</option>
+                        <option value="fashion">Fashion</option>
+                        <img class="dropdown-logo" src="images/icons/category.png">
+                    </select>
+                </div>
+
+                <div class="shortcut-links">
+                    <a href="#">
+                        <div>Today's Deals</div>
+                    </a>
+
+                    <a href="#">
+                        <div>Customer Service</div>
+                    </a>
+
+                    <a href="#">
+                        <div>
+                            Sell
+                        </div>
+                    </a>
+                </div>
             </div>
         </div>
-
-        <div class="bottom-bar">
-            <div class="dropdown-box">
-                <select name="category" id="category-dropdown">
-                    <option value="" disabled selected>All Categories</option>
-                    <option value="electronics">Electronics</option>
-                    <option value="home">Home</option>
-                    <option value="fashion">Fashion</option>
-                    <img class="dropdown-logo" src="images/icons/category.png">
-                </select>
-            </div>
-
-            <div class="shortcut-links">
-                <a href="#">
-                    <div>
-                        Today's Deals
-                    </div>
-                </a>
-
-                <a href="#">
-                    <div>
-                        Customer Service
-                    </div>
-                </a>
-
-                <a href="#">
-                    <div>
-                        Sell
-                    </div>
-                </a>
-            </div>
-        </div>
-    </header>
+    </nav>
 
     <script src="javascript/header.js"></script>
 

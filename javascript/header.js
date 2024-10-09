@@ -1,45 +1,48 @@
-// Toggle the display of the upload box
 function toggleUploadBox() {
-    const uploadBox = document.getElementById('uploadBox');
-    
-    // Check current visibility and toggle it
-    if (uploadBox.style.display === 'block') {
-        uploadBox.style.display = 'none';
-    } else {
-        uploadBox.style.display = 'block';
-    }
+    const uploadBox = document.getElementById("uploadBox");
+    uploadBox.style.display = (uploadBox.style.display === "none" || !uploadBox.style.display) ? "block" : "none";
 }
 
-// Optional: Close the upload box when clicking outside
 window.addEventListener('click', function(event) {
     const uploadBox = document.getElementById('uploadBox');
     const imageSearchButton = document.querySelector('.image-search-button');
     
-    // If the click is outside the button or the box, close the box
-    if (!imageSearchButton.contains(event.target)) {
+    if (!imageSearchButton.contains(event.target) && !uploadBox.contains(event.target)) {
         uploadBox.style.display = 'none';
     }
 });
 
-// Toggle the display of the upload box
 function toggleProfilePopupBox() {
-    const profilePopup = document.getElementById('profilePopup');
-    
-    // Check current visibility and toggle it
-    if (profilePopup.style.display === 'flex') {
-        profilePopup.style.display = 'none';
-    } else {
-        profilePopup.style.display = 'flex';
-    }
+    const profilePopup = document.getElementById("profilePopup");
+    profilePopup.style.display = (profilePopup.style.display === "none" || !profilePopup.style.display) ? "block" : "none";
 }
 
-// Optional: Close the upload box when clicking outside
 window.addEventListener('click', function(event) {
     const profilePopup = document.getElementById('profilePopup');
-    const profilePicture = document.getElementsByClassName('current-user-picture');
+    const profilePicture = document.querySelector('.current-user-picture');
     
-    // If the click is outside the button or the box, close the box
-    if (!profilePicture.contains(event.target)) {
+    if (!profilePicture.contains(event.target) && !profilePopup.contains(event.target)) {
         profilePopup.style.display = 'none';
+    }
+});
+
+const sideNavBar = document.getElementById('sideNavBar');
+const hamburgerButton = document.querySelector('.hamburger-button');
+const closeBtn = document.getElementById('closeBtn');
+
+hamburgerButton.addEventListener('click', function() {
+    sideNavBar.classList.add('open');
+    document.querySelector(".overlay").style.display = "block";
+});
+
+closeBtn.addEventListener('click', function() {
+    sideNavBar.classList.remove('open');   
+    document.querySelector(".overlay").style.display = "none";
+});
+
+window.addEventListener('click', function(event) {
+    if (!sideNavBar.contains(event.target) && !hamburgerButton.contains(event.target)) {
+        sideNavBar.classList.remove('open');
+        document.querySelector(".overlay").style.display = "none";
     }
 });
