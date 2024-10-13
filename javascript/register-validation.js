@@ -18,17 +18,17 @@ function togglePassword(id) {
 function validatePassword() {
     const password = document.getElementById('password').value.trim();
 
-    // Password requirements
+    
     const lengthRequirement = password.length >= 6;
     const lowerCaseRequirement = /[a-z]/.test(password);
     const upperCaseRequirement = /[A-Z]/.test(password);
     const numberRequirement = /\d/.test(password);
     const specialCharRequirement = /[\W_]/.test(password);
 
-    // Get element for error message
+    
     const passwordError = document.getElementById('psw-msg');
 
-    // Determine the error message based on unmet requirements
+    
     if (!lengthRequirement) {
         passwordError.innerHTML = 'Password must be at least 6 characters';
     } else if (!lowerCaseRequirement) {
@@ -50,7 +50,7 @@ function validateEmail() {
     const message = emailPattern.test(email) ? "" : "Invalid email address";
     document.getElementById('email-msg').innerHTML = message;
 
-    return message === '';  // Return whether the email is valid
+    return message === '';  
 }
 
 // Live validation for form fields
@@ -85,10 +85,8 @@ document.getElementById('register-form').addEventListener('submit', function(eve
     const password = document.getElementById('password').value.trim();
     const confirmPassword = document.getElementById('cPassword').value.trim();
 
-    // Validate email first
     const isEmailValid = validateEmail();
 
-    // Validate form fields
     const errors = {
         fName: fname === '' ? 'First name is required' : '',
         lName: lname === '' ? 'Last name is required' : '',
@@ -96,13 +94,11 @@ document.getElementById('register-form').addEventListener('submit', function(eve
         cPassword: confirmPassword !== password ? 'Passwords do not match' : ''
     };
 
-    // Update error messages
     document.getElementById('fName-msg').innerHTML = errors.fName;
     document.getElementById('lName-msg').innerHTML = errors.lName;
     document.getElementById('psw-msg').innerHTML = errors.password;
     document.getElementById('cPsw-msg').innerHTML = errors.cPassword;
 
-    // Check if there are any errors
     const hasErrors = Object.values(errors).some(error => error !== '') || !isEmailValid;
 
     if (!hasErrors) {
@@ -114,9 +110,9 @@ document.getElementById('register-form').addEventListener('submit', function(eve
 function showPopup(message) {
     const popup = document.getElementById('popup');
     popup.innerHTML = message;
-    popup.classList.add('show');  // Add the show class to make it visible
+    popup.classList.add('show');  
 
     setTimeout(() => {
-        popup.classList.remove('show');  // Remove the show class after 2 seconds
+        popup.classList.remove('show');  
     }, 2000);
 }

@@ -20,7 +20,7 @@ function validateEmail() {
     const message = emailPattern.test(email) ? "" : "Invalid email address";
     document.getElementById('email-msg').innerHTML = message;
 
-    return message === '';  // Return whether the email is valid
+    return message === ''; 
 }
 
 
@@ -39,10 +39,8 @@ document.getElementById('signin-form').addEventListener('submit', function(event
     
     const password = document.getElementById('password').value.trim();
 
-    // Validate email first
     const isEmailValid = validateEmail();
 
-    // Validate form fields
     const errors = {
         password: password === '' ? 'Password is required' : '',
     };
@@ -51,7 +49,6 @@ document.getElementById('signin-form').addEventListener('submit', function(event
 
     const hasErrors = Object.values(errors).some(error => error !== '') || !isEmailValid;
 
-    // Check if there are any errors
     if (!hasErrors) {
         showPopup("Successfully Signed in!");
         document.getElementById('register-form').reset();
@@ -61,10 +58,10 @@ document.getElementById('signin-form').addEventListener('submit', function(event
 function showPopup(message) {
     const popup = document.getElementById('popup');
     popup.innerHTML = message;
-    popup.classList.add('show');  // Add the show class to make it visible
+    popup.classList.add('show');  
 
     setTimeout(() => {
-        popup.classList.remove('show');  // Remove the show class after 2 seconds
+        popup.classList.remove('show');  
     }, 2000);
 }
 
