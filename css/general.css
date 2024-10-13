@@ -1,9 +1,10 @@
 * {
-    font-family: Raleway, Arial;
+    font-family: Nunito, Arial;
 }
 
 body {
     background-color: rgb(255, 255, 255);
     margin: 0;
     padding: 0;
+    margin-bottom: 2000px;
 }

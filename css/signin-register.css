@@ -61,7 +61,7 @@ form {
 }
 
 label {
-    color: rgb(29, 28, 28);
+    color: rgba(51,90,2,255);
     font-size: 40px;
     font-weight: 700;
     margin-bottom: 50px;
@@ -120,6 +120,8 @@ form input {
     color: red;
     padding: 0px 6px;
     margin: 0 0 20px 0;
+    word-wrap: normal;
+    
 }
 
 
@@ -141,7 +143,7 @@ form input:focus {
     font-size: 17px;
     font-weight: 500;
     padding: 10px 30px;
-    background-color: rgb(29, 28, 28);
+    background-color: rgba(51,90,2,255);
     color: white;
     margin-top: 12px;
     border-radius: 49px;

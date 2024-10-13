@@ -1,30 +1,34 @@
-function toggleUploadBox() {
-    const uploadBox = document.getElementById("uploadBox");
-    uploadBox.style.display = (uploadBox.style.display === "none" || !uploadBox.style.display) ? "block" : "none";
-}
+//Search by image popup animation and transition
 
-window.addEventListener('click', function(event) {
-    const uploadBox = document.getElementById('uploadBox');
-    const imageSearchButton = document.querySelector('.image-search-button');
-    
-    if (!imageSearchButton.contains(event.target) && !uploadBox.contains(event.target)) {
-        uploadBox.style.display = 'none';
-    }
+const uploadBox = document.getElementById('uploadBox');
+const imageSearchButton = document.querySelector('.image-search-button');
+
+imageSearchButton.addEventListener('mouseover', function() {
+    uploadBox.style.display = 'block';   
 });
 
-function toggleProfilePopupBox() {
-    const profilePopup = document.getElementById("profilePopup");
-    profilePopup.style.display = (profilePopup.style.display === "none" || !profilePopup.style.display) ? "block" : "none";
-}
-
-window.addEventListener('click', function(event) {
-    const profilePopup = document.getElementById('profilePopup');
-    const profilePicture = document.querySelector('.current-user-picture');
-    
-    if (!profilePicture.contains(event.target) && !profilePopup.contains(event.target)) {
-        profilePopup.style.display = 'none';
-    }
+imageSearchButton.addEventListener('mouseout', function() {
+    uploadBox.style.display = 'none';   
 });
+
+
+
+//Profile poup animation and transition
+
+const profilePopup = document.getElementById('profilePopup');
+const profileButton = document.getElementById('profileButton');
+
+profileButton.addEventListener('mouseover', function() {
+        profilePopup.style.display = 'block';   
+});
+
+profileButton.addEventListener('mouseout', function() {
+        profilePopup.style.display = 'none'; 
+});
+
+
+
+//Side navbar animation and transition
 
 const sideNavBar = document.getElementById('sideNavBar');
 const hamburgerButton = document.querySelector('.hamburger-button');
@@ -45,4 +49,33 @@ window.addEventListener('click', function(event) {
         sideNavBar.classList.remove('open');
         document.querySelector(".overlay").style.display = "none";
     }
+});
+
+
+let lastScrollTop = 0; 
+const navbar = document.querySelector('.nav-bar');
+
+window.addEventListener('scroll', function() {
+    const currentScrollTop = window.scrollY; 
+
+    if (currentScrollTop > lastScrollTop && currentScrollTop > 60) { 
+        navbar.classList.add('hide'); 
+        navbar.classList.add('scroll-down'); 
+    } else if (currentScrollTop < lastScrollTop) {
+        navbar.classList.remove('hide'); 
+        navbar.classList.remove('scroll-down'); 
+    }
+
+    lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop; 
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const categorySection = document.querySelector('.sidenav-category-section');
+    const label = categorySection.querySelector('.dropdown-label');
+    
+    label.addEventListener('click', function() {
+        
+        categorySection.classList.toggle('open');
+    });
 });
