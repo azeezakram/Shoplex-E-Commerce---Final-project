@@ -29,3 +29,6 @@ prevButton.addEventListener('click', prevSlide);
 setInterval(nextSlide, 5000);
 
 showSlide(currentSlideIndex);
+
+
+

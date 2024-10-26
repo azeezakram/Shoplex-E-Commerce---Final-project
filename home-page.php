@@ -18,8 +18,6 @@
 
     <link rel="stylesheet" href="css/styles.css">
 
-
-
 </head>
 
 <body>
@@ -27,7 +25,7 @@
         <div class="side-navbar" id="sideNavBar">
             <!-- <span class="close-btn" id="closeBtn">&times;</span> -->
             <img src="images/icons/close.svg" class="close-btn" id="closeBtn">
-            <a href="home-page.html">
+            <a href="home-page.php">
                 <img class="sidebar-logo" src="images/logo/white-logo.png">
             </a>
             <div class="sidenav-category-section">
@@ -95,7 +93,7 @@
                         <img class="hamburger-menu" src="images/icons/hamburger-menu.png">
                     </button>
 
-                    <a href="home-page.html">
+                    <a href="home-page.php">
                         <img class="comp-logo" src="images/logo/green-logo.png">
                     </a>
                 </div>
@@ -138,7 +136,7 @@
 
                         <div class="profile-popup" id="profilePopup">
                             <div class="top-section">
-                                <a href="signin-page.html">
+                                <a href="signin-page.php">
                                     <button class="sigin-btn">Sign in</button>
                                 </a>
                                 <a class="register" href="register-page.html">
@@ -149,7 +147,7 @@
                             <div class="profile-mid-section">
 
 
-                                <a href="signin-page.html">
+                                <a href="signin-page.php">
                                     <img src="images/icons/profile-p.png">
                                     <div>Profile</div>
                                 </a>

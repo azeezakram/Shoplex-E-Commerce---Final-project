@@ -23,7 +23,7 @@
             <div class="main-box">
                 <div class="logo-container">
                     <div class="logo-box">
-                        <a href="home-page.html"><img class="logo" src="images/logo/green-logo.png"></a>
+                        <a href="home-page.php"><img class="logo" src="images/logo/green-logo.png"></a>
                     </div>
                 </div>
                 <div class="signin-container">
@@ -49,12 +49,17 @@
                             <button id="signin-btn" class="signin-btn" type="submit">Sign in</button>
                         </form>
                         <div class="signin-text">New to Shoplex?<a href="register-page.html">Register</a></div>
-                        <div class="forget-psw"><a href="register-page.html">Forget password</a></div>
+                        <!-- <div class="forget-psw"><a href="register-page.php">Forget password</a></div> -->
                     </div>
                 </div>
+                <div>2024 All Rights Reserved</div>
             </div>
+            
             <div id="popup" class="popup">Successfully Signed in!</div>
+            
+
         </div>
+
     <script src="javascript/signin-validation.js"></script>
     
 </body>

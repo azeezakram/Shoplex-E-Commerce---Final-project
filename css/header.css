@@ -485,7 +485,7 @@
 }
 
 .sidenav-category-section .dropdown-label::after {
-    content: '▶';
+    content: '🡫';
     font-size: 14px;
     position: absolute;
     right: 0;
@@ -494,7 +494,7 @@
 
 .sidenav-category-section.open .dropdown-label::after,
 .sidenav-category-section:hover .dropdown-label::after {
-    transform: rotate(90deg);
+    transform: rotate(180deg);
 }
 
 .sidenav-category-section .subject,
