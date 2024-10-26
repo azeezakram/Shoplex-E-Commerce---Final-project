@@ -1,3 +1,5 @@
+<?php session_start(); ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -135,13 +137,27 @@
                             onclick="toggleProfilePopupBox()">
 
                         <div class="profile-popup" id="profilePopup">
-                            <div class="top-section">
+                            <!-- <div class="top-section">
                                 <a href="signin-page.php">
                                     <button class="sigin-btn">Sign in</button>
                                 </a>
                                 <a class="register" href="register-page.html">
                                     Register
                                 </a>
+                            </div> -->
+
+                            <div class="top-section">
+                                <?php if (isset($_SESSION['user_id'])): ?>
+                                    <span>Welcome, <?php echo $_SESSION['name']; ?></span>
+                                    <a href="php-config/logout.php">
+                                        <button class="sigin-btn">Logout</button>
+                                    </a>
+                                <?php else: ?>
+                                    <a href="signin-page.php">
+                                        <button class="sigin-btn">Sign in</button>
+                                    </a>
+                                    <a class="register" href="register-page.html">Register</a>
+                                <?php endif; ?>
                             </div>
 
                             <div class="profile-mid-section">

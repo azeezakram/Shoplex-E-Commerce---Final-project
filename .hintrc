@@ -27,6 +27,8 @@
           "text-wrap: nowrap"
         ]
       }
-    ]
+    ],
+    "button-type": "off",
+    "no-inline-styles": "off"
   }
 }

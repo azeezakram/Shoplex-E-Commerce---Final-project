@@ -1,3 +1,13 @@
+<?php
+session_start();
+
+// Prevent caching
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,52 +23,53 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="css/signin-register.css">
 </head>
 <body>   
-        <div class="box">
-            <div class="main-box">
-                <div class="logo-container">
-                    <div class="logo-box">
-                        <a href="home-page.php"><img class="logo" src="images/logo/green-logo.png"></a>
-                    </div>
+    <div class="box">
+        <div class="main-box">
+            <div class="logo-container">
+                <div class="logo-box">
+                    <a href="home-page.php"><img class="logo" src="images/logo/green-logo.png"></a>
                 </div>
-                <div class="signin-container">
-                    <div class="signin-box">
-                        <label for="signin-form">Sign in</label>
-                        <form id="signin-form" class="signin-form" autocomplete="off">
-                            <div class="input-box">
-                                <input id="email" type="text" name="email" placeholder="Enter email">
-                                <div id="email-msg" class="message"></div>
-                            </div>
-                            <div class="password-box">
-                                <div class="input-box">
-                                    <input id="password" type="password" name="password" placeholder="Enter password">
-                                    <span class="eye" onclick="togglePassword('password')"><i id="see" class="far fa-eye"></i></span>
-                                    <div id="psw-msg" class="message"></div>
-                                </div>
-                            </div>
-
-                            <div class="remember-box">
-                                <input type="checkbox" name="remember_me" id="remember_me">
-                                <p class="remember" for="remember_me">Remember Me</p>
-                            </div>
-                            <button id="signin-btn" class="signin-btn" type="submit">Sign in</button>
-                        </form>
-                        <div class="signin-text">New to Shoplex?<a href="register-page.html">Register</a></div>
-                        <!-- <div class="forget-psw"><a href="register-page.php">Forget password</a></div> -->
-                    </div>
-                </div>
-                <div>2024 All Rights Reserved</div>
             </div>
-            
-            <div id="popup" class="popup">Successfully Signed in!</div>
-            
+            <div class="signin-container">
+                <div class="signin-box">
+                    <label for="signin-form">Sign in</label>
+                    <form id="signin-form" class="signin-form" action="process-login.php" method="POST" autocomplete="off">
+                        <div class="input-box">
+                            <input id="email" type="text" name="email" placeholder="Enter email">
+                            <div id="email-msg" class="message"></div>
+                        </div>
+                        <div class="password-box">
+                            <div class="input-box">
+                                <input id="password" type="password" name="password" placeholder="Enter password">
+                                <span class="eye" onclick="togglePassword('password')"><i id="see" class="far fa-eye"></i></span>
+                                <div id="psw-msg" class="message"></div>
+                            </div>
+                        </div>
 
+                        <div class="remember-box">
+                            <input type="checkbox" name="remember_me" id="remember_me">
+                            <p class="remember" for="remember_me">Remember Me</p>
+                        </div>
+                        <button id="signin-btn" class="signin-btn" type="submit">Sign in</button>
+                    </form>
+                    <div class="signin-text">New to Shoplex?<a href="register-page.html">Register</a></div>
+                </div>
+            </div>
+            <div>2024 All Rights Reserved</div>
         </div>
+
+        <div id="popup" class="popup">Successfully Signed in!</div>
+
+        <div id="user-info">
+            <span id="user-name-display"></span>
+            <button id="logout-btn" style="display: none;">Logout</button>
+        </div>
+    </div>
 
     <script src="javascript/signin-validation.js"></script>
     

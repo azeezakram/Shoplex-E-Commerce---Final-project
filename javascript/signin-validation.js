@@ -14,54 +14,100 @@ function togglePassword(id) {
     }
 }
 
+// Email Validation
 function validateEmail() {
-    const email = document.getElementById('email').value.trim();  
+    const email = document.getElementById('email').value.trim();
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const message = emailPattern.test(email) ? "" : "Invalid email address";
-    document.getElementById('email-msg').innerHTML = message;
-
-    return message === ''; 
+    document.getElementById('email-msg').textContent = message; 
+    return message === '';
 }
 
-
-document.getElementById('email').addEventListener('input', validateEmail);
-
-document.getElementById('password').addEventListener('input', function() {
+// Password Validation
+function validatePassword() {
     const password = document.getElementById('password').value.trim();
     const message = password === '' ? 'Password is required' : '';
-    document.getElementById('psw-msg').innerHTML = message;
-});
+    document.getElementById('psw-msg').textContent = message; 
+    return message === '';
+}
 
+// Event listeners for input validation
+document.getElementById('email').addEventListener('input', validateEmail);
+document.getElementById('password').addEventListener('input', validatePassword);
 
-// Form submission validation
+// Handle Form Submission
 document.getElementById('signin-form').addEventListener('submit', function(event) {
     event.preventDefault();
-    
+
+    const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value.trim();
 
+    // Check if both fields are empty
+    if (email === '' && password === '') {
+        document.getElementById('email-msg').textContent = 'Email is required';
+        document.getElementById('psw-msg').textContent = 'Password is required';
+        return;
+    } else if (email === '') {
+        document.getElementById('email-msg').textContent = 'Email is required';
+        return;
+    } else if (password === '') {
+        document.getElementById('psw-msg').textContent = 'Password is required';
+        return;
+    }
+
+    // Validate email pattern
     const isEmailValid = validateEmail();
 
-    const errors = {
-        password: password === '' ? 'Password is required' : '',
-    };
+    if (isEmailValid) {
+        // Clear previous messages
+        document.getElementById('email-msg').textContent = ''; 
+        document.getElementById('psw-msg').textContent = ''; 
 
-    document.getElementById('psw-msg').innerHTML = errors.password;
+        // Fetch email existence and validate password
+        fetch('signin-process.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.email_exists) {
+                if (data.success) {
+                    localStorage.setItem('user_id', data.user_id);
+                    localStorage.setItem('user_name', data.user_name);
 
-    const hasErrors = Object.values(errors).some(error => error !== '') || !isEmailValid;
-
-    if (!hasErrors) {
-        showPopup("Successfully Signed in!");
-        document.getElementById('register-form').reset();
+                    window.location.href = 'home-page.php';
+                } else {
+                    document.getElementById('psw-msg').textContent = 'Incorrect password.';
+                }
+            } else {
+                document.getElementById('email-msg').textContent = 'Email does not exist.';
+            }
+        })
+        .catch(error => console.error('Error:', error));
     }
 });
 
-function showPopup(message) {
-    const popup = document.getElementById('popup');
-    popup.innerHTML = message;
-    popup.classList.add('show');  
+// Check login status on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const userName = localStorage.getItem('user_name');
 
-    setTimeout(() => {
-        popup.classList.remove('show');  
-    }, 2000);
-}
+    if (userName) {
+        document.getElementById('user-info').style.display = 'block'; 
+        document.getElementById('logout-btn').style.display = 'block'; 
+        document.getElementById('user-name-display').textContent = `Welcome, ${userName}`;
+    } else {
+        document.getElementById('user-info').style.display = 'none'; 
+        document.getElementById('logout-btn').style.display = 'none'; 
+    }
+});
 
+// // Logout functionality
+// document.getElementById('logout-btn').addEventListener('click', function() {
+//     // Clear localStorage
+//     localStorage.removeItem('user_id');
+//     localStorage.removeItem('user_name');
+
+//     // Redirect to the login page or refresh
+//     window.location.href = 'signin-page.php';
+// });
