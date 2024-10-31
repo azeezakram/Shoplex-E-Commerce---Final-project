@@ -1,10 +1,4 @@
-<?php
-session_start();
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-?>
-
+<?php session_start(); ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -36,57 +30,24 @@ error_reporting(E_ALL);
             <a href="home-page.php">
                 <img class="sidebar-logo" src="images/logo/white-logo.png">
             </a>
-
             <div class="sidenav-category-section">
                 <label for="categories" class="dropdown-label">Categories</label>
                 <div class="dropdown-content">
-                    <?php
-                    include('php-config/db-conn.php');
-
-                    // Initialize an array to store categories
-                    $categories = [];
-
-                    // Fetch all categories with their parent relationships
-                    $result = $conn->query("SELECT category_id, category_name, parent_category_id FROM category ORDER BY parent_category_id, category_name");
-
-                    // Organize categories into parent-child structure
-                    while ($row = $result->fetch_assoc()) {
-                        if ($row['parent_category_id'] === null) {
-                            // Add parent category
-                            $categories[$row['category_id']] = [
-                                'name' => $row['category_name'],
-                                'children' => []
-                            ];
-                        } else {
-                            // Add child category under the respective parent
-                            $categories[$row['parent_category_id']]['children'][] = [
-                                'id' => $row['category_id'],
-                                'name' => $row['category_name']
-                            ];
-                        }
-                    }
-
-                    // Display categories
-                    foreach ($categories as $parent_id => $category): ?>
-                        <a href="#" class="subject parent-category" data-id="<?php echo $parent_id; ?>">
-                            <div><?php echo htmlspecialchars($category['name']); ?></div>
-                        </a>
-                        <?php if (!empty($category['children'])): ?>
-                            <div class="subcategory-content">
-                                <?php foreach ($category['children'] as $child): ?>
-                                    <a href="#" class="subject child-category" data-id="<?php echo $child['id']; ?>" style="padding-left: 25px;">
-                                        <div><?php echo htmlspecialchars($child['name']); ?></div>
-                                    </a>
-                                <?php endforeach; ?>
-                            </div>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
+                    <a href="#" class="subject">
+                        <div>All</div>
+                    </a>
+                    <a href="#" class="subject">
+                        <div>Electrical</div>
+                    </a>
+                    <a href="#" class="subject">
+                        <div>Home ware</div>
+                    </a>
+                    <a href="#" class="subject">
+                        <div>Fashion</div>
+                    </a>
                 </div>
             </div>
-
-
-
-
+            
             <div class="sidenav-program-section">
                 <label for="Programs & Events">Programs & Events</label>
                 <a href="#" class="subject">
@@ -102,7 +63,7 @@ error_reporting(E_ALL);
                     <div>Fashion</div>
                 </a>
             </div>
-
+            
             <div class="sidenav-setting-section">
                 <label for="categories">Settings & Helps</label>
                 <a href="#" class="subject" id="greeting">
@@ -146,15 +107,14 @@ error_reporting(E_ALL);
                         <div class="tooltip">Search</div>
                     </button>
 
-                    <!-- <div class="image-search-button" onclick="toggleUploadBox()">
+                    <div class="image-search-button" onclick="toggleUploadBox()">
                         <img src="images/icons/image-search.png" alt="Upload Icon">
                         <div class="image-upload-box" id="uploadBox">
                             <p>Search by image</p>
                             <input type="file" accept="image/*">
-                        </div> -->
-                    <!-- <div class="tooltip">Search by image</div> -->
-                    <!-- </div> -->
-
+                        </div>
+                        <!-- <div class="tooltip">Search by image</div> -->
+                    </div>
                 </div>
 
                 <div class="right-section">
@@ -177,7 +137,6 @@ error_reporting(E_ALL);
                             onclick="toggleProfilePopupBox()">
 
                         <div class="profile-popup" id="profilePopup">
-
                             <!-- <div class="top-section">
                                 <a href="signin-page.php">
                                     <button class="sigin-btn">Sign in</button>
@@ -204,7 +163,7 @@ error_reporting(E_ALL);
                             <div class="profile-mid-section">
 
 
-                                <a href="#">
+                                <a href="signin-page.php">
                                     <img src="images/icons/profile-p.png">
                                     <div>Profile</div>
                                 </a>
@@ -236,69 +195,16 @@ error_reporting(E_ALL);
             </div>
 
             <div class="bottom-bar">
-                <!-- <div class="dropdown-box">
+                <div class="dropdown-box">
                     <select name="category" id="category-dropdown">
-                       
+                        <!-- <option value="" disabled selected>All Categories</option> -->
                         <option value="all-categories">All Categories</option>
                         <option value="electronics">Electronics</option>
                         <option value="home">Home</option>
                         <option value="fashion">Fashion</option>
                         <img class="dropdown-logo" src="images/icons/category.png">
                     </select>
-                </div> -->
-
-                <!-- <div class="custom-dropdown-box">
-                    <div id="custom-category-dropdown" class="custom-dropdown">
-                        <div class="custom-dropdown-toggle">Select Category</div>
-                        <div class="custom-dropdown-content">
-                            <?php
-                            include('php-config/db-conn.php');
-
-                            // Initialize an array to store categories
-                            $categories = [];
-
-                            // Fetch all categories with their parent relationships
-                            $result = $conn->query("SELECT category_id, category_name, parent_category_id FROM category ORDER BY parent_category_id, category_name");
-
-                            // Organize categories into parent-child structure
-                            while ($row = $result->fetch_assoc()) {
-                                if ($row['parent_category_id'] === null) {
-                                    // Add parent category
-                                    $categories[$row['category_id']] = [
-                                        'name' => $row['category_name'],
-                                        'children' => []
-                                    ];
-                                } else {
-                                    // Add child category under the respective parent
-                                    if (isset($categories[$row['parent_category_id']])) {
-                                        $categories[$row['parent_category_id']]['children'][] = [
-                                            'id' => $row['category_id'],
-                                            'name' => $row['category_name']
-                                        ];
-                                    }
-                                }
-                            }
-
-                            // Display categories
-                            foreach ($categories as $parent_id => $category): ?>
-                                <div class="custom-parent-category" data-id="<?php echo $parent_id; ?>">
-                                    <span><?php echo htmlspecialchars($category['name']); ?></span>
-                                </div>
-                                <?php if (!empty($category['children'])): ?>
-                                    <div class="custom-subcategory-content" style="display: none;">
-                                        <?php foreach ($category['children'] as $child): ?>
-                                            <div class="custom-child-category" data-id="<?php echo $child['id']; ?>" style="padding-left: 15px;">
-                                                <span><?php echo htmlspecialchars($child['name']); ?></span>
-                                            </div>
-                                        <?php endforeach; ?>
-                                    </div>
-                                <?php endif; ?>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-                </div> -->
-
-
+                </div>
 
                 <div class="shortcut-links">
                     <a href="#">
@@ -335,12 +241,12 @@ error_reporting(E_ALL);
                     <img src="images/slideshow-banner/3.webp" alt="Slide 3">
                 </div>
             </div>
-
+            
             <div class="arrow-forward">
                 <img src="images/icons/arrow-forward.png" class="arrow" alt="Next">
             </div>
         </section>
-
+        
         <section class="hero">
             <div class="hero-content">
                 <h1>Welcome to&nbsp;<span><img src="images/logo/green-logo.png"></span></h1>
@@ -399,28 +305,15 @@ error_reporting(E_ALL);
                 </div>
             </div>
         </section>
-
+              
     </main>
-
-
-
+    
+    
+    
 
 
     <script src="javascript/header.js"></script>
     <script src="javascript/slideshow.js"></script>
-
-    <!-- <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.subject').forEach(function(categoryLink) {
-                categoryLink.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    const categoryId = this.getAttribute('data-id');
-                    console.log("Category clicked:", categoryId);
-                    // Future AJAX call for product loading will go here
-                });
-            });
-        });
-    </script> -->
 </body>
 
 </html>
