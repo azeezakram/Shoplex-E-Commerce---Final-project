@@ -31,6 +31,11 @@ if ($email && $password) {
             setcookie('user_id', $user_data['user_id'], time() + (86400 * 30), "/"); // 86400 = 1 day
             setcookie('user_name', $user_data['name'], time() + (86400 * 30), "/");
 
+            // Update the last_login timestamp
+            $update_stmt = $conn->prepare("UPDATE user SET last_login = NOW() WHERE user_id = ?");
+            $update_stmt->bind_param('i', $user_data['user_id']);
+            $update_stmt->execute();
+
             // Include user data in response for localStorage
             $response['success'] = true;
             $response['user_id'] = $user_data['user_id'];

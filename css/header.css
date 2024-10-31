@@ -399,6 +399,12 @@
     font-size: 14px;
 }
 
+.profile-popup .top-section .username {
+    margin-bottom: 5px;
+    font-weight: 700;
+}
+
+
 .profile-popup .profile-mid-section {
     display: flex;
     flex-direction: column;

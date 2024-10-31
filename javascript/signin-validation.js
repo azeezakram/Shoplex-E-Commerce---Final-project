@@ -1,8 +1,9 @@
+import { showSpinner, hideSpinner } from './spinner.js';
+
 // Function to toggle password visibility
 function togglePassword(id) {
     const passwordInput = document.getElementById(id);
     const eyeIcon = passwordInput.nextElementSibling.querySelector('i');
-
     if (passwordInput.type === 'password') {
         passwordInput.type = 'text';
         eyeIcon.classList.remove('fa-eye');
@@ -13,6 +14,12 @@ function togglePassword(id) {
         eyeIcon.classList.add('fa-eye');
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('toggle-password').addEventListener('click', () => {
+        togglePassword('password'); 
+    });
+});
 
 // Email Validation
 function validateEmail() {
@@ -46,12 +53,15 @@ document.getElementById('signin-form').addEventListener('submit', function(event
     if (email === '' && password === '') {
         document.getElementById('email-msg').textContent = 'Email is required';
         document.getElementById('psw-msg').textContent = 'Password is required';
+        hideSpinner();  
         return;
     } else if (email === '') {
         document.getElementById('email-msg').textContent = 'Email is required';
+        hideSpinner();  
         return;
     } else if (password === '') {
         document.getElementById('psw-msg').textContent = 'Password is required';
+        hideSpinner();  
         return;
     }
 
@@ -59,6 +69,9 @@ document.getElementById('signin-form').addEventListener('submit', function(event
     const isEmailValid = validateEmail();
 
     if (isEmailValid) {
+        // Show the spinner before making the request
+        showSpinner();
+
         // Clear previous messages
         document.getElementById('email-msg').textContent = ''; 
         document.getElementById('psw-msg').textContent = ''; 
@@ -71,11 +84,12 @@ document.getElementById('signin-form').addEventListener('submit', function(event
         })
         .then(response => response.json())
         .then(data => {
+            hideSpinner();  
+
             if (data.email_exists) {
                 if (data.success) {
                     localStorage.setItem('user_id', data.user_id);
                     localStorage.setItem('user_name', data.user_name);
-
                     window.location.href = 'home-page.php';
                 } else {
                     document.getElementById('psw-msg').textContent = 'Incorrect password.';
@@ -84,7 +98,12 @@ document.getElementById('signin-form').addEventListener('submit', function(event
                 document.getElementById('email-msg').textContent = 'Email does not exist.';
             }
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            hideSpinner();  
+            // console.error('Error:', error);
+        });
+    } else {
+        hideSpinner(); 
     }
 });
 
@@ -111,3 +130,9 @@ document.addEventListener('DOMContentLoaded', function() {
 //     // Redirect to the login page or refresh
 //     window.location.href = 'signin-page.php';
 // });
+
+
+
+
+
+

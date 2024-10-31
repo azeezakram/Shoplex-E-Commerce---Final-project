@@ -42,10 +42,24 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     if ($result->num_rows > 0) {
         echo json_encode(['status' => 'error', 'message' => 'Email already exists.']);
     } else {
+        // Insert new user
         $query = "INSERT INTO user (user_type_id, name, email, password) VALUES (?, ?, ?, ?)";
         $stmt = $conn->prepare($query);
         $stmt->bind_param("isss", $userTypeId, $fullname, $email, $password);
+
         if ($stmt->execute()) {
+            // Get the inserted user ID
+            $userId = $conn->insert_id;
+
+            // Insert into buyer table if the user type is "buyer"
+            if ($userType === 'buyer') {
+                $buyerInsert = "INSERT INTO buyer (buyer_id) VALUES (?)";
+                $stmtBuyer = $conn->prepare($buyerInsert);
+                $stmtBuyer->bind_param("i", $userId);
+                $stmtBuyer->execute();
+                $stmtBuyer->close();
+            }
+
             echo json_encode(['status' => 'success']);
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Registration failed.']);
@@ -56,8 +70,3 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $conn->close();
 }
 ?>
-
-
-
-
-

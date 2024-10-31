@@ -148,7 +148,7 @@
 
                             <div class="top-section">
                                 <?php if (isset($_SESSION['user_id'])): ?>
-                                    <span>Welcome, <?php echo $_SESSION['name']; ?></span>
+                                    <span class="username"><?php echo $_SESSION['name']; ?></span>
                                     <a href="php-config/logout.php">
                                         <button class="sigin-btn">Logout</button>
                                     </a>

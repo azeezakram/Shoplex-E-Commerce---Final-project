@@ -1,12 +1,16 @@
 
 
 * {
-    font-family: Nunito, Arial;
+    font-family: Nunito, serif;
 }
 
 body, html {
     margin: 0;
     padding: 0;
+    
+}
+
+body {
     /* width: 100vw; */
     height: 100vh;
     /* overflow: hidden; */
@@ -15,7 +19,7 @@ body, html {
 .box {
     background-color: rgb(255, 255, 255);
     padding: 50px 50px;
-    height: 100vh;   
+    height: 100%;   
 }
 
 .main-box {
@@ -23,12 +27,15 @@ body, html {
     flex-direction: column;
     justify-content: center;
     align-items: center;  
+    padding: 50px 50px;
+    /* height: 100%; */
 }
 
 .logo-container {
     display: flex;
     justify-content: start;
     width: 100%;
+    /* height: 100%; */
 }
 
 .logo-box {
@@ -43,7 +50,7 @@ body, html {
 
 .register-container, .signin-container {
     width: 100%;
-    height: 100vh;
+    /* height: 100vh; */
     display: flex;
     align-items: start;
     justify-content: center;
@@ -67,6 +74,10 @@ label {
     font-size: 40px;
     font-weight: 700;
     margin-bottom: 50px;
+}
+
+label span img {
+    height: 35px;
 }
 
 .signin-box, .register-box {
@@ -147,7 +158,6 @@ form input:focus {
     padding: 10px 30px;
     background-color: black;
     color: white;
-    margin-top: 12px;
     border-radius: 49px;
     transition: 0.45s;
     border: none;
@@ -213,40 +223,46 @@ form input:focus {
     font-weight: 600;
 }
 
-.forget-psw  {
-    margin-top: 13px; 
-}
+    /* 
+    .forget-psw  {
+        margin-top: 13px; 
+    }
 
-.forget-psw a {
-    color: gray;
-    font-size: 16px;
-}
+    .forget-psw a {
+        color: gray;
+        font-size: 16px;
+    }
 
-.forget-psw a:hover {
-    color: black;
-    font-weight: 500;
-}
+    .forget-psw a:hover {
+        color: black;
+        font-weight: 500;
+    }
 
-.remember-box {
-    display: flex;
-    align-items: center;
-    justify-content: start;
-    margin-bottom: 10px;
-}
+    .remember-box {
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        margin-bottom: 10px;
+    }
 
-.remember-box input {
-    display: flex;
-    justify-content:start;
-    width: 15px;
-    height: 15px;
-    margin: 0;
-    margin-right: 10px;
+    .remember-box input {
+        display: flex;
+        justify-content:start;
+        width: 15px;
+        height: 15px;
+        margin: 0;
+        margin-right: 10px;
 
-}
+    }
 
-.remember-box p {
-    display: flex;   
-    margin: 0;
+    .remember-box p {
+        display: flex;   
+        margin: 0;
+    } */
+
+.rights {
+    font-size: 0.8rem;
+    color: lightgray;
 }
 
 @media (max-width: 768px) {

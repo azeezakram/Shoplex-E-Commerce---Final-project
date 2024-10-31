@@ -1,3 +1,5 @@
+import { showSpinner, hideSpinner } from './spinner.js';
+
 let emailValid = false;
 let initialCheck = false;
 
@@ -15,6 +17,16 @@ function togglePassword(id) {
         eyeIcon.classList.add('fa-eye');
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('toggle-password').addEventListener('click', () => {
+        togglePassword('password'); // Toggle only the password field
+    });
+
+    document.getElementById('toggle-cPassword').addEventListener('click', () => {
+        togglePassword('cPassword'); // Toggle only the confirm password field
+    });
+});
 
 // Function to validate password requirements
 function validatePassword() {
@@ -133,10 +145,15 @@ document.getElementById('register-form').addEventListener('submit', function (ev
             return;
         }
 
+        // Show spinner
+        showSpinner(); // Call function from spinner.js to show the spinner
+
         // Redirect directly on successful registration
         const xhr = new XMLHttpRequest();
         xhr.open('POST', 'register-page.php', true);
         xhr.onload = function () {
+            // Hide spinner once the request is complete
+            hideSpinner(); // Call function from spinner.js to hide the spinner
             if (xhr.status === 200) {
                 const response = JSON.parse(xhr.responseText);
                 if (response.status === 'success') {
@@ -144,6 +161,7 @@ document.getElementById('register-form').addEventListener('submit', function (ev
                 }
             }
         };
+
         const formData = new FormData(document.getElementById('register-form'));
         xhr.send(formData);
     });
