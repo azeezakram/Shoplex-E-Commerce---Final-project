@@ -5,11 +5,10 @@ main {
     margin: 120px 20px;
 }
 
-/* Slideshow */
 .slideshow {
     display: flex;
     align-items: center;
-    justify-content: center; /* Center horizontally */
+    justify-content: center; 
     width: 100%;
     max-width: 1500px;
     height: 400px;
@@ -167,10 +166,15 @@ main {
         padding: 15px;
     }
     .slideshow {
-        height: 300px;
+        max-width: 1000px;
+        height: 200px;
     }
     .slideshow .slide {
-        height: 300px;
+        height: 200px;
+    }
+
+    .slideshow .slide img{ 
+        scale: 100%;
     }
 }
 
@@ -187,11 +191,17 @@ main {
         padding: 10px;
     }
     .slideshow {
-        height: 200px;
+        max-width: 500px;
+        height: 150px;
     }
     .slideshow .slide {
-        height: 200px;
+        height: 150px;
     }
+
+    .slideshow .slide img{ 
+        
+    }
+
     .hero-content h1 span img {
         height: 28px;
     }

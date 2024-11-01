@@ -41,7 +41,7 @@
 
 .hamburger-button {
     padding: 8px 8px;
-    margin-right: 16px;
+    margin-right: 1rem;
     border-radius: 24px;
     border: none;
     background: transparent;
@@ -493,7 +493,7 @@
     font-weight: 700;
     margin: 12px 25px;
     position: relative;
-    cursor: pointer;
+    /* cursor: pointer; */
 }
 
 .sidenav-category-section .dropdown-label::after {
@@ -529,15 +529,16 @@
     font-size: 15px;
 }
 
-.sidenav-setting-section #greeting .user-name {
+.sidenav-setting-section #greeting .username {
     font-weight: 800;
 }
 
 .sidenav-category-section .subject:hover,
 .sidenav-setting-section .subject:hover,
-.sidenav-program-section .subject:hover {
+.sidenav-program-section .subject:hover  {
     background-color: #575757;
 }
+
 
 .subcategory-content {
     display: flex;
@@ -545,15 +546,15 @@
     background-color: #444;
     padding-left: 25px;
 }
-/* asa */
+
 
 .subcategory-content {
-    display: none; /* Hide by default, can add JS toggle on click if needed */
+    display: none; 
 }
 
 .parent-category:hover + .subcategory-content,
 .subcategory-content:hover {
-    display: block; /* Show on hover */
+    display: block; 
 }
 
 .child-category {
@@ -631,6 +632,8 @@
     display: none; 
     transition: opacity 0.1s;
 }
+
+
 
 
 
@@ -722,5 +725,9 @@
     }
     .right-button {
         margin-bottom: 10px;
+    }
+
+    .hamburger-button {
+        margin-right: 0rem;
     }
 }

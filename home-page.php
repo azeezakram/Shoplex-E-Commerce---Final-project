@@ -1,7 +1,7 @@
 <?php
+ini_set('session.cookie_lifetime', 60 * 60 * 24 * 365);
+ini_set('session.gc-maxlifetime', 60 * 60 * 24 * 365);
 session_start();
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 ?>
 
@@ -105,22 +105,49 @@ error_reporting(E_ALL);
 
             <div class="sidenav-setting-section">
                 <label for="categories">Settings & Helps</label>
-                <a href="#" class="subject" id="greeting">
-                    <p class="hi-txt">Hi,&#xA0;</p>
-                    <p class="user-name"> Abdul Azeez</p>
-                </a>
-                <a href="#" class="subject">
-                    <div>Profile</div>
-                </a>
-                <a href="#" class="subject">
-                    <div>Cart</div>
-                </a>
-                <a href="#" class="subject">
-                    <div>Orders</div>
-                </a>
-                <a href="#" class="subject">
-                    <div>Log out</div>
-                </a>
+
+
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <div class="subject" id="greeting">
+                        <span class="username">Hi,&#xA0;<?php echo $_SESSION['name']; ?></span>
+                    </div>
+                <?php else: ?>
+                    <a href="signin-page.php" class="subject">
+                        <div>Sign in</div>
+                    </a>
+                    <a href="register-page.html" class="subject">
+                        <div>Register</div>
+                    </a>
+                <?php endif; ?>
+
+
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <a href="#" class="subject">
+                        <div>Profile</div>
+                    </a>
+                    <a href="#" class="subject">
+                        <div>Cart</div>
+                    </a>
+                    <a href="#" class="subject">
+                        <div>Orders</div>
+                    </a>
+                <?php else: ?>
+                    <a href="signin-page.php" class="subject">
+                        <div>Profile</div>
+                    </a>
+                    <a href="signin-page.php" class="subject">
+                        <div>Cart</div>
+                    </a>
+                    <a href="signin-page.php" class="subject">
+                        <div>Orders</div>
+                    </a>
+                <?php endif; ?>
+
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <a href="php-config/logout.php" class="subject">
+                        <div>Log out</div>
+                    </a>
+                <?php endif; ?>
             </div>
         </div>
 
@@ -158,19 +185,48 @@ error_reporting(E_ALL);
                 </div>
 
                 <div class="right-section">
-                    <div class="right-button" id="cart-button">
-                        <img class="cart-icon" src="images/icons/cart.png">
-                        <div class="tooltip">Cart</div>
-                    </div>
-                    <div class="right-button" id="order-button">
-                        <img class="order-icon" src="images/icons/order.png">
-                        <div class="tooltip">Order</div>
-                    </div>
-                    <div class="right-button" id="notfication-button">
-                        <img class="notfications-icon" src="images/icons/notification.png">
-                        <div class="notfication-count">5</div>
-                        <div class="tooltip">Notification</div>
-                    </div>
+                    <?php if (isset($_SESSION['user_id'])): ?>
+                        <div class="right-button" id="cart-button">
+                            <a href="#">
+                                <img class="cart-icon" src="images/icons/cart.png">
+                                <div class="tooltip">Cart</div>
+                            </a>
+                        </div>
+                        <div class="right-button" id="order-button">
+                            <a href="#">
+                                <img class="order-icon" src="images/icons/order.png">
+                                <div class="tooltip">Order</div>
+                            </a>
+                        </div>
+                        <div class="right-button" id="notfication-button">
+                            <a href="#">
+                                <img class="notfications-icon" src="images/icons/notification.png">
+                                <div class="notfication-count">5</div>
+                                <div class="tooltip">Notification</div>
+                            </a>
+                        </div>
+                    <?php else: ?>
+                        <div class="right-button" id="cart-button">
+                            <a href="signin-page.php">
+                                <img class="cart-icon" src="images/icons/cart.png">
+                                <div class="tooltip">Cart</div>
+                            </a>
+                        </div>
+                        <div class="right-button" id="order-button">
+                            <a href="signin-page.php">
+                                <img class="order-icon" src="images/icons/order.png">
+                                <div class="tooltip">Order</div>
+                            </a>
+                        </div>
+                        <div class="right-button" id="notfication-button">
+                            <a href="signin-page.php">
+                                <img class="notfications-icon" src="images/icons/notification.png">
+                                <div class="notfication-count">5</div>
+                                <div class="tooltip">Notification</div>
+                            </a>
+                        </div>
+                    <?php endif; ?>
+
                     <div class="right-button" id="profileButton">
 
                         <img class="current-user-picture" src="images/icons/profile.png"
@@ -203,32 +259,60 @@ error_reporting(E_ALL);
 
                             <div class="profile-mid-section">
 
+                                <?php if (isset($_SESSION['user_id'])): ?>
+                                    <a href="#">
+                                        <img src="images/icons/profile-p.png">
+                                        <div>Profile</div>
+                                    </a>
 
-                                <a href="#">
-                                    <img src="images/icons/profile-p.png">
-                                    <div>Profile</div>
-                                </a>
+                                    <a href="#">
+                                        <img src="images/icons/cart.png">
+                                        <div>Cart</div>
+                                    </a>
+                                    <a href="#">
+                                        <img src="images/icons/order.png">
+                                        <div>Orders</div>
+                                    </a>
+                                    <a href="#">
+                                        <img src="images/icons/wishlist.png">
+                                        <div>Wishlist</div>
+                                    </a>
+                                    <a href="#">
+                                        <img src="images/icons/message-center.png">
+                                        <div>Message Center</div>
+                                    </a>
+                                    <a href="#">
+                                        <img src="images/icons/about-us.png">
+                                        <div>About</div>
+                                    </a>
+                                <?php else: ?>
+                                    <a href="signin-page.php">
+                                        <img src="images/icons/profile-p.png">
+                                        <div>Profile</div>
+                                    </a>
 
-                                <a href="#">
-                                    <img src="images/icons/cart.png">
-                                    <div>Cart</div>
-                                </a>
-                                <a href="#">
-                                    <img src="images/icons/order.png">
-                                    <div>My Orders</div>
-                                </a>
-                                <a href="#">
-                                    <img src="images/icons/payment.png">
-                                    <div>Payment</div>
-                                </a>
-                                <a href="#">
-                                    <img src="images/icons/message-center.png">
-                                    <div>Message Center</div>
-                                </a>
-                                <a href="#">
-                                    <img src="images/icons/about-us.png">
-                                    <div>About</div>
-                                </a>
+                                    <a href="signin-page.php">
+                                        <img src="images/icons/cart.png">
+                                        <div>Cart</div>
+                                    </a>
+                                    <a href="signin-page.php">
+                                        <img src="images/icons/order.png">
+                                        <div>Orders</div>
+                                    </a>
+                                    <a href="signin-page.php">
+                                        <img src="images/icons/wishlist.png">
+                                        <div>Wishlist</div>
+                                    </a>
+                                    <a href="signin-page.php">
+                                        <img src="images/icons/message-center.png">
+                                        <div>Message Center</div>
+                                    </a>
+                                    <a href="signin-page.php">
+                                        <img src="images/icons/about-us.png">
+                                        <div>About</div>
+                                    </a>
+                                <?php endif; ?>
+
                             </div>
                         </div>
                     </div>
@@ -298,16 +382,25 @@ error_reporting(E_ALL);
                     </div>
                 </div> -->
 
-
-
                 <div class="shortcut-links">
-                    <a href="#">
-                        <div>Today's Deals</div>
-                    </a>
+                    <?php if (isset($_SESSION['user_id'])): ?>
+                        <a href="#">
+                            <div>Today's Deals</div>
+                        </a>
 
-                    <a href="#">
-                        <div>Customer Service</div>
-                    </a>
+                        <a href="#">
+                            <div>Customer Service</div>
+                        </a>
+
+                    <?php else: ?>
+                        <a href="signin-page.php">
+                            <div>Today's Deals</div>
+                        </a>
+
+                        <a href="signin-page.php">
+                            <div>Customer Service</div>
+                        </a>
+                    <?php endif; ?>
 
                     <a href="#">
                         <div>
@@ -315,6 +408,7 @@ error_reporting(E_ALL);
                         </div>
                     </a>
                 </div>
+
             </div>
         </div>
     </nav>
@@ -361,9 +455,9 @@ error_reporting(E_ALL);
                     <!-- <a href="#support" class="service-link">Learn More</a> -->
                 </div>
                 <div class="service-card">
-                    <img src="images/services/return.png" alt="Easy Returns" class="service-icon">
-                    <h3>Easy Returns</h3>
-                    <p>Hassle-free returns within 30 days of purchase.</p>
+                    <img src="images/services/bid.png" alt="Bid" class="service-icon">
+                    <h3>Place bids</h3>
+                    <p>You can place bids for auction products.</p>
                     <!-- <a href="#returns" class="service-link">Learn More</a> -->
                 </div>
                 <div class="service-card">
@@ -376,29 +470,82 @@ error_reporting(E_ALL);
         </section>
 
         <section class="products-grid">
-            <div>
-                <div>
-                    <div>
-                        <img src="" alt="">
-                    </div>
-                    <div>
-                        <div>
-                            <p>Wireless keyboard</p>
-                        </div>
-                        <div class="star-rating">
-                            <span class="star filled">★</span>
-                            <span class="star filled">★</span>
-                            <span class="star filled">★</span>
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                        </div>
-                        <div class="star-rating">
-                            <p>LKR.3000</p>
-                        </div>
-                    </div>
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="images/product-images/console.jpg" alt="Product Image" class="product-img">
+                </div>
+                <h2 class="product-name">Gaming Console</h2>
+                <div class="rating">
+                    <span class="stars">★★★★☆</span>
+                    <span class="review-count">(120 reviews)</span>
+                </div>
+                <div class="price">
+                    <span class="discounted-price">$99.99</span>
+                    <span class="original-price">$129.99</span>
+                    <span class="discount-badge">23% off</span>
+                </div>
+                <div class="shipping">
+                    <span>Shipping Fee: $5.00</span>
+                </div>
+                <div class="stock-status">
+                    <span>Stock: In Stock</span>
+                </div>
+                <div class="see-more">
+                    <span>See More</span>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="images/product-images/console.webp" alt="Product Image" class="product-img">
+                </div>
+                <h2 class="product-name">Gaming Console</h2>
+                <div class="rating">
+                    <span class="stars">★★★★☆</span>
+                    <span class="review-count">(120 reviews)</span>
+                </div>
+                <div class="price">
+                    <span class="discounted-price">$99.99</span>
+                    <span class="original-price">$129.99</span>
+                    <span class="discount-badge">23% off</span>
+                </div>
+                <div class="shipping">
+                    <span>Shipping Fee: $5.00</span>
+                </div>
+                <div class="stock-status">
+                    <span>Stock: In Stock</span>
+                </div>
+                <div class="see-more">
+                    <span>See More</span>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="images/product-images/console2.jpg" alt="Product Image" class="product-img">
+                </div>
+                <h2 class="product-name">Gaming Console</h2>
+                <div class="rating">
+                    <span class="stars">★★★★☆</span>
+                    <span class="review-count">(120 reviews)</span>
+                </div>
+                <div class="price">
+                    <span class="discounted-price">$99.99</span>
+                    <span class="original-price">$129.99</span>
+                    <span class="discount-badge">23% off</span>
+                </div>
+                <div class="shipping">
+                    <span>Shipping Fee: $5.00</span>
+                </div>
+                <div class="stock-status">
+                    <span>Stock: In Stock</span>
+                </div>
+                <div class="see-more">
+                    <span>See More</span>
                 </div>
             </div>
         </section>
+
 
     </main>
 
@@ -407,20 +554,10 @@ error_reporting(E_ALL);
 
 
     <script src="javascript/header.js"></script>
+    <script src="javascript/signin-validation.js"></script>
     <script src="javascript/slideshow.js"></script>
 
-    <!-- <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.subject').forEach(function(categoryLink) {
-                categoryLink.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    const categoryId = this.getAttribute('data-id');
-                    console.log("Category clicked:", categoryId);
-                    // Future AJAX call for product loading will go here
-                });
-            });
-        });
-    </script> -->
+
 </body>
 
 </html>

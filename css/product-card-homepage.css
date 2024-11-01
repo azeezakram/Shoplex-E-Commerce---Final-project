@@ -1,23 +1,120 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+}
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Minimum width of 280px */
+    gap: 15px; /* Spacing between product cards */
+    padding: 20px; /* Padding around the grid */
+}
+
 .product-card {
-    width: 200px;
-    padding: 20px;
-    border: 1px solid #ccc;
+    background: white;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Softer shadow for a compact feel */
+    padding: 15px; /* Reduced padding */
+    max-width: 280px; /* Reduce max-width for a smaller card */
+    margin: 0 auto; /* Center card horizontally */
     text-align: center;
+    position: relative;
 }
 
-.star-rating {
-    display: flex;
-    justify-content: center;
-    margin: 10px 0;
+.product-image {
+    width: 100%;
+    height: 0; /* Remove height */
+    padding-top: 100%; /* Create a square aspect ratio */
+    position: relative;
+    overflow: hidden; /* Prevent overflow */
+    border-radius: 8px; /* Optional for rounded corners */
 }
 
-.star {
-    font-size: 24px;
-    color: #ddd; /* Default color for empty stars */
+.product-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%; /* Use full width */
+    height: 100%; /* Use full height */
+    object-fit: cover; /* Ensures the image covers the area */
 }
 
-.star.filled {
-    color: #f5c518; /* Color for filled stars */
+.product-name {
+    font-size: 0.9em; /* Further reduced font size */
+    margin: 8px 0; /* Reduced margin */
+}
+
+.rating {
+    font-size: 0.8em; /* Slightly smaller */
+    color: #888;
+}
+
+.price {
+    margin: 12px 0; /* Reduced margin */
+}
+
+.discounted-price {
+    font-size: 1.1em; /* Slightly smaller */
+    color: #e74c3c; /* Red for discounted price */
+}
+
+.original-price {
+    text-decoration: line-through;
+    color: #888; /* Gray for original price */
+    margin-left: 5px; /* Reduced margin */
+}
+
+.discount-badge {
+    background: #f39c12; /* Orange for discount badge */
+    color: white;
+    border-radius: 5px;
+    padding: 2px 6px; /* Slightly smaller padding */
+    margin-left: 5px; /* Reduced margin */
+}
+
+.shipping,
+.stock-status {
+    font-size: 0.8em; /* Slightly smaller */
+    color: #555;
+}
+
+.add-to-cart,
+.wishlist {
+    background-color: #3498db; /* Blue for buttons */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px; /* Reduced padding */
+    cursor: pointer;
+    margin: 5px 0;
+    width: 100%;
+    font-size: 0.9em; /* Slightly smaller */
+}
+
+.add-to-cart:hover,
+.wishlist:hover {
+    background-color: #2980b9; /* Darker blue on hover */
+}
+
+.see-more {
+    color: #3498db;
+    font-size: 0.8em; /* Slightly smaller */
+    cursor: pointer;
+    margin-top: 8px; /* Reduced margin */
+}
+
+.share-icons {
+    margin-top: 8px; /* Reduced margin */
+    font-size: 0.8em; /* Slightly smaller */
+    color: #555;
+}
+
+.share-icon {
+    margin: 0 3px; /* Reduced margin */
+    color: #3498db; /* Blue for share icons */
+    text-decoration: none;
+}
+
+.share-icon:hover {
+    text-decoration: underline;
 }

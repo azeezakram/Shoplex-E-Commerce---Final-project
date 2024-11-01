@@ -70,10 +70,11 @@ form {
 }
 
 label {
-    color: black;
+    color: rgb(0, 0, 0);
     font-size: 40px;
-    font-weight: 700;
+    font-weight: 300;
     margin-bottom: 50px;
+    /* border-bottom: 2px solid rgb(51, 90, 2); */
 }
 
 label span img {
