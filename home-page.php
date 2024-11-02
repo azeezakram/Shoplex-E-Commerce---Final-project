@@ -435,7 +435,7 @@ error_reporting(E_ALL);
             </div>
         </section>
 
-        <section class="hero">
+        <!-- <section class="hero">
             <div class="hero-content">
                 <h1>Welcome to&nbsp;<span><img src="images/logo/green-logo.png"></span></h1>
                 <p>Your one-stop shop for everything!</p>
@@ -446,28 +446,28 @@ error_reporting(E_ALL);
                     <img src="images/services/shipping.png" alt="Free Shipping" class="service-icon">
                     <h3>Free Shipping</h3>
                     <p>Enjoy free shipping on orders over LKR.3000</p>
-                    <!-- <a href="#shipping" class="service-link">Learn More</a> -->
+                  
                 </div>
                 <div class="service-card">
                     <img src="images/services/247.png" alt="24/7 Support" class="service-icon">
                     <h3>24/7 Support</h3>
                     <p>Our support team is available 24/7 to assist you.</p>
-                    <!-- <a href="#support" class="service-link">Learn More</a> -->
+                   
                 </div>
                 <div class="service-card">
                     <img src="images/services/bid.png" alt="Bid" class="service-icon">
                     <h3>Place bids</h3>
                     <p>You can place bids for auction products.</p>
-                    <!-- <a href="#returns" class="service-link">Learn More</a> -->
+                   
                 </div>
                 <div class="service-card">
                     <img src="images/services/payment.png" alt="Secure Payments" class="service-icon">
                     <h3>Secure Payments</h3>
                     <p>Your payments are safe and secure with us.</p>
-                    <!-- <a href="#payments" class="service-link">Learn More</a> -->
+                    
                 </div>
             </div>
-        </section>
+        </section> -->
 
         <section class="products-grid">
             <div class="product-card">
