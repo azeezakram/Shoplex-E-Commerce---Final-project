@@ -1,7 +1,7 @@
 
 
 * {
-    font-family: Nunito, serif;
+    font-family: Nunito, Segoe UI;
 }
 
 body, html {
@@ -45,7 +45,7 @@ body {
 }
 
 .logo-box .logo {
-    width: 170px;
+    width: 255px;
 }
 
 .register-container, .signin-container {

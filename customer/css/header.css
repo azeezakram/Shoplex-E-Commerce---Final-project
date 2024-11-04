@@ -125,7 +125,6 @@
 }
 
 .search-button .tooltip,
-.image-search-button .tooltip,
 #cart-button .tooltip,
 #order-button .tooltip,
 #notfication-button .tooltip {
@@ -142,11 +141,11 @@
 }
 
 .search-button:hover .tooltip,
-.image-search-button:hover .tooltip,
 #cart-button:hover .tooltip,
 #order-button:hover .tooltip,
 #notfication-button:hover .tooltip {
     opacity: 1;
+    color: black;
 }
 
 .image-search-button {

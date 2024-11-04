@@ -402,11 +402,11 @@ error_reporting(E_ALL);
                         </a>
                     <?php endif; ?>
 
-                    <a href="#">
+                    <!-- <a href="#">
                         <div>
                             Sell
                         </div>
-                    </a>
+                    </a> -->
                 </div>
 
             </div>

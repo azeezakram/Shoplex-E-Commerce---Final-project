@@ -13,13 +13,13 @@ function showSlide(index) {
 
 // Function to go to the next slide
 function nextSlide() {
-    currentSlideIndex = (currentSlideIndex + 1) % slides.length; 
+    currentSlideIndex = (currentSlideIndex + 1) % slides.length;
     showSlide(currentSlideIndex);
 }
 
 // Function to go to the previous slide
 function prevSlide() {
-    currentSlideIndex = (currentSlideIndex - 1 + slides.length) % slides.length; 
+    currentSlideIndex = (currentSlideIndex - 1 + slides.length) % slides.length;
     showSlide(currentSlideIndex);
 }
 
