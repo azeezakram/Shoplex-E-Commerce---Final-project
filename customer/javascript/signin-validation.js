@@ -90,7 +90,7 @@ document.getElementById('signin-form').addEventListener('submit', function(event
                 if (data.success) {
                     localStorage.setItem('user_id', data.user_id);
                     localStorage.setItem('user_name', data.user_name);
-                    window.location.href = 'home-page.php';
+                    window.location.href = 'index.php';
                 } else {
                     document.getElementById('psw-msg').textContent = 'Incorrect password.';
                 }

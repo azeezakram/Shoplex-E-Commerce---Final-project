@@ -36,7 +36,7 @@ header("Pragma: no-cache");
         <div class="main-box">
             <div class="logo-container">
                 <div class="logo-box">
-                    <a href="home-page.php"><img class="logo" src="images/logo/green-logo.png"></a>
+                    <a href="index.php"><img class="logo" src="images/logo/green-logo.png"></a>
                 </div>
             </div>
             <div class="signin-container">
