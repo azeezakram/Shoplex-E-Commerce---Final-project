@@ -1,9 +1,4 @@
-main {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    margin: 120px 20px;
-}
+
 
 .slideshow {
     display: flex;
@@ -198,9 +193,9 @@ main {
         height: 150px;
     }
 
-    .slideshow .slide img{ 
+    /* .slideshow .slide img{ 
         
-    }
+    } */
 
     .hero-content h1 span img {
         height: 28px;

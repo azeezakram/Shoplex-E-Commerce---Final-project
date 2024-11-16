@@ -1,4 +1,5 @@
 <?php
+include('php-config/db-conn.php');
 ini_set('session.cookie_lifetime', 60 * 60 * 24 * 365);
 ini_set('session.gc-maxlifetime', 60 * 60 * 24 * 365);
 session_start();
@@ -41,8 +42,6 @@ error_reporting(E_ALL);
                 <label for="categories" class="dropdown-label">Categories</label>
                 <div class="dropdown-content">
                     <?php
-                    include('php-config/db-conn.php');
-
                     // Initialize an array to store categories
                     $categories = [];
 
@@ -420,17 +419,15 @@ error_reporting(E_ALL);
             </div>
             <div class="slideshow-image-box">
                 <div class="slide">
-                    <img src="images/slideshow/1.png" alt="Slide 1">
+                    <img src="../images/slideshow-banner/1.jpg" alt="Slide 1">
                 </div>
                 <div class="slide">
-                    <img src="images/slideshow/2.png" alt="Slide 2">
+                    <img src="../images/slideshow-banner/1.jpg" alt="Slide 2">
                 </div>
                 <div class="slide">
-                    <img src="images/slideshow/3.jpg" alt="Slide 3">
+                    <img src="../images/slideshow-banner/3.png" alt="Slide 3">
                 </div>
-                <div class="slide">
-                    <img src="images/slideshow/4.webp" alt="Slide 3">
-                </div>
+
             </div>
 
             <div class="arrow-forward">
@@ -473,82 +470,218 @@ error_reporting(E_ALL);
         </section> -->
 
         <section class="products-grid">
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="images/product-images/console.jpg" alt="Product Image" class="product-img">
-                </div>
-                <h2 class="product-name">Gaming Console</h2>
-                <div class="rating">
-                    <span class="stars">★★★★☆</span>
-                    <span class="review-count">(120 reviews)</span>
-                </div>
-                <div class="price">
-                    <span class="discounted-price">$99.99</span>
-                    <span class="original-price">$129.99</span>
-                    <span class="discount-badge">23% off</span>
-                </div>
-                <div class="shipping">
-                    <span>Shipping Fee: $5.00</span>
-                </div>
-                <div class="stock-status">
-                    <span>Stock: In Stock</span>
-                </div>
-                <div class="see-more">
-                    <span>See More</span>
+            <?php
+            $sql = "SELECT * FROM product";
+
+            $productsResult = $conn->query($sql);
+            ?>
+
+            <?php
+            if ($productsResult->num_rows > 0) {
+                while ($row = $productsResult->fetch_assoc()) {
+            ?>
+
+                    <div class="product-card">
+                        <p class="product-id" hidden><?php $row["product_id"]; ?></p>
+
+                        <div class="product-image">
+                            <?php
+                            $productId = (int)$row["product_id"];
+                            $sql = "SELECT picture_path FROM product_picture WHERE product_id = $productId AND default_picture = 1";
+
+                            $productPictureResult = $conn->query($sql);
+
+
+                            if ($productPictureResult && $productPictureResult->num_rows > 0) {
+
+                                $pictureRow = $productPictureResult->fetch_assoc();
+                                $picturePath = $pictureRow['picture_path'];
+                            } else {
+
+                                $picturePath = 'images\product-images\no_picture.jpg';
+                            }
+                            ?>
+                            <a href="signin-page.php"><img src="<?php echo "../" . $picturePath; ?>" alt="Product Image" class="product-img"></a>
+                        </div>
+                        <div class="product-details">
+                            <a href="signin-page.php">
+                                <h2 class="product-name"><?php echo $row["product_name"]; ?></h2>
+                                <div class="rating">
+                                    <?php
+                                    $productId = (int)$row["product_id"];
+                                    $sql = "SELECT * FROM product_review WHERE product_id = $productId";
+
+                                    $reviewResult = $conn->query($sql);
+
+
+                                    $totalRating = 0;
+                                    $count = 0;
+
+
+                                    if ($reviewResult && $reviewResult->num_rows > 0) {
+                                        while ($reviewRow = $reviewResult->fetch_assoc()) {
+                                            $totalRating += (int)$reviewRow["rating"];
+                                            $count++;
+                                        }
+
+                                        $productRating = $totalRating / $count;
+
+                                        for ($i = 1; $i <= 5; $i++) {
+                                            if ($i <= $productRating) {
+                                                echo '<span class="fa fa-star checked"></span>';
+                                            } else {
+                                                echo '<span class="fa fa-star"></span>';
+                                            }
+                                        }
+                                        echo '<span class="review-count">(' . $count . ' reviews)</span>';
+                                    } else {
+                                        echo '
+                                            <span class="fa fa-star"></span>
+                                            <span class="fa fa-star"></span>
+                                            <span class="fa fa-star"></span>
+                                            <span class="fa fa-star"></span>
+                                            <span class="fa fa-star"></span>
+                                            <span class="review-count">(0 reviews)</span>
+                                        ';
+                                    }
+                                    ?>
+                                </div>
+                                <div class="price">
+                                    <span class="discounted-price">
+                                        <?php
+                                        $discount = 0;
+                                        if ((float)$row["discount"] > 0) {
+                                            $discount = (float)$row["discount"];
+                                        }
+
+                                        $price = (float)$row["price"];
+                                        $discountPrice = number_format($price - ($price * $discount), 2);
+                                        echo "LKR. " . $discountPrice;
+                                        ?>
+                                    </span>
+
+                                    <?php if ((float)$row["discount"] > 0): ?>
+                                        <span class="original-price">
+                                            LKR. <?php echo number_format($price, 2); ?>
+                                        </span>
+                                        <span class="discount-badge">
+                                            <?php echo $discount * 100; ?>% off
+                                        </span>
+                                    <?php endif; ?>
+                                </div>
+
+                                <div class="shipping">
+                                    <span>
+                                        <?php
+                                        if ((float)$row["shipping_fee"] > 0) {
+                                            echo "Shipping Fee: LKR." . $row["shipping_fee"];
+                                        } else {
+                                            echo "Free Shipping";
+                                        }
+
+                                        ?>
+                                    </span>
+                                </div>
+                                <div class="stock-status">Availability:
+                                    <span>
+                                        <?php
+                                        if ((int)$row["stock"] > 10) {
+                                            echo "In Stock";
+                                        } else {
+                                            echo $row["stock"];
+                                        }
+
+                                        ?>
+                                    </span>
+                                </div>
+                            </a>
+                            <div class="buttons">
+
+                                <?php
+                                if ((int)$row["bid_activate"] == 1) {
+                                    echo '<button id="placeBidBtn" class="place-bid" style="display: block;"data-product-id="' . $row['product_id'] . '">Place Bid</button>';
+                                    echo '<button class="add-to-cart" style="display: none;" data-product-id="' . $row['product_id'] . '">Add to Cart</button>';
+                                    echo '<button class="buy-now" style="display: none;" data-product-id="' . $row['product_id'] . '">Buy Now</button>';
+                                } else {
+                                    echo '<button class="add-to-cart" data-product-id="' . $row['product_id'] . '">Add to Cart</button>';
+                                    echo '<button id="addToCartBtn" class="buy-now" data-product-id="' . $row['product_id'] . '">Buy Now</button>';
+                                    echo '<button id="buyNowBtn" class="place-bid" style="display: none;" data-product-id="' . $row['product_id'] . '">Place Bid</button>';
+                                }
+                                ?>
+
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+            <?php
+                }
+            } else {
+                echo "No products found.";
+            }
+            ?>
+
+
+
+            <div id="product-preview-modal" class="modal">
+                <div class="modal-content">
+                    <!-- Close Button -->
+                    <span class="close-button">&times;</span>
+
+                    <div class="modal-body">
+                        <!-- Left Section - Product Image -->
+                        <div class="modal-left">
+                            <div id="carousel-container">
+                                <div class="carousel"></div>
+                                <button id="prev-btn" class="carousel-btn">&#8249;</button>
+                                <button id="next-btn" class="carousel-btn">&#8250;</button>
+                            </div>
+                        </div>
+
+                        <!-- Right Section - Product Details -->
+                        <div class="modal-middle">
+                            <h2 id="modal-product-name">Product Name</h2>
+                            <div id="modal-product-description"></div>
+
+                            <div id="modal-product-rating"></div>
+                            <!-- Add Rating Star/Icons Here -->
+
+                            <!-- Price Section -->
+                            <div class="price">
+                                <span id="modal-discounted-price">LKR. 1000</span>
+                                <span id="modal-original-price">LKR. 1500</span>
+                                <span id="modal-discount-badge">20% off</span>
+                            </div>
+
+                            <!-- Stock and Shipping Section -->
+                            <div class="stock-shipping">
+                                <p class="stock-info" id="modal-stock-info">Stock: 10 available</p>
+                                <p class="shipping-info" id="modal-shipping-info">Shipping Fee: LKR. 200</p>
+                            </div>
+
+                            <!-- Quantity Controller -->
+                            <div class="quantity-controller">
+                                <button id="decrease-quantity">-</button>
+                                <input type="text" id="quantity-input" value="1" min="1" disabled />
+                                <button id="increase-quantity">+</button>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="action-buttons">
+                                <button id="custom-add-to-cart" class="custom-button">Add to Cart</button>
+                                <button id="custom-buy-now" class="custom-button custom-buy-now">Buy Now</button>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="images/product-images/console.webp" alt="Product Image" class="product-img">
-                </div>
-                <h2 class="product-name">Gaming Console</h2>
-                <div class="rating">
-                    <span class="stars">★★★★☆</span>
-                    <span class="review-count">(120 reviews)</span>
-                </div>
-                <div class="price">
-                    <span class="discounted-price">$99.99</span>
-                    <span class="original-price">$129.99</span>
-                    <span class="discount-badge">23% off</span>
-                </div>
-                <div class="shipping">
-                    <span>Shipping Fee: $5.00</span>
-                </div>
-                <div class="stock-status">
-                    <span>Stock: In Stock</span>
-                </div>
-                <div class="see-more">
-                    <span>See More</span>
-                </div>
-            </div>
 
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="images/product-images/console2.jpg" alt="Product Image" class="product-img">
-                </div>
-                <h2 class="product-name">Gaming Console</h2>
-                <div class="rating">
-                    <span class="stars">★★★★☆</span>
-                    <span class="review-count">(120 reviews)</span>
-                </div>
-                <div class="price">
-                    <span class="discounted-price">$99.99</span>
-                    <span class="original-price">$129.99</span>
-                    <span class="discount-badge">23% off</span>
-                </div>
-                <div class="shipping">
-                    <span>Shipping Fee: $5.00</span>
-                </div>
-                <div class="stock-status">
-                    <span>Stock: In Stock</span>
-                </div>
-                <div class="see-more">
-                    <span>See More</span>
-                </div>
-            </div>
+
         </section>
-
 
     </main>
 
@@ -559,7 +692,7 @@ error_reporting(E_ALL);
     <script src="javascript/header.js"></script>
     <script src="javascript/signin-validation.js"></script>
     <script src="javascript/slideshow.js"></script>
-
+    <script src="javascript/product-preview.js"></script>
 
 </body>
 
