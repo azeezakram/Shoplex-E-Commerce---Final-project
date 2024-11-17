@@ -1,8 +1,8 @@
 <?php 
-    $host = 'localhost';
-    $username = 'root';
+    $host = "localhost";
+    $username = "root";
     $psw = '';
-    $db_name = 'shoplex_db';
+    $db_name = "shoplex_db";
     $conn = mysqli_connect($host, $username, $psw, $db_name);
 
     if (!$conn) {
