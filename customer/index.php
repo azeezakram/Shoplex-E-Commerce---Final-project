@@ -229,10 +229,7 @@ error_reporting(E_ALL);
                     <div class="right-button" id="profileButton">
 
                         <img class="current-user-picture" src="images/icons/profile.png"
-                            
-                            onclick="window.location.href='profile.php'" 
-                            onclick="toggleProfilePopupBox()"
-                            >
+                            onclick="toggleProfilePopupBox()">
 
                         <div class="profile-popup" id="profilePopup">
 
