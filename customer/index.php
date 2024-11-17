@@ -533,6 +533,7 @@ error_reporting(E_ALL);
                                                 echo '<span class="fa fa-star"></span>';
                                             }
                                         }
+                                        echo '<span class="rating-point">(' . number_format($productRating, 1) . ')</span>';
                                         echo '<span class="review-count">(' . $count . ' reviews)</span>';
                                     } else {
                                         echo '
@@ -541,6 +542,7 @@ error_reporting(E_ALL);
                                             <span class="fa fa-star"></span>
                                             <span class="fa fa-star"></span>
                                             <span class="fa fa-star"></span>
+                                            <span class="rating-point">(0.0)</span>
                                             <span class="review-count">(0 reviews)</span>
                                         ';
                                     }

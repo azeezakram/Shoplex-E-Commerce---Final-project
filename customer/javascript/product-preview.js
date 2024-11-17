@@ -2,11 +2,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const modal = document.getElementById("product-preview-modal");
     const carousel = document.querySelector(".carousel");
     let currentIndex = 0;
+    let productId = 0;
 
     // Event listener for Add to Cart and Buy Now buttons
     document.querySelectorAll(".add-to-cart, .buy-now").forEach((button) => {
         button.addEventListener("click", function () {
-            const productId = this.dataset.productId;
+            productId = this.dataset.productId;
 
             if (!productId) {
                 alert("Invalid product ID.");
@@ -25,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 })
                 .then((data) => {
                     if (data.success) {
-                        console.log(JSON.stringify(data));
+                        // console.log(JSON.stringify(data));
                         // Populate modal
                         document.getElementById("modal-product-name").textContent = data.product_name;
                         data.description == null ? document.getElementById("modal-product-description").textContent = "No description" : document.getElementById("modal-product-description").textContent = data.description;;
@@ -144,8 +145,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         if (!addToCartButton || !buyNowButton) {
                             console.error("Custom buttons not found in the DOM.");
                         } else {
-                            console.log("Custom Add to Cart Button: ", window.getComputedStyle(addToCartButton).display);
-                            console.log("Custom Buy Now Button: ", window.getComputedStyle(buyNowButton).display);
+                            // console.log("Custom Add to Cart Button: ", window.getComputedStyle(addToCartButton).display);
+                            // console.log("Custom Buy Now Button: ", window.getComputedStyle(buyNowButton).display);
 
                             // Make buttons visible
                             addToCartButton.style.display = "inline-block";
@@ -254,30 +255,67 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Close modal
     document.querySelector(".close-button").addEventListener("click", () => {
+        // Close the modal
         modal.style.display = "none";
+    
+        // Reset quantity input
+        const quantityInput = document.getElementById("quantity-input");
+        const increaseButton = document.getElementById("increase-quantity");
+        const decreaseButton = document.getElementById("decrease-quantity");
+    
+        if (quantityInput && increaseButton && decreaseButton) {
+            // Reset quantity value
+            quantityInput.value = "1";
+    
+            // Reset button states
+            increaseButton.disabled = false; // Enable the increase button
+            increaseButton.style.pointerEvents = "auto";
+            increaseButton.style.opacity = "1";
+    
+            decreaseButton.disabled = true; // Disable the decrease button
+            decreaseButton.style.pointerEvents = "none";
+            decreaseButton.style.opacity = "0.6";
+        } else {
+            console.warn("Quantity input or control buttons not found.");
+        }
     });
+    
+    
 
 
     
     
     document.getElementById("custom-add-to-cart").addEventListener("click", () => {
+        alert("Clicked");
         
-        const productId = button.dataset.productId;
+        // const productId = button.dataset.productId;
         const quantity = document.getElementById("quantity-input").value;
 
         if (!productId || !quantity || quantity <= 0) {
             alert("Invalid product or quantity.");
             return;
         }
-
-        fetch('other-php/add_to_cart.php', {
+        alert("Processeing");
+        fetch('other-php/add-to-cart.php', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
+                'Content-Type': 'application/x-www-form-urlencoded',
             },
-            body: `product_id=${productId}&quantity=${quantity}`
+            body: `product_id=${productId}&quantity=${quantity}`,
         })
-            .then((response) => response.json())
+            .then((response) => {
+                // console.log("Response received:", response);
+                
+                // Check if the response is not JSON
+                if (!response.ok || !response.headers.get('content-type')?.includes('application/json')) {
+                    return response.text().then(text => {
+                        console.error("Received non-JSON response:", text);
+                        throw new Error("Expected JSON, but received HTML or plain text.");
+                    });
+                }
+                
+                return response.json();
+            })
             .then((data) => {
                 if (data.success) {
                     alert("Product added to cart successfully!");
@@ -289,6 +327,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.error("Error adding product to cart:", error);
                 alert("An error occurred. Please try again.");
             });
+        
+        
     });
 
 
