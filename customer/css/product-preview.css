@@ -1,0 +1,290 @@
+/* General Modal Styling */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.7); /* Dim background */
+    justify-content: center; /* Align content to the top */
+    align-items: center;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Modal Content */
+.modal-content {
+    background: #fff;
+    border-radius: 20px; /* Rounded corners */
+    padding: 30px; /* Spacious padding */
+    max-width: 1100px; /* Wider modal */
+    width: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.4s ease-out;
+    height: auto; /* Adjust height based on content */
+}
+
+/* Close Button */
+.close-button {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 1.8rem; /* Larger close button */
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.close-button:hover {
+    color: #f00;
+}
+
+/* Modal Body */
+.modal-body {
+    display: flex;
+    flex-direction: row;
+    gap: 30px; /* Spacing between left and right sections */
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+/* Left Section - Product Image */
+.modal-left {
+    flex: 1;
+    max-width: 50%; /* Adjusted width for image */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px; /* Added margin for spacing */
+}
+
+#carousel-container {
+    position: relative;
+    max-width: 520px;
+    max-height: 520px;
+    width: 100%;
+    height: 100%; /* Fixed height or adjust to your needs */
+    overflow: hidden;
+    border-radius: 15px; /* Rounded corners */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); /* Slight shadow */
+}
+
+.carousel {
+    display: flex;
+    flex-wrap: nowrap; /* Prevent wrapping */
+    transition: transform 0.5s ease;
+    
+    align-items: center;
+}
+
+
+.carousel img {
+    width: 100%;
+    height: 100%; /* Fit to container */
+    object-fit: contain; /* Maintain aspect ratio */
+    border-radius: 15px; /* Rounded corners for images */
+}
+
+
+/* Carousel navigation buttons */
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    padding: 15px;
+    font-size: 2rem; /* Larger icons */
+    border-radius: 50%;
+    z-index: 1000;
+    transition: background 0.3s ease;
+}
+
+.carousel-btn:hover {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+#prev-btn {
+    left: 15px; /* More space from the left */
+}
+
+#next-btn {
+    right: 15px; /* More space from the right */
+}
+
+/* Right Section - Product Details */
+.modal-middle {
+    flex: 2;
+    max-width: 50%; /* Adjusted width for product details */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin-top: 20px; /* Margin for spacing */
+}
+
+.modal-middle h2 {
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+#modal-product-rating {
+    margin-top: 10px;
+}
+
+/* Rating Stars */
+#modal-product-rating .fa-star.checked {
+    color: gold;
+}
+
+#modal-product-rating .fa-star {
+    color: lightgray;
+}
+
+.review-count {
+    margin-left: 10px;
+    font-size: 1rem;
+    color: #555;
+}
+
+
+/* .modal-middle .rating {
+    margin-bottom: 20px;
+} */
+
+.modal-middle .price {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Space between price elements */
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+#modal-discounted-price {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+#modal-original-price {
+    text-decoration: line-through;
+    color: #888;
+}
+
+#modal-discount-badge {
+    background: #27ae60;
+    color: #fff;
+    padding: 7px 15px;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+/* Stock and Shipping Info */
+.modal-middle .stock-shipping {
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    font-weight: 600;
+}
+
+/* Quantity Controller */
+.quantity-controller {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.quantity-controller button {
+    background: none;
+    /* color: #fff; */
+    border: none;
+    padding: 12px 20px;
+    font-size: 1.4rem;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.quantity-controller button:hover {
+    background: #3437f5;
+    color: white;
+}
+
+.quantity-controller input {
+    width: 70px;
+    text-align: center;
+    font-size: 1rem;
+    margin: 0 15px;
+    border: none;
+    border-radius: 5px;
+    padding: 7px;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+}
+
+.custom-button {
+    flex: 1;
+    padding: 15px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #000000; /* Primary button color */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-align: center;
+}
+
+.custom-button:hover {
+    background-color: #3437f5; /* Darker blue for hover effect */
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+.custom-buy-now {
+    background-color: #000000; /* Distinct red for Buy Now */
+    background: none;
+    border: 1px solid black;
+    color: black;
+}
+
+.custom-buy-now:hover {
+    background-color: #3437f5; /* Darker red for hover effect */
+    border: 1px solid #3437f5;
+    color: white;
+}
+
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .modal-content {
+        flex-direction: column;
+        max-width: 95%;
+    }
+
+    .modal-left {
+        max-width: 100%;
+        margin-bottom: 30px; /* Margin below image */
+    }
+
+    .modal-middle {
+        max-width: 100%;
+    }
+}
