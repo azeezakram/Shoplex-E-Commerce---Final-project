@@ -346,8 +346,16 @@ document.addEventListener("DOMContentLoaded", () => {
                     document.getElementById("orderConfirmationModal").style.display = "none";
                     isOrderPlaced = true; // Mark the order as placed
                 } else {
+                    const successMessage = document.getElementById("success-message");
+                    successMessage.classList.add("show");
+                    successMessage.innerText = data.message;
+                    successMessage.style.backgroundColor = "red";
+                    // Hide the message after 3 seconds
+                    setTimeout(() => {
+                        successMessage.classList.remove("show");
+                    }, 3000);
                     // alert(data.message || "Failed to add product to cart.");
-                    alert(data.message); // This shows the error message from the PHP script
+                    // alert(data.message); // This shows the error message from the PHP script
         
                     // Optionally, redirect to the login page if necessary
                     if (data.message === 'Please log in to add items to your cart.') {
