@@ -338,6 +338,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const successMessage = document.getElementById("success-message");
                     successMessage.classList.add("show");
                     successMessage.innerText = "Product added to cart successfully!";
+                    successMessage.style.backgroundColor = "#11942f";
                     // Hide the message after 3 seconds
                     setTimeout(() => {
                         successMessage.classList.remove("show");
@@ -429,6 +430,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const successMessage = document.getElementById("success-message");
                     successMessage.classList.add("show");
                     successMessage.innerText = "Order placed successfully!";
+                    successMessage.style.backgroundColor = "#11942f";
                     // Hide the message after 3 seconds
                     setTimeout(() => {
                         successMessage.classList.remove("show");

@@ -460,74 +460,78 @@ error_reporting(E_ALL);
             </div>
         </section> -->
 
-        <section class="products-grid">
-            <?php
-            $sql = "SELECT * FROM product";
+        <section class="for-you-products-section">
+            <div class="list-type">
+                <h1>For You</h1>
+            </div>
+            <div class="products-grid">
+                <?php
+                $sql = "SELECT * FROM product";
 
-            $productsResult = $conn->query($sql);
-            ?>
+                $productsResult = $conn->query($sql);
+                ?>
 
-            <?php
-            if ($productsResult->num_rows > 0) {
-                while ($row = $productsResult->fetch_assoc()) {
-            ?>
+                <?php
+                if ($productsResult->num_rows > 0) {
+                    while ($row = $productsResult->fetch_assoc()) {
+                ?>
 
-                    <div class="product-card">
-                        <p class="product-id" hidden><?php $row["product_id"]; ?></p>
+                        <div class="product-card">
+                            <p class="product-id" hidden><?php $row["product_id"]; ?></p>
 
-                        <div class="product-image">
-                            <?php
-                            $productId = (int)$row["product_id"];
-                            $sql = "SELECT picture_path FROM product_picture WHERE product_id = $productId AND default_picture = 1";
+                            <div class="product-image">
+                                <?php
+                                $productId = (int)$row["product_id"];
+                                $sql = "SELECT picture_path FROM product_picture WHERE product_id = $productId AND default_picture = 1";
 
-                            $productPictureResult = $conn->query($sql);
-
-
-                            if ($productPictureResult && $productPictureResult->num_rows > 0) {
-
-                                $pictureRow = $productPictureResult->fetch_assoc();
-                                $picturePath = $pictureRow['picture_path'];
-                            } else {
-
-                                $picturePath = 'images\product-images\no_picture.jpg';
-                            }
-                            ?>
-                            <a href="signin-page.php"><img src="<?php echo "../" . $picturePath; ?>" alt="Product Image" class="product-img"></a>
-                        </div>
-                        <div class="product-details">
-                            <a href="signin-page.php">
-                                <h2 class="product-name"><?php echo $row["product_name"]; ?></h2>
-                                <div class="rating">
-                                    <?php
-                                    $productId = (int)$row["product_id"];
-                                    $sql = "SELECT * FROM product_review WHERE product_id = $productId";
-
-                                    $reviewResult = $conn->query($sql);
+                                $productPictureResult = $conn->query($sql);
 
 
-                                    $totalRating = 0;
-                                    $count = 0;
+                                if ($productPictureResult && $productPictureResult->num_rows > 0) {
+
+                                    $pictureRow = $productPictureResult->fetch_assoc();
+                                    $picturePath = $pictureRow['picture_path'];
+                                } else {
+
+                                    $picturePath = 'images\product-images\no_picture.jpg';
+                                }
+                                ?>
+                                <a href="signin-page.php"><img src="<?php echo "../" . $picturePath; ?>" alt="Product Image" class="product-img"></a>
+                            </div>
+                            <div class="product-details">
+                                <a href="signin-page.php">
+                                    <h2 class="product-name"><?php echo $row["product_name"]; ?></h2>
+                                    <div class="rating">
+                                        <?php
+                                        $productId = (int)$row["product_id"];
+                                        $sql = "SELECT * FROM product_review WHERE product_id = $productId";
+
+                                        $reviewResult = $conn->query($sql);
 
 
-                                    if ($reviewResult && $reviewResult->num_rows > 0) {
-                                        while ($reviewRow = $reviewResult->fetch_assoc()) {
-                                            $totalRating += (int)$reviewRow["rating"];
-                                            $count++;
-                                        }
+                                        $totalRating = 0;
+                                        $count = 0;
 
-                                        $productRating = $totalRating / $count;
 
-                                        for ($i = 1; $i <= 5; $i++) {
-                                            if ($i <= $productRating) {
-                                                echo '<span class="fa fa-star checked"></span>';
-                                            } else {
-                                                echo '<span class="fa fa-star"></span>';
+                                        if ($reviewResult && $reviewResult->num_rows > 0) {
+                                            while ($reviewRow = $reviewResult->fetch_assoc()) {
+                                                $totalRating += (int)$reviewRow["rating"];
+                                                $count++;
                                             }
-                                        }
-                                        echo '<span class="rating-point">(' . number_format($productRating, 1) . ')</span>';
-                                        echo '<span class="review-count">(' . $count . ' reviews)</span>';
-                                    } else {
-                                        echo '
+
+                                            $productRating = $totalRating / $count;
+
+                                            for ($i = 1; $i <= 5; $i++) {
+                                                if ($i <= $productRating) {
+                                                    echo '<span class="fa fa-star checked"></span>';
+                                                } else {
+                                                    echo '<span class="fa fa-star"></span>';
+                                                }
+                                            }
+                                            echo '<span class="rating-point">(' . number_format($productRating, 1) . ')</span>';
+                                            echo '<span class="review-count">(' . $count . ' reviews)</span>';
+                                        } else {
+                                            echo '
                                             <span class="fa fa-star"></span>
                                             <span class="fa fa-star"></span>
                                             <span class="fa fa-star"></span>
@@ -536,159 +540,159 @@ error_reporting(E_ALL);
                                             <span class="rating-point">(0.0)</span>
                                             <span class="review-count">(0 reviews)</span>
                                         ';
+                                        }
+                                        ?>
+                                    </div>
+                                    <div class="price">
+                                        <?php
+                                        if ((int)$row["bid_activate"] === 1) {
+                                            // If it's a bid product, show bid starting price
+                                            echo '<span class="bid-starting-price price-label">Starting Bid: </span>';
+                                            echo '<span class="bid-starting-price bid-price">LKR. ' . number_format((float)$row["bid_starting_price"], 2) . '</span>';
+                                        } else {
+                                            // If it's a regular product, show discounted price and original price
+                                            $discount = (float)$row["discount"] > 0 ? (float)$row["discount"] : 0;
+                                            $price = (float)$row["price"];
+                                            $discountPrice = $price - ($price * $discount);
+
+                                            echo '<span class="discounted-price">LKR. ' . number_format($discountPrice, 2) . '</span>';
+
+                                            if ($discount > 0) {
+                                                echo '<span class="original-price">LKR. ' . number_format($price, 2) . '</span>';
+                                                echo '<span class="discount-badge">' . ($discount * 100) . '% off</span>';
+                                            }
+                                        }
+                                        ?>
+                                    </div>
+
+
+                                    <div class="shipping">
+                                        <span>
+                                            <?php
+                                            if ((float)$row["shipping_fee"] > 0) {
+                                                echo "Shipping Fee: LKR. " . $row["shipping_fee"];
+                                            } else {
+                                                echo "Free Shipping";
+                                            }
+
+                                            ?>
+                                        </span>
+                                    </div>
+                                    <div class="stock-status">Availability:
+                                        <span>
+                                            <?php
+                                            if ((int)$row["stock"] > 10) {
+                                                echo "In Stock";
+                                            } else {
+                                                echo $row["stock"];
+                                            }
+
+                                            ?>
+                                        </span>
+                                    </div>
+                                </a>
+                                <div class="buttons">
+
+                                    <?php
+                                    if ((int)$row["bid_activate"] == 1) {
+                                        echo '<button id="placeBidBtn" class="place-bid" style="display: block;"data-product-id="' . $row['product_id'] . '">Place Bid</button>';
+                                        echo '<button class="add-to-cart" style="display: none;" data-product-id="' . $row['product_id'] . '">Add to Cart</button>';
+                                        echo '<button class="buy-now" style="display: none;" data-product-id="' . $row['product_id'] . '">Buy Now</button>';
+                                    } else {
+                                        echo '<button class="add-to-cart" data-product-id="' . $row['product_id'] . '">Add to Cart</button>';
+                                        echo '<button id="addToCartBtn" class="buy-now" data-product-id="' . $row['product_id'] . '">Buy Now</button>';
+                                        echo '<button id="buyNowBtn" class="place-bid" style="display: none;" data-product-id="' . $row['product_id'] . '">Place Bid</button>';
                                     }
                                     ?>
+
+
                                 </div>
-                                <div class="price">
-                                    <span class="discounted-price">
-                                        <?php
-                                        $discount = 0;
-                                        if ((float)$row["discount"] > 0) {
-                                            $discount = (float)$row["discount"];
-                                        }
-
-                                        $price = (float)$row["price"];
-                                        $discountPrice = number_format($price - ($price * $discount), 2);
-                                        echo "LKR. " . $discountPrice;
-                                        ?>
-                                    </span>
-
-                                    <?php if ((float)$row["discount"] > 0): ?>
-                                        <span class="original-price">
-                                            LKR. <?php echo number_format($price, 2); ?>
-                                        </span>
-                                        <span class="discount-badge">
-                                            <?php echo $discount * 100; ?>% off
-                                        </span>
-                                    <?php endif; ?>
-                                </div>
-
-                                <div class="shipping">
-                                    <span>
-                                        <?php
-                                        if ((float)$row["shipping_fee"] > 0) {
-                                            echo "Shipping Fee: LKR." . $row["shipping_fee"];
-                                        } else {
-                                            echo "Free Shipping";
-                                        }
-
-                                        ?>
-                                    </span>
-                                </div>
-                                <div class="stock-status">Availability:
-                                    <span>
-                                        <?php
-                                        if ((int)$row["stock"] > 10) {
-                                            echo "In Stock";
-                                        } else {
-                                            echo $row["stock"];
-                                        }
-
-                                        ?>
-                                    </span>
-                                </div>
-                            </a>
-                            <div class="buttons">
-
-                                <?php
-                                if ((int)$row["bid_activate"] == 1) {
-                                    echo '<button id="placeBidBtn" class="place-bid" style="display: block;"data-product-id="' . $row['product_id'] . '">Place Bid</button>';
-                                    echo '<button class="add-to-cart" style="display: none;" data-product-id="' . $row['product_id'] . '">Add to Cart</button>';
-                                    echo '<button class="buy-now" style="display: none;" data-product-id="' . $row['product_id'] . '">Buy Now</button>';
-                                } else {
-                                    echo '<button class="add-to-cart" data-product-id="' . $row['product_id'] . '">Add to Cart</button>';
-                                    echo '<button id="addToCartBtn" class="buy-now" data-product-id="' . $row['product_id'] . '">Buy Now</button>';
-                                    echo '<button id="buyNowBtn" class="place-bid" style="display: none;" data-product-id="' . $row['product_id'] . '">Place Bid</button>';
-                                }
-                                ?>
-
 
                             </div>
 
                         </div>
 
-                    </div>
-
-            <?php
+                <?php
+                    }
+                } else {
+                    echo "No products found.";
                 }
-            } else {
-                echo "No products found.";
-            }
-            ?>
+                ?>
 
 
 
-            <div id="product-preview-modal" class="modal">
-                <div class="modal-content">
-                    <!-- Close Button -->
-                    <span class="close-button">&times;</span>
+                <div id="product-preview-modal" class="modal">
+                    <div class="modal-content">
+                        <!-- Close Button -->
+                        <span class="close-button">&times;</span>
 
-                    <div class="modal-body">
-                        <!-- Left Section - Product Image -->
-                        <div class="modal-left">
-                            <div id="carousel-container">
-                                <div class="carousel"></div>
-                                <button id="prev-btn" class="carousel-btn">&#8249;</button>
-                                <button id="next-btn" class="carousel-btn">&#8250;</button>
+                        <div class="modal-body">
+                            <!-- Left Section - Product Image -->
+                            <div class="modal-left">
+                                <div id="carousel-container">
+                                    <div class="carousel"></div>
+                                    <button id="prev-btn" class="carousel-btn">&#8249;</button>
+                                    <button id="next-btn" class="carousel-btn">&#8250;</button>
+                                </div>
+                            </div>
+
+                            <!-- Right Section - Product Details -->
+                            <div class="modal-middle">
+                                <h2 id="modal-product-name">Product Name</h2>
+                                <div id="modal-product-description"></div>
+
+                                <div id="modal-product-rating"></div>
+                                <!-- Add Rating Star/Icons Here -->
+
+                                <!-- Price Section -->
+                                <div class="price">
+                                    <span id="modal-discounted-price">LKR. 1000</span>
+                                    <span id="modal-original-price">LKR. 1500</span>
+                                    <span id="modal-discount-badge">20% off</span>
+                                </div>
+
+                                <!-- Stock and Shipping Section -->
+                                <div class="stock-shipping">
+                                    <p class="stock-info" id="modal-stock-info">Stock: 10 available</p>
+                                    <p class="shipping-info" id="modal-shipping-info">Shipping Fee: LKR. 200</p>
+                                </div>
+
+                                <!-- Quantity Controller -->
+                                <div class="quantity-controller">
+                                    <button id="decrease-quantity">-</button>
+                                    <input type="text" id="quantity-input" value="1" min="1" disabled />
+                                    <button id="increase-quantity">+</button>
+                                </div>
+
+
+                                <!-- Action Buttons -->
+                                <div class="action-buttons">
+                                    <button id="custom-add-to-cart" class="custom-button">Add to Cart</button>
+                                    <button id="custom-buy-now" class="custom-button custom-buy-now">Buy Now</button>
+                                </div>
+
                             </div>
                         </div>
 
-                        <!-- Right Section - Product Details -->
-                        <div class="modal-middle">
-                            <h2 id="modal-product-name">Product Name</h2>
-                            <div id="modal-product-description"></div>
-
-                            <div id="modal-product-rating"></div>
-                            <!-- Add Rating Star/Icons Here -->
-
-                            <!-- Price Section -->
-                            <div class="price">
-                                <span id="modal-discounted-price">LKR. 1000</span>
-                                <span id="modal-original-price">LKR. 1500</span>
-                                <span id="modal-discount-badge">20% off</span>
-                            </div>
-
-                            <!-- Stock and Shipping Section -->
-                            <div class="stock-shipping">
-                                <p class="stock-info" id="modal-stock-info">Stock: 10 available</p>
-                                <p class="shipping-info" id="modal-shipping-info">Shipping Fee: LKR. 200</p>
-                            </div>
-
-                            <!-- Quantity Controller -->
-                            <div class="quantity-controller">
-                                <button id="decrease-quantity">-</button>
-                                <input type="text" id="quantity-input" value="1" min="1" disabled />
-                                <button id="increase-quantity">+</button>
-                            </div>
-
-                            
-                            <!-- Action Buttons -->
-                            <div class="action-buttons">
-                                <button id="custom-add-to-cart" class="custom-button">Add to Cart</button>
-                                <button id="custom-buy-now" class="custom-button custom-buy-now">Buy Now</button>
-                            </div>
-
-                        </div>
                     </div>
-                    
                 </div>
-            </div>
-            <div id="orderConfirmationModal" class="order-modal">
-                <div class="modal-content">
-                    <h2>Confirm Your Order</h2>
-                    <p><strong>Quantity:</strong> <span id="modal-quantity-info"></span></p>
-                    <p><strong>Price After Discount:</strong> LKR. <span id="modal-price-info"></span></p>
-                    <p><strong>Shipping Fee:</strong> LKR. <span id="modal-shipping-fee-info"></span></p>
-                    <p><strong>Total:</strong> LKR. <span id="modal-total-info"></span></p>
-                    <button id="confirm-order-btn" class="confirm-button">Confirm Order</button>
-                    <button id="cancel-order-btn" class="cancel-button">Cancel</button>
+                <div id="orderConfirmationModal" class="order-modal">
+                    <div class="modal-content">
+                        <h2>Confirm Your Order</h2>
+                        <p><strong>Quantity:</strong> <span id="modal-quantity-info"></span></p>
+                        <p><strong>Price After Discount:</strong> LKR. <span id="modal-price-info"></span></p>
+                        <p><strong>Shipping Fee:</strong> LKR. <span id="modal-shipping-fee-info"></span></p>
+                        <p><strong>Total:</strong> LKR. <span id="modal-total-info"></span></p>
+                        <button id="confirm-order-btn" class="confirm-button">Confirm Order</button>
+                        <button id="cancel-order-btn" class="cancel-button">Cancel</button>
+                    </div>
                 </div>
-            </div>
-            <div id="success-message" class="success-message">
-                <p>Order placed successfully!</p>
-            </div>
+                <div id="success-message" class="success-message">
+                    <p>Order placed successfully!</p>
+                </div>
 
 
+            </div>
         </section>
 
     </main>
