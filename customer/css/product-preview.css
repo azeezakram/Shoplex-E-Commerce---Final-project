@@ -1,46 +1,77 @@
 /* General Modal Styling */
 .modal {
-    display: none; /* Hidden by default */
+    display: flex;
     position: fixed;
-    z-index: 1000;
+    z-index: 1000; /* Ensure modal is above the background */
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.7); /* Dim background */
-    justify-content: center; /* Align content to the top */
+    justify-content: center;
     align-items: center;
-    animation: fadeIn 0.3s ease-in-out;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease, visibility 0s 0.3s;
 }
+
 
 /* Modal Content */
 .modal-content {
     background: #fff;
-    border-radius: 20px; /* Rounded corners */
+    border-radius: 15px; /* Rounded corners */
     padding: 30px; /* Spacious padding */
-    max-width: 1100px; /* Wider modal */
+    max-width: 1100px; /* Fixed width for order confirmation modal */
     width: 90%;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    flex-wrap: wrap;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    animation: slideUp 0.4s ease-out;
+    opacity: 0; /* Content starts invisible */
+    transform: translateY(-50px); /* Slide it off-screen initially */
+    transition: opacity 0.4s ease, transform 0.4s ease; /* Smooth slide and fade */
     height: auto; /* Adjust height based on content */
 }
+
+/* Show the modal with smooth transition */
+.modal.show {
+    visibility: visible; /* Make modal visible */
+    opacity: 1; /* Make modal fully visible */
+    transition: opacity 0.3s ease, visibility 0s 0s; /* Smooth fade-in */
+}
+
+.modal.show .modal-content {
+    opacity: 1; /* Make content fully visible */
+    transform: translateY(0); /* Slide content into view */
+}
+
+/* Hide the modal with smooth transition */
+.modal.hide {
+    opacity: 0; /* Fade out modal */
+    visibility: hidden; /* Hide modal */
+    transition: opacity 0.3s ease, visibility 0s 0.3s; /* Fade out and hide after */
+}
+
+.modal.hide .modal-content {
+    opacity: 0; /* Fade out content */
+    transform: translateY(-50px); /* Slide content out */
+}
+
 
 /* Close Button */
 .close-button {
     position: absolute;
     top: 15px;
     right: 20px;
-    font-size: 1.8rem; /* Larger close button */
-    color: #ffffff;
+    font-size: 1.8rem;
+    color: #000000;
     cursor: pointer;
     font-weight: bold;
     transition: color 0.3s;
+    z-index: 1100; /* Ensure close button is above other content */
 }
+
 
 .close-button:hover {
     color: #f00;
@@ -144,14 +175,14 @@
 
 /* Rating Stars */
 #modal-product-rating .fa-star.checked {
-    color: gold;
+    color: orange;
 }
 
 #modal-product-rating .fa-star {
     color: lightgray;
 }
 
-.review-count {
+#modal-product-rating .review-count, #modal-product-rating .rating-point {
     margin-left: 10px;
     font-size: 1em;
     color: #555;
@@ -272,11 +303,178 @@
 }
 
 
+
+/* Order Confirmation Modal Styling */
+.order-modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.7); /* Dim background */
+    justify-content: center; /* Align content to the center */
+    align-items: center;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.order-modal.show {
+    display: flex; /* Flex to align content */
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease-in-out;
+
+}
+/* Modal Content */
+.order-modal .modal-content {
+    background: #fff;
+    border-radius: 15px; /* Rounded corners */
+    padding: 30px; /* Spacious padding */
+    max-width: 600px; /* Fixed width for order confirmation modal */
+    width: 90%;
+    display: flex;
+    opacity: 1;
+    visibility: visible;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.4s ease-out;
+    height: auto; /* Adjust height based on content */
+}
+
+/* Hide modal content when modal is not visible */
+.order-modal:not(.show) .modal-content {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px); /* Slight slide-down for animation */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Header */
+.order-modal h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Information Section */
+.order-modal p {
+    font-size: 1.2rem;
+    margin: 10px 0;
+    color: #333;
+}
+
+.order-modal p strong {
+    font-weight: bold;
+}
+
+/* Quantity, Price, Shipping, and Total Info */
+#modal-quantity-info,
+#modal-price-info,
+#modal-shipping-fee-info,
+#modal-total-info {
+    font-size: 1.2rem;
+    color: #555;
+    font-weight: normal;
+}
+
+/* Confirm and Cancel Buttons */
+.confirm-button,
+.cancel-button {
+    padding: 12px 30px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-align: center;
+    margin-top: 20px;
+    width: 100%;
+}
+
+/* Confirm Order Button Styling */
+.confirm-button {
+    background-color: #27ae60; /* Green for confirmation */
+    color: #fff;
+}
+
+.confirm-button:hover {
+    background-color: #2ecc71; /* Lighter green on hover */
+    transform: scale(1.05);
+}
+
+/* Cancel Button Styling */
+.cancel-button {
+    background-color: #e74c3c; /* Red for cancel */
+    color: #fff;
+    margin-top: 10px;
+}
+
+.cancel-button:hover {
+    background-color: #c0392b; /* Darker red on hover */
+    transform: scale(1.05);
+}
+
+
+/* Success Message Popup */
+/* Success Message Popup */
+.success-message {
+    position: fixed;
+    bottom: -80px; /* Start off-screen */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #11942f; /* Green for success */
+    color: white;
+    padding: 15px;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 10px;
+    visibility: hidden; /* Hidden by default */
+    opacity: 0; /* Start as invisible */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1001;
+    text-align: center;
+    transition: opacity 0.5s ease, bottom 0.5s ease, visibility 0s 0.5s; /* Smooth transition */
+}
+
+/* Show the success message with smooth transition */
+.success-message.show {
+    visibility: visible; /* Make it visible */
+    opacity: 1; /* Make it fully visible */
+    bottom: 30px; /* Slide up to 30px from the bottom */
+    transition: opacity 0.5s ease, bottom 0.5s ease, visibility 0s 0s; /* Smooth transition */
+}
+
+/* Optional: Animation to fade out the success message after a few seconds */
+.success-message.hide {
+    opacity: 0;
+    bottom: -80px; /* Slide back off-screen */
+    transition: opacity 0.5s ease, bottom 0.5s ease; /* Smooth slide-out */
+}
+
+
+
+
+
+
+
+
 /* Responsive Design */
 @media screen and (max-width: 768px) {
     .modal-content {
         flex-direction: column;
         max-width: 95%;
+    }
+
+    .modal-body {
+        flex-direction: column;
     }
 
     .modal-left {
@@ -286,5 +484,20 @@
 
     .modal-middle {
         max-width: 100%;
+    }
+
+    .order-modal .modal-content {
+        width: 90%; /* Make modal smaller on smaller screens */
+        padding: 20px;
+    }
+
+    .order-modal p {
+        font-size: 1rem;
+    }
+
+    .confirm-button,
+    .cancel-button {
+        font-size: 1rem;
+        width: 100%; /* Full-width buttons on small screens */
     }
 }

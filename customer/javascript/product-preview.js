@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                             const reviewCount = document.createElement("span");
                             reviewCount.classList.add("review-count");
-                            reviewCount.textContent = `(${data.product_review_count})`;
+                            reviewCount.textContent = `(${data.product_review_count} reviews)`;
                             ratingContainer.appendChild(reviewCount);
                         } else {
                             for (let i = 1; i <= 5; i++) {
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                             const reviewCount = document.createElement("span");
                             reviewCount.classList.add("review-count");
-                            reviewCount.textContent = `(${data.product_review_count})`;
+                            reviewCount.textContent = `(${data.product_review_count} reviews)`;
                             ratingContainer.appendChild(reviewCount);
                         }
 
@@ -98,22 +98,39 @@ document.addEventListener("DOMContentLoaded", () => {
                             }
                             
                         } else {
-                            document.getElementById("modal-stock-info").style.display = "none";
-                        }
-
-
-                        if (data.stock) {
-                            if (data.shipping_fee > 0) {
-                                document.getElementById("modal-shipping-info").textContent = "Shipping Fee: LKR." + data.shipping_fee;
-                                document.getElementById("modal-shipping-info").style.display = "inline";
-                            } else {
-                                document.getElementById("modal-shipping-info").textContent = "Free Shipping";
-                                document.getElementById("modal-shipping-info").style.display = "inline";
-                            }
-                            
-                        } else {
                             document.getElementById("modal-shipping-info").style.display = "none";
                         }
+
+
+                        const shippingFeeDetail = document.getElementById("modal-shipping-info");
+
+                        shippingFeeDetail.innerHTML = "";
+
+                        if (data.shipping_fee !== undefined) { // Explicitly check for undefined
+                            if (data.shipping_fee > 0) {
+                                shippingFeeDetail.style.display = "inline";
+
+                                // Add base text for the shipping fee
+                                const baseText = document.createTextNode("Shipping Fee: LKR.");
+                                shippingFeeDetail.appendChild(baseText);
+
+                                // Create and append a span element for the fee value
+                                const shippingFee = document.createElement("span");
+                                shippingFee.classList.add("shipping-fee");
+                                shippingFee.textContent = ` ${Number(data.shipping_fee).toFixed(2)}`; // Add space before value
+                                shippingFeeDetail.appendChild(shippingFee);
+
+                            } else {
+                                shippingFeeDetail.textContent = "Free Shipping";
+                                shippingFeeDetail.style.display = "inline";
+                            }
+                        } else {
+                            // Hide the element if no shipping fee is provided
+                            shippingFeeDetail.style.display = "none";
+                        }
+
+
+
 
 
 
@@ -154,8 +171,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         }
 
                         // Show modal
-                        modal.style.display = "flex";
-
+                        // modal.style.display = "flex";
+                        modal.classList.add("show");
 
 
                         // Show modal and buttons
@@ -256,7 +273,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Close modal
     document.querySelector(".close-button").addEventListener("click", () => {
         // Close the modal
-        modal.style.display = "none";
+        modal.classList.remove("show");
     
         // Reset quantity input
         const quantityInput = document.getElementById("quantity-input");
@@ -286,7 +303,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
     
     document.getElementById("custom-add-to-cart").addEventListener("click", () => {
-        alert("Clicked");
+        // alert("Clicked");
         
         // const productId = button.dataset.productId;
         const quantity = document.getElementById("quantity-input").value;
@@ -295,7 +312,7 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("Invalid product or quantity.");
             return;
         }
-        alert("Processeing");
+        // alert("Processeing");
         fetch('other-php/add-to-cart.php', {
             method: 'POST',
             headers: {
@@ -318,9 +335,24 @@ document.addEventListener("DOMContentLoaded", () => {
             })
             .then((data) => {
                 if (data.success) {
-                    alert("Product added to cart successfully!");
+                    const successMessage = document.getElementById("success-message");
+                    successMessage.classList.add("show");
+                    successMessage.innerText = "Product added to cart successfully!";
+                    // Hide the message after 3 seconds
+                    setTimeout(() => {
+                        successMessage.classList.remove("show");
+                    }, 3000);
+                    // Hide the modal and reset the values
+                    document.getElementById("orderConfirmationModal").style.display = "none";
+                    isOrderPlaced = true; // Mark the order as placed
                 } else {
-                    alert(data.message || "Failed to add product to cart.");
+                    // alert(data.message || "Failed to add product to cart.");
+                    alert(data.message); // This shows the error message from the PHP script
+        
+                    // Optionally, redirect to the login page if necessary
+                    if (data.message === 'Please log in to add items to your cart.') {
+                        window.location.href = "signin-page.php"; // Redirect to sign-in page
+                    }
                 }
             })
             .catch((error) => {
@@ -330,6 +362,94 @@ document.addEventListener("DOMContentLoaded", () => {
         
         
     });
+
+
+    // Show the product preview modal when "Buy Now" is clicked
+    document.getElementById("custom-buy-now").addEventListener("click", () => {
+
+        
+        const quantity = parseInt(document.getElementById("quantity-input").value, 10);
+        const priceAfterDiscount = parseFloat(document.getElementById("modal-discounted-price").textContent.replace("LKR. ", ""));
+        
+        let shippingFeeElement = document.querySelector(".shipping-fee");
+        const shippingFee = shippingFeeElement 
+            ? parseFloat(shippingFeeElement.textContent.replace("(", "").replace(")", "").trim()) 
+            : 0;
+
+        // Calculate the subtotal
+        const subtotal = priceAfterDiscount * quantity;
+
+        // Update modal with calculated values
+        document.getElementById("modal-quantity-info").textContent = quantity;
+        document.getElementById("modal-price-info").textContent = priceAfterDiscount.toFixed(2);
+        document.getElementById("modal-shipping-fee-info").textContent = shippingFee.toFixed(2);
+        document.getElementById("modal-total-info").textContent = (subtotal + shippingFee).toFixed(2);
+
+        // Show the order confirmation modal
+        const orderConfirmationModal = document.getElementById("orderConfirmationModal");
+        orderConfirmationModal.style.display = "flex";
+       
+        orderConfirmationModal.classList.add("show");
+        // orderConfirmationModal.classList.add("show");
+        
+        // Declare the productId here or get it from a relevant source
+        // const productId = document.getElementById("custom-buy-now").dataset.productId;
+
+        let isOrderPlaced = false;
+
+        // Handle the confirm order button click
+        document.getElementById("confirm-order-btn").addEventListener("click", function() {
+            if (isOrderPlaced) {
+                return; // Prevent placing the same order again
+            }
+
+            // Disable the confirm button to prevent further clicks
+            this.disabled = true;
+            this.textContent = "Processing...";
+
+            // Sending the order details to the server
+            fetch('other-php/buy-now.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `product_id=${productId}&quantity=${quantity}&price_after_discount=${priceAfterDiscount}&subtotal=${subtotal}&shipping_fee=${shippingFee}`,
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    const successMessage = document.getElementById("success-message");
+                    successMessage.classList.add("show");
+                    successMessage.innerText = "Order placed successfully!";
+                    // Hide the message after 3 seconds
+                    setTimeout(() => {
+                        successMessage.classList.remove("show");
+                    }, 3000);
+                    // Hide the modal and reset the values
+                    document.getElementById("orderConfirmationModal").style.display = "none";
+                    isOrderPlaced = true; // Mark the order as placed
+                } else {
+                    alert(data.message || "Failed to place the order.");
+                }
+            })
+            .catch((error) => {
+                console.error("Error placing the order:", error);
+                alert("An error occurred. Please try again.");
+            })
+            .finally(() => {
+                // Re-enable the button after the process is complete (in case of error or success)
+                document.getElementById("confirm-order-btn").disabled = false;
+                document.getElementById("confirm-order-btn").textContent = "Confirm Order"; // Reset the text
+            });
+        });
+
+        // Handle the cancel order button click
+        document.getElementById("cancel-order-btn").addEventListener("click", () => {
+            // Close the modal if user cancels
+            document.getElementById("orderConfirmationModal").style.display = "none";
+        });
+    });
+
 
 
 });

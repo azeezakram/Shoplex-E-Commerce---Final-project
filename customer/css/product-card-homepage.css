@@ -91,9 +91,14 @@ a {
   }
 
 .rating {
+    
     font-size: 0.8em; /* Slightly smaller */
     color: #888;
     word-wrap: break-word;
+}
+
+.rating .review-count, .rating .rating-point{
+    margin-left: 5px;
 }
 
 .price {

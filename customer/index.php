@@ -233,15 +233,6 @@ error_reporting(E_ALL);
 
                         <div class="profile-popup" id="profilePopup">
 
-                            <!-- <div class="top-section">
-                                <a href="signin-page.php">
-                                    <button class="sigin-btn">Sign in</button>
-                                </a>
-                                <a class="register" href="register-page.html">
-                                    Register
-                                </a>
-                            </div> -->
-
                             <div class="top-section">
                                 <?php if (isset($_SESSION['user_id'])): ?>
                                     <span class="username"><?php echo $_SESSION['name']; ?></span>
@@ -272,10 +263,10 @@ error_reporting(E_ALL);
                                         <img src="images/icons/order.png">
                                         <div>Orders</div>
                                     </a>
-                                    <a href="#">
+                                    <!-- <a href="#">
                                         <img src="images/icons/wishlist.png">
                                         <div>Wishlist</div>
-                                    </a>
+                                    </a> -->
                                     <a href="#">
                                         <img src="images/icons/message-center.png">
                                         <div>Message Center</div>
@@ -298,10 +289,10 @@ error_reporting(E_ALL);
                                         <img src="images/icons/order.png">
                                         <div>Orders</div>
                                     </a>
-                                    <a href="signin-page.php">
+                                    <!-- <a href="signin-page.php">
                                         <img src="images/icons/wishlist.png">
                                         <div>Wishlist</div>
-                                    </a>
+                                    </a> -->
                                     <a href="signin-page.php">
                                         <img src="images/icons/message-center.png">
                                         <div>Message Center</div>
@@ -670,6 +661,7 @@ error_reporting(E_ALL);
                                 <button id="increase-quantity">+</button>
                             </div>
 
+                            
                             <!-- Action Buttons -->
                             <div class="action-buttons">
                                 <button id="custom-add-to-cart" class="custom-button">Add to Cart</button>
@@ -678,9 +670,23 @@ error_reporting(E_ALL);
 
                         </div>
                     </div>
+                    
                 </div>
             </div>
-
+            <div id="orderConfirmationModal" class="order-modal">
+                <div class="modal-content">
+                    <h2>Confirm Your Order</h2>
+                    <p><strong>Quantity:</strong> <span id="modal-quantity-info"></span></p>
+                    <p><strong>Price After Discount:</strong> LKR. <span id="modal-price-info"></span></p>
+                    <p><strong>Shipping Fee:</strong> LKR. <span id="modal-shipping-fee-info"></span></p>
+                    <p><strong>Total:</strong> LKR. <span id="modal-total-info"></span></p>
+                    <button id="confirm-order-btn" class="confirm-button">Confirm Order</button>
+                    <button id="cancel-order-btn" class="cancel-button">Cancel</button>
+                </div>
+            </div>
+            <div id="success-message" class="success-message">
+                <p>Order placed successfully!</p>
+            </div>
 
 
         </section>
