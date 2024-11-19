@@ -231,6 +231,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
+
                         // Populate carousel
                         carousel.innerHTML = ""; // Clear previous images
                         if (data.pictures.length > 0) {
@@ -252,23 +253,95 @@ document.addEventListener("DOMContentLoaded", () => {
                         updateCarousel();
                         inputController(data);
 
-                        // // Ensure the new button IDs are referenced in your JavaScript
-                        // const addToCartButton = document.getElementById("custom-add-to-cart");
-                        // const buyNowButton = document.getElementById("custom-buy-now");
+                        
 
-                        // if (!addToCartButton || !buyNowButton) {
-                        //     console.error("Custom buttons not found in the DOM.");
+                        // if (data.review_details) { // Explicitly check for undefined
+                        //     if (data.shipping_fee > 0) {
+                        //         document.getElementById('no-review-label').style.display = "none";
+
+                                
+
+                        //         // Add base text for the shipping fee
+                        //         const baseText = document.createTextNode("Shipping Fee: LKR.");
+                        //         shippingFeeDetail.appendChild(baseText);
+
+                        //         // Create and append a span element for the fee value
+                        //         const shippingFee = document.createElement("span");
+                        //         shippingFee.classList.add("shipping-fee");
+                        //         shippingFee.textContent = ` ${Number(data.shipping_fee).toFixed(2)}`; // Add space before value
+                        //         shippingFeeDetail.appendChild(shippingFee);
+
+                        //     } else {
+                        //         document.getElementById('no-review-label').style.display = "block";
+                        //         shippingFeeDetail.style.display = "inline";
+                        //     }
                         // } else {
-                        //     // console.log("Custom Add to Cart Button: ", window.getComputedStyle(addToCartButton).display);
-                        //     // console.log("Custom Buy Now Button: ", window.getComputedStyle(buyNowButton).display);
-
-                        //     // Make buttons visible
-                        //     addToCartButton.style.display = "inline-block";
-                        //     buyNowButton.style.display = "inline-block";
+                        //     // Hide the element if no shipping fee is provided
+                        //     shippingFeeDetail.style.display = "none";
                         // }
 
-                        // Show modal
-                        // modal.style.display = "flex";
+
+
+                        // console.log(data.review_details);
+                        const reviewsContainer = document.getElementById("reviews-container");
+                        // document.getElementById('no-review-label').style.display = "none";
+
+                        if (data.review_details && data.review_details.length > 0) {
+                            
+                            document.getElementById('no-review-label').style.display = "none";
+
+                            reviewsContainer.innerHTML = '';
+                            // Loop through each review and create HTML elements
+                            data.review_details.forEach(review => {
+                                // Create review item container
+                                const reviewItem = document.createElement("div");
+                                reviewItem.classList.add("review-item");
+                
+                                // Add reviewer name
+                                const reviewerName = document.createElement("div");
+                                reviewerName.classList.add("reviewer-name");
+                                reviewerName.textContent = review.reviewer_name;
+                                reviewItem.appendChild(reviewerName);
+                
+                                // Add review rating
+                                const reviewRating = document.createElement("div");
+                                reviewRating.classList.add("review-rating");
+                                reviewRating.textContent = "⭐".repeat(review.rating); // Display stars
+                                reviewItem.appendChild(reviewRating);
+                
+                                // Add review comment
+                                const reviewComment = document.createElement("div");
+                                reviewComment.classList.add("review-content");
+                                reviewComment.textContent = review.review_content;
+                                reviewItem.appendChild(reviewComment);
+                
+                                // Add review date
+                                const reviewDate = document.createElement("div");
+                                reviewDate.classList.add("review-date");
+                                reviewDate.textContent = `Reviewed on: ${new Date(review.created_at).toLocaleDateString()}`;
+                                reviewItem.appendChild(reviewDate);
+                
+                                // Append the review item to the container
+                                reviewsContainer.appendChild(reviewItem);
+                            });
+
+                        } 
+                        else {
+                            // Show a message if no reviews are found
+                            reviewsContainer.innerHTML = '';
+                            document.getElementById('no-review-label').style.display = "block";
+                        }
+
+
+
+
+
+
+
+
+
+
+
                         modal.classList.add("show");
 
 

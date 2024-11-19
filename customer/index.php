@@ -628,73 +628,90 @@ error_reporting(E_ALL);
 
                         <div class="modal-body">
                             <!-- Left Section - Product Image -->
-                            <div class="modal-left">
-                                <div id="carousel-container">
-                                    <div class="carousel"></div>
-                                    <button id="prev-btn" class="carousel-btn">&#8249;</button>
-                                    <button id="next-btn" class="carousel-btn">&#8250;</button>
+                            <div class="modal-product-details">
+                                <div class="modal-left">
+                                    <div id="carousel-container">
+                                        <div class="carousel"></div>
+                                        <button id="prev-btn" class="carousel-btn">&#8249;</button>
+                                        <button id="next-btn" class="carousel-btn">&#8250;</button>
+                                    </div>
+                                </div>
+
+                                <!-- Right Section - Product Details -->
+                                <div class="modal-middle">
+                                    <h2 id="modal-product-name">Product Name</h2>
+                                    <div id="modal-product-description"></div>
+
+                                    <div id="modal-product-rating"></div>
+                                    <!-- Add Rating Star/Icons Here -->
+
+                                    <!-- Price Section -->
+                                    <div class="price">
+                                        <span id="modal-discounted-price">LKR. 1000</span>
+                                        <span id="modal-original-price">LKR. 1500</span>
+                                        <span id="modal-discount-badge">20% off</span>
+                                        <div class="bid-price-box">
+                                            <span id="modal-bid-starting-price">LKR. 1000</span>
+                                            <span id="modal-highest-bid-price">Highest Bid Amount: LKR. <span class="highest-bid-price"></span></span>
+                                        </div>
+
+                                    </div>
+
+                                    <!-- Stock and Shipping Section -->
+                                    <div class="stock-shipping">
+                                        <p class="stock-info" id="modal-stock-info">Stock: 10 available</p>
+                                        <p class="shipping-info" id="modal-shipping-info">Shipping Fee: LKR. 200</p>
+                                    </div>
+
+                                    <!-- Quantity Controller -->
+                                    <div class="quantity-controller">
+                                        <button id="decrease-quantity">-</button>
+                                        <input type="text" id="quantity-input" value="1" min="1" disabled />
+                                        <button id="increase-quantity">+</button>
+                                    </div>
+
+                                    <div class="place-bid-price-controller">
+                                        <p id="auction-id" hidden></p>
+                                        <div class="controller-box">
+                                            <label>Place bid price: </label>
+                                            <button id="decrease-bid-price">-</button>
+                                            <input type="text" id="place-bid-price-input" />
+                                            <button id="increase-bid-price">+</button>
+                                        </div>
+                                        <div class="bid-ending-date-box">Ending date:
+                                            <span id="modal-bid-ending_date"></span>
+                                        </div>
+                                        <div class="bid-status-box">Status:
+                                            <span id="modal-bid-status"></span>
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- Action Buttons -->
+                                    <div class="action-buttons">
+                                        <button id="custom-add-to-cart" class="custom-button">Add to Cart</button>
+                                        <button id="custom-buy-now" class="custom-button custom-buy-now">Buy Now</button>
+                                        <button id="custom-place-bid" class="custom-button">Place Bid</button>
+                                    </div>
+
                                 </div>
                             </div>
 
-                            <!-- Right Section - Product Details -->
-                            <div class="modal-middle">
-                                <h2 id="modal-product-name">Product Name</h2>
-                                <div id="modal-product-description"></div>
-
-                                <div id="modal-product-rating"></div>
-                                <!-- Add Rating Star/Icons Here -->
-
-                                <!-- Price Section -->
-                                <div class="price">
-                                    <span id="modal-discounted-price">LKR. 1000</span>
-                                    <span id="modal-original-price">LKR. 1500</span>
-                                    <span id="modal-discount-badge">20% off</span>
-                                    <div class="bid-price-box">
-                                        <span id="modal-bid-starting-price">LKR. 1000</span>
-                                        <span id="modal-highest-bid-price">Highest Bid Amount: LKR. <span class="highest-bid-price"></span></span>
-                                    </div>
+                            <div class="modal-product-review">
+                                <h3>Customer Reviews</h3>
+                                <h3 id="no-review-label">No reviews</h3>
+                                <div id="reviews-container">
                                     
+                                    <!-- Example Review -->
+                                    <!-- <div class="review-item">
+                                        <p class="reviewer-name">John Doe</p>
+                                        <div class="review-rating">★★★★☆</div>
+                                        <p class="review-content">This product exceeded my expectations! Highly recommend.</p>
+                                    </div> -->
                                 </div>
-
-                                <!-- Stock and Shipping Section -->
-                                <div class="stock-shipping">
-                                    <p class="stock-info" id="modal-stock-info">Stock: 10 available</p>
-                                    <p class="shipping-info" id="modal-shipping-info">Shipping Fee: LKR. 200</p>
-                                </div>
-
-                                <!-- Quantity Controller -->
-                                <div class="quantity-controller">
-                                    <button id="decrease-quantity">-</button>
-                                    <input type="text" id="quantity-input" value="1" min="1" disabled />
-                                    <button id="increase-quantity">+</button>
-                                </div>
-
-                                <div class="place-bid-price-controller">
-                                    <p id="auction-id" hidden></p>
-                                    <div class="controller-box">
-                                        <label>Place bid price: </label>
-                                        <button id="decrease-bid-price">-</button>
-                                        <input type="text" id="place-bid-price-input"/>
-                                        <button id="increase-bid-price">+</button>
-                                    </div>
-                                    <div class="bid-ending-date-box">Ending date: 
-                                        <span id="modal-bid-ending_date"></span>
-                                    </div>
-                                    <div class="bid-status-box">Status: 
-                                        <span id="modal-bid-status"></span>
-                                    </div>
-                                    
-                                </div>
-
-
-                                <!-- Action Buttons -->
-                                <div class="action-buttons">
-                                    <button id="custom-add-to-cart" class="custom-button">Add to Cart</button>
-                                    <button id="custom-buy-now" class="custom-button custom-buy-now">Buy Now</button>
-                                    <button id="custom-place-bid" class="custom-button">Place Bid</button>
-                                </div>
-
                             </div>
+
                         </div>
 
                     </div>
