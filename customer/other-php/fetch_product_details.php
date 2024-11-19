@@ -84,7 +84,41 @@ if (isset($_GET['product_id'])) {
             'pictures' => $pictures,
             'stock' => $stock,
             'shipping_fee' => number_format($shippingFee, 2),
+            'bid_activate' => (int)$product['bid_activate'],
+            'bid_starting_price' => number_format((float)$product['bid_starting_price'], 2)
         ];
+        
+        if ($product["bid_activate"] == 1) {
+            $auctionHistoryQuery = $conn->prepare("SELECT * FROM auction_history WHERE product_id = ? AND end_time > ?");
+            $currentDt = date('Y-m-d H:i:s');
+            $auctionHistoryQuery->bind_param("is", $productId, $currentDt);
+            $auctionHistoryQuery->execute();
+            $auctionHistoryResult = $auctionHistoryQuery->get_result();
+        
+            if ($auctionHistoryResult->num_rows > 0) {
+                $auctionHistory = $auctionHistoryResult->fetch_assoc();
+        
+                $biddingRecordsQuery = $conn->prepare("SELECT * FROM bidding_records WHERE product_id = ? AND auction_id = ?");
+                $biddingRecordsQuery->bind_param("ii", $productId, $auctionHistory["auction_id"]);
+                $biddingRecordsQuery->execute();
+                $biddingRecordsResults = $biddingRecordsQuery->get_result();
+        
+                // Fetch all bidding records
+                $biddingRecords = [];
+                while ($row = $biddingRecordsResults->fetch_assoc()) {
+                    $biddingRecords[] = $row;
+                }
+        
+                // Add auction history and bidding records to the response
+                $response['auction_history'] = $auctionHistory;
+                $response['bidding_records'] = $biddingRecords;
+                
+            }  else {
+                $response['auction_history'] = [];
+                $response['bidding_records'] = [];
+            }
+        }
+        
     } else {
         $response = ['success' => false, 'message' => 'Product not found.'];
     }

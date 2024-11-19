@@ -649,6 +649,11 @@ error_reporting(E_ALL);
                                     <span id="modal-discounted-price">LKR. 1000</span>
                                     <span id="modal-original-price">LKR. 1500</span>
                                     <span id="modal-discount-badge">20% off</span>
+                                    <div class="bid-price-box">
+                                        <span id="modal-bid-starting-price">LKR. 1000</span>
+                                        <span id="modal-highest-bid-price">Highest Bid Amount: LKR. <span class="highest-bid-price"></span></span>
+                                    </div>
+                                    
                                 </div>
 
                                 <!-- Stock and Shipping Section -->
@@ -664,11 +669,29 @@ error_reporting(E_ALL);
                                     <button id="increase-quantity">+</button>
                                 </div>
 
+                                <div class="place-bid-price-controller">
+                                    <p id="auction-id" hidden></p>
+                                    <div class="controller-box">
+                                        <label>Place bid price: </label>
+                                        <button id="decrease-bid-price">-</button>
+                                        <input type="text" id="place-bid-price-input"/>
+                                        <button id="increase-bid-price">+</button>
+                                    </div>
+                                    <div class="bid-ending-date-box">Ending date: 
+                                        <span id="modal-bid-ending_date"></span>
+                                    </div>
+                                    <div class="bid-status-box">Status: 
+                                        <span id="modal-bid-status"></span>
+                                    </div>
+                                    
+                                </div>
+
 
                                 <!-- Action Buttons -->
                                 <div class="action-buttons">
                                     <button id="custom-add-to-cart" class="custom-button">Add to Cart</button>
                                     <button id="custom-buy-now" class="custom-button custom-buy-now">Buy Now</button>
+                                    <button id="custom-place-bid" class="custom-button">Place Bid</button>
                                 </div>
 
                             </div>

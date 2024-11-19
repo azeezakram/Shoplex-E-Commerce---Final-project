@@ -281,3 +281,16 @@ a {
         display: block;
     }
 }
+
+@media (max-width: 400px) {
+    .products-grid {
+        grid-template-columns: repeat(1, 1fr);
+    }
+
+    .buttons {
+        flex-direction: row;
+    }
+    .discount-badge {
+        display: block;
+    }
+}

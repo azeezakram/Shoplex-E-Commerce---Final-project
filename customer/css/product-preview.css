@@ -201,7 +201,12 @@
     margin-bottom: 20px;
 }
 
-#modal-discounted-price {
+.modal-middle .price .bid-price-box {
+    display: flex; 
+    flex-direction: column;
+}
+
+#modal-discounted-price, #modal-bid-starting-price {
     color: #e74c3c;
     font-weight: bold;
 }
@@ -220,9 +225,14 @@
     font-weight: bold;
 }
 
+#modal-highest-bid-price {
+    margin-bottom: 0;
+    margin-top: 20px;
+}
+
 /* Stock and Shipping Info */
-.modal-middle .stock-shipping {
-    margin-bottom: 20px;
+.modal-middle .stock-shipping, #modal-highest-bid-price {
+    /* margin-bottom: 20px; */
     font-size: 1.1rem;
     display: flex;
     flex-direction: column;
@@ -230,13 +240,17 @@
 }
 
 /* Quantity Controller */
-.quantity-controller {
+.quantity-controller, .place-bid-price-controller {
     display: flex;
     align-items: center;
     margin-bottom: 30px;
 }
 
-.quantity-controller button {
+.place-bid-price-controller .controller-box {
+    margin-bottom: 20px;
+}
+
+.quantity-controller button, .place-bid-price-controller button{
     background: none;
     /* color: #fff; */
     border: none;
@@ -247,12 +261,12 @@
     transition: background 0.3s ease;
 }
 
-.quantity-controller button:hover {
+.quantity-controller button:hover, .place-bid-price-controller button:hover {
     background: #3437f5;
     color: white;
 }
 
-.quantity-controller input {
+.quantity-controller input,  .place-bid-price-controller input{
     width: 70px;
     text-align: center;
     font-size: 1rem;
@@ -260,6 +274,26 @@
     border: none;
     border-radius: 5px;
     padding: 7px;
+}
+
+.place-bid-price-controller label {
+    font-weight: 600; 
+}
+
+
+
+.bid-ending-date-box {
+    margin-bottom: 10px;
+    
+}
+
+.bid-status-box, .bid-ending-date-box { 
+    font-weight: 600; 
+} 
+
+
+.bid-status-box > span, .bid-ending-date-box > span { 
+    font-weight: normal;
 }
 
 /* Action Buttons */
