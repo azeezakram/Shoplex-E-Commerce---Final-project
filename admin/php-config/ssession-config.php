@@ -18,7 +18,7 @@ function check_login($conn)
 		}
 	}
 
-	header("Location: signin_page.php");
+	header("Location: index.php");
 	die;
 
 }

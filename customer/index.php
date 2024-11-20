@@ -121,13 +121,13 @@ error_reporting(E_ALL);
 
 
                 <?php if (isset($_SESSION['user_id'])): ?>
-                    <a href="#" class="subject">
+                    <a href="profile.php" class="subject">
                         <div>Profile</div>
                     </a>
-                    <a href="#" class="subject">
+                    <a href="cart-page.php" class="subject">
                         <div>Cart</div>
                     </a>
-                    <a href="#" class="subject">
+                    <a href="order-page.php" class="subject">
                         <div>Orders</div>
                     </a>
                 <?php else: ?>
@@ -186,13 +186,13 @@ error_reporting(E_ALL);
                 <div class="right-section">
                     <?php if (isset($_SESSION['user_id'])): ?>
                         <div class="right-button" id="cart-button">
-                            <a href="#">
+                            <a href="cart-page.php">
                                 <img class="cart-icon" src="images/icons/cart.png">
                                 <div class="tooltip">Cart</div>
                             </a>
                         </div>
                         <div class="right-button" id="order-button">
-                            <a href="#">
+                            <a href="order-page.php">
                                 <img class="order-icon" src="images/icons/order.png">
                                 <div class="tooltip">Order</div>
                             </a>
@@ -250,16 +250,16 @@ error_reporting(E_ALL);
                             <div class="profile-mid-section">
 
                                 <?php if (isset($_SESSION['user_id'])): ?>
-                                    <a href="#">
+                                    <a href="profile.php">
                                         <img src="images/icons/profile-p.png">
                                         <div>Profile</div>
                                     </a>
 
-                                    <a href="#">
+                                    <a href="cart-page.php">
                                         <img src="images/icons/cart.png">
                                         <div>Cart</div>
                                     </a>
-                                    <a href="#">
+                                    <a href="order-page.php">
                                         <img src="images/icons/order.png">
                                         <div>Orders</div>
                                     </a>
