@@ -18,11 +18,7 @@ function check_login($conn)
 		}
 	}
 
-<<<<<<< HEAD
-	header("Location: signin_page.php");
-=======
 	header("Location: index.php");
->>>>>>> safras3
 	die;
 
 }

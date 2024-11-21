@@ -11,14 +11,9 @@ $response = ['success' => false, 'message' => '', 'email_exists' => false];
 
 if ($email && $password) {
     // Prepare and execute the statement to check for the email
-<<<<<<< HEAD
-    $stmt = $conn->prepare("SELECT * FROM user WHERE email = ? LIMIT 1");
-    $stmt->bind_param('s', $email);
-=======
     $stmt = $conn->prepare("SELECT * FROM user WHERE email = ? AND user_type_id = ? LIMIT 1");
     $user_type_id = 4;
     $stmt->bind_param('si', $email, $user_type_id);
->>>>>>> safras3
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -43,10 +38,7 @@ if ($email && $password) {
             $update_stmt->execute();
 
             // Include user data in response for localStorage
-<<<<<<< HEAD
-=======
             $response['is_admin'] = $user_data['user_type_id'] === 4; // Assume user_type_id 1 is admin
->>>>>>> safras3
             $response['success'] = true;
             $response['user_id'] = $user_data['user_id'];
             $response['user_name'] = $user_data['name'];
