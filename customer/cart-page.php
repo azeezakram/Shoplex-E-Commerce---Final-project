@@ -45,7 +45,11 @@ $cartItemResult = $cartItemStmt->get_result();
 </head>
 <body>
 
+<<<<<<< HEAD
 <nav>
+=======
+    <nav>
+>>>>>>> safras3
         <div class="side-navbar" id="sideNavBar">
             <!-- <span class="close-btn" id="closeBtn">&times;</span> -->
             <img src="images/icons/close.svg" class="close-btn" id="closeBtn">
@@ -142,7 +146,11 @@ $cartItemResult = $cartItemStmt->get_result();
                     <a href="cart-page.php" class="subject">
                         <div>Cart</div>
                     </a>
+<<<<<<< HEAD
                     <a href="#" class="subject">
+=======
+                    <a href="order-page.php" class="subject">
+>>>>>>> safras3
                         <div>Orders</div>
                     </a>
                 <?php else: ?>
@@ -207,7 +215,11 @@ $cartItemResult = $cartItemStmt->get_result();
                             </a>
                         </div>
                         <div class="right-button" id="order-button">
+<<<<<<< HEAD
                             <a href="#">
+=======
+                            <a href="order-page.php">
+>>>>>>> safras3
                                 <img class="order-icon" src="images/icons/order.png">
                                 <div class="tooltip">Order</div>
                             </a>
@@ -274,7 +286,11 @@ $cartItemResult = $cartItemStmt->get_result();
                                         <img src="images/icons/cart.png">
                                         <div>Cart</div>
                                     </a>
+<<<<<<< HEAD
                                     <a href="#">
+=======
+                                    <a href="order-page.php">
+>>>>>>> safras3
                                         <img src="images/icons/order.png">
                                         <div>Orders</div>
                                     </a>
