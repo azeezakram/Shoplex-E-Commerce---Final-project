@@ -1,4 +1,4 @@
-<?php
+<?php 
 include '../php-config/db-conn.php';
 include '../php-config/ssession-config.php';
 session_start();
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Fetch user details to prefill the form
-$sql = "SELECT user_id, name, email, user_type_id FROM user WHERE user_id = ?";
+$sql = "SELECT user_id, name, email, user_type_id , password FROM user WHERE user_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param('i', $userId);
 $stmt->execute();
@@ -43,6 +43,10 @@ $user = $stmt->get_result()->fetch_assoc();
 if (!$user) {
     die('User not found.');
 }
+
+// Fetch all user types to populate the dropdown
+$sqlUserTypes = "SELECT user_type_id, type_name FROM user_type"; // Fetching user types from the `user_type` table
+$resultUserTypes = $conn->query($sqlUserTypes);
 ?>
 
 <!DOCTYPE html>
@@ -51,9 +55,6 @@ if (!$user) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit User</title>
-    <!-- Link to the CSS file -->
-  
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/edit-userpage.css">
 </head>
@@ -71,11 +72,19 @@ if (!$user) {
             <br>
             
             <label for="user_type">User Type:</label>
-            <input type="number" id="user_type" name="user_type" value="<?php echo htmlspecialchars($user['user_type_id']); ?>" required>
+            <select id="user_type" name="user_type" required>
+                <?php 
+                // Loop through user types to create the dropdown options
+                while ($row = $resultUserTypes->fetch_assoc()) {
+                    $selected = ($row['user_type_id'] == $user['user_type_id']) ? 'selected' : ''; // Pre-select the current user type
+                    echo "<option value='" . $row['user_type_id'] . "' $selected>" . htmlspecialchars($row['type_name']) . "</option>";
+                }
+                ?>
+            </select>
             <br>
             
             <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+            <input type="password" id="password" name="password" value="<?php echo htmlspecialchars($user['password']); ?>" required>
             <br>
             
             <button type="submit">Update</button>
