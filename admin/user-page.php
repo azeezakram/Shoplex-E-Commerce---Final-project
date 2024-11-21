@@ -6,9 +6,11 @@ session_start();
 // Check if a search query is provided
 $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
 
-// Modify the SQL query to search for users based on name or email
-$sql = "SELECT user_id, user_type_id, name, email, profile_picture, last_login, created_at, updated_at, password FROM user 
-        WHERE name LIKE ? OR email LIKE ?"; 
+// Modify the SQL query to join the user_type table and fetch the user type name
+$sql = "SELECT u.user_id, u.user_type_id, u.name, u.email, u.profile_picture, u.last_login, u.created_at, u.updated_at, u.password, ut.type_name 
+        FROM user u 
+        LEFT JOIN user_type ut ON u.user_type_id = ut.user_type_id 
+        WHERE u.name LIKE ? OR u.email LIKE ?"; 
 
 $stmt = $conn->prepare($sql);
 $searchTermWithWildcard = "%" . $searchTerm . "%"; // Add wildcards for partial matching
@@ -74,7 +76,8 @@ $result = $stmt->get_result();
                 </div>
                 <div class="user-card-body">
                     <p><strong>Email:</strong> <?php echo htmlspecialchars($row['email']); ?></p>
-                    <p><strong>User Type:</strong> <?php echo htmlspecialchars($row['user_type_id']); ?></p>
+                    
+                    <p><strong>User Type:</strong> <?php echo htmlspecialchars($row['type_name']); ?></p> <!-- Displaying the user type name -->
                     <p><strong>Created At:</strong> <?php echo htmlspecialchars($row['created_at']); ?></p>
                     <p><strong>Last Updated:</strong> <?php echo htmlspecialchars($row['updated_at']); ?></p>
                 </div>
