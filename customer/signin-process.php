@@ -11,14 +11,9 @@ $response = ['success' => false, 'message' => '', 'email_exists' => false];
 
 if ($email && $password) {
     // Prepare and execute the statement to check for the email
-<<<<<<< HEAD
-    $stmt = $conn->prepare("SELECT * FROM user WHERE email = ? LIMIT 1");
-    $stmt->bind_param('s', $email);
-=======
     $stmt = $conn->prepare("SELECT * FROM user WHERE email = ? AND user_type_id = ? LIMIT 1");
     $user_type_id = 1;
     $stmt->bind_param('si', $email, $user_type_id);
->>>>>>> safras3
     $stmt->execute();
     $result = $stmt->get_result();
 

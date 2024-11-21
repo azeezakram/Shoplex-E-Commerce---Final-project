@@ -127,11 +127,7 @@ error_reporting(E_ALL);
                     <a href="cart-page.php" class="subject">
                         <div>Cart</div>
                     </a>
-<<<<<<< HEAD
-                    <a href="#" class="subject">
-=======
                     <a href="order-page.php" class="subject">
->>>>>>> safras3
                         <div>Orders</div>
                     </a>
                 <?php else: ?>
@@ -196,11 +192,7 @@ error_reporting(E_ALL);
                             </a>
                         </div>
                         <div class="right-button" id="order-button">
-<<<<<<< HEAD
-                            <a href="#">
-=======
                             <a href="order-page.php">
->>>>>>> safras3
                                 <img class="order-icon" src="images/icons/order.png">
                                 <div class="tooltip">Order</div>
                             </a>
@@ -267,11 +259,7 @@ error_reporting(E_ALL);
                                         <img src="images/icons/cart.png">
                                         <div>Cart</div>
                                     </a>
-<<<<<<< HEAD
-                                    <a href="#">
-=======
                                     <a href="order-page.php">
->>>>>>> safras3
                                         <img src="images/icons/order.png">
                                         <div>Orders</div>
                                     </a>
@@ -757,11 +745,6 @@ error_reporting(E_ALL);
     <script src="javascript/signin-validation.js"></script>
     <script src="javascript/slideshow.js"></script>
     <script src="javascript/product-preview.js"></script>
-<<<<<<< HEAD
-    <script src="javascript/cart.js"></script>
-=======
-
->>>>>>> safras3
 </body>
 
 </html>
