@@ -1,21 +1,7 @@
 <?php
-// include('navbar.php');
 include 'php-config/db-conn.php';
-
-
 session_start();
-
-
-
-
-
 ?>
-
-
-
-
-
-
 
 
 <!DOCTYPE html>
@@ -56,6 +42,8 @@ session_start();
             <a href="logout.php"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
         </nav>
     </div>
+
+
     <div class="main-content">
         <div class="header">
             <h1>Inventory Management</h1>
@@ -65,96 +53,23 @@ session_start();
         </div>
 
         <div>
-            <button class="inventory-buttons">Normal Products</button>
-            <button class="inventory-buttons">Bidding Products</button>
+            <button class="inventory-buttons" id="normalProductBtn">Normal Products</button>
+            <button class="inventory-buttons" id="biddingProductBtn">Bidding Products</button>
         </div>
 
         <!-- Table to display users -->
-        <table id="normalProductsTable" class="inventory-table">
+        <table id="productsTable" class="inventory-table">
             <thead>
-                <tr>
-                    <th>Product ID</th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Category</th>
-                    <th>Price (Rs.)</th>
-                    <th>Discount (%)</th>
-                    <th>Stock</th>
-                    <th>Shipping Fee (Rs.)</th>
-                    <th>Created At</th>
-                    <th>Updated At</th>
-                    <th>Actions</th>
+                <tr id="tableHeaders">
+                    <!-- Headers will be updated dynamically -->
                 </tr>
             </thead>
-            <tbody>
-                <!-- Placeholder for dynamically loaded user data -->
-                <tr>
-                    <td>1</td>
-                    <td class="description-container">
-                        <div class="name">
-                            Monitor
-                        </div>
-                    </td>
-                    <td class="description-container">
-                        <div class="description">
-                            Monitorssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
-                        </div>
-                    </td>
-                    <td>Electric</td>
-                    <td>15000</td>
-                    <td>15</td>
-                    <td>100</td>
-                    <td>1250</td>
-                    <td>date</td>
-                    <td>date</td>
-                    <td><button class="action-buttons">Edit</button> <button class="action-buttons">Delete</button></td>
-                </tr>
-                <!-- More users can be added here dynamically -->
+            <tbody id="productsTableBody">
+                <!-- Products will be loaded here -->
             </tbody>
         </table>
 
-        <table id="biddingProductsTable" class="inventory-table">
-            <thead>
-                <tr>
-                    <th>Product ID</th>
-                    <th>Name</th>
-                    <th>Category</th>
-                    <th>Bid Starting Price (Rs.)</th>
-                    <th>Stock</th>
-                    <th>Shipping Fee (Rs.)</th>
-                    <th>Bid Status</th>
-                    <th>Created At</th>
-                    <th>Updated At</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Placeholder for dynamically loaded user data -->
-                <tr>
-                    <td>1</td>
-                    <td class="description-container">
-                        <div class="name">
-                            Monitor
-                        </div>
-                    </td>
-                    <td class="description-container">
-                        <div class="description">
-                            Monitorssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
-                        </div>
-                    </td>
-                    <td>15000</td>
-                    <td>100</td>
-                    <td>1250</td>
-                    <td>Active</td>
-                    <td>date</td>
-                    <td>date</td>
-                    <td><button class="action-buttons">Edit</button> <button class="action-buttons">Delete</button></td>
-                </tr>
-
-                <!-- More users can be added here dynamically -->
-            </tbody>
-        </table>
-        <div class="popup-overlay" id="productPopup">
+        <div class="popup-overlay" id="productPopup" >
             <div class="popup-content">
                 <span class="close-btn" onclick="closeProductForm()">&times;</span>
 
@@ -166,12 +81,12 @@ session_start();
                 <form id="productForm">
                     <div class="form-section">
                         <label>Product Name</label>
-                        <input type="text" required>
+                        <input type="text" name="productName">
                     </div>
 
                     <div class="form-section">
                         <label>Description</label>
-                        <textarea rows="4"></textarea>
+                        <textarea rows="4" name="description"></textarea>
                     </div>
 
                     <div class="form-section">
@@ -181,7 +96,6 @@ session_start();
                         </select>
                     </div>
 
-                    <!-- Subcategory Dropdown -->
                     <div class="form-section">
                         <label for="subCategory">Sub Category</label>
                         <select id="subCategory" name="subCategory" disabled>
@@ -189,64 +103,77 @@ session_start();
                         </select>
                     </div>
 
-                </form>
 
 
-                <div id="normalProductFields">
-                    <div class="form-section">
-                        <label>Price</label>
-                        <input type="number" min="0" step="0.01">
+
+
+                    <div id="normalProductFields">
+                        <div class="form-section">
+                            <label>Price</label>
+                            <input type="number" min="1" step="0.01" name="price">
+                        </div>
+
+                        <div class="form-section">
+                            <label>Discount (%)</label>
+                            <input type="number" min="0" max="100" name="discount" value="0">
+                        </div>
+
+                    </div>
+
+                    <div id="biddingProductFields" style="display:none;">
+                        <div class="form-section">
+                            <label>Bid Starting Price</label>
+                            <input type="number" name="bidStartingPrice" min="1" step="0.01">
+                        </div>
+
+                        <div class="form-section">
+                            <label>Bid Starting Date</label>
+                            <input type="date" name="bidStartDate">
+                        </div>
+
+                        <div class="form-section">
+                            <label>Bid Ending Date</label>
+                            <input type="date" name="bidEndDate">
+                        </div>
                     </div>
 
                     <div class="form-section">
-                        <label>Discount (%)</label>
-                        <input type="number" min="0" max="100" value="0">
-                    </div>
-                </div>
-
-                <div id="biddingProductFields" style="display:none;">
-                    <div class="form-section">
-                        <label>Bid Starting Price</label>
-                        <input type="number" min="0" step="0.01">
+                        <label>Stock</label>
+                        <input type="number" min="1" value="1" name="stock">
                     </div>
 
                     <div class="form-section">
-                        <label>Bid Starting Date</label>
-                        <input type="date">
+                        <label>Shipping Fee</label>
+                        <input type="number" name="shippingFee" min="0" value="0" step="0.01">
                     </div>
 
                     <div class="form-section">
-                        <label>Bid Ending Date</label>
-                        <input type="date">
+                        <label>Product Images</label>
+                        <div id="imageUploadContainer" class="image-upload">
+                            <input type="file" id="imageInput" accept="image/*" multiple hidden>
+                            <p>Click to upload images or drag and drop here</p>
+                        </div>
+                        <div id="imagePreviewContainer" class="image-preview-container"></div>
+                        <div id="productImagesContainer"></div>
                     </div>
-                </div>
-
-                <div class="form-section">
-                    <label>Stock</label>
-                    <input type="number" min="1" value="1">
-                </div>
-
-                <div class="form-section">
-                    <label>Shipping Fee</label>
-                    <input type="number" min="0" value="0" step="0.01">
-                </div>
-
-                <div class="form-section">
-                    <label>Product Images</label>
-                    <div id="imageUploadContainer" class="image-upload">
-                        <input type="file" id="imageInput" accept="image/*" multiple hidden>
-                        <p>Click to upload images or drag and drop here</p>
-                    </div>
-                    <div id="imagePreviewContainer" class="image-preview-container"></div>
-                </div>
+                    <input type="hidden" id="productId" name="productId" value="existingProductIdHere" style="display: none;">
+                    <input type="hidden" name="productType" id="productTypeHidden" />
 
 
-                <button type="submit" class="submit-btn">Add Product</button>
+                    <button type="submit" class="submit-btn" id="addProductSubmitBtn">Add Product</button>
+                    <button type="submit" class="submit-btn" id="updateSubmitBtn" style="display: none;">Update</button>
                 </form>
             </div>
         </div>
 
+        <div id="success-message" class="success-message">
+            <p>Order placed successfully!</p>
+        </div>
+
     </div>
+
+
+
     <script src="javascript/user-page.js"></script>
     <script src="javascript/inventory-page.js"></script>
 </body>

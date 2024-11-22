@@ -52,6 +52,12 @@ h1 {
     color: #0b507e;
 }
 
+.inventory-buttons.active {
+    background-color: #007bff;
+    color: white;
+}
+
+
 .inventory-table th, .inventory-table td {
     padding: 10px;
     text-align: left;
@@ -67,19 +73,17 @@ h1 {
     background-color: #f2f2f2;
 }
 
-/* Description column scrollable style */
 .inventory-table td.description-container {
-    max-height: 100px; /* Set a maximum height for the cell */
+    max-height: 100px; /* Limit the vertical height */
     overflow-y: auto;  /* Enable vertical scrolling */
-    padding: 8px;
-    background-color: #ffffff; /* Optional: Set a background color */
+    padding: 8px; /* Optional: Padding for better spacing */
+    background-color: #ffffff; /* Optional: Consistent background color */
 }
 
 .inventory-table td.description {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal; /* Allow text to wrap if needed */
 }
+
 
 /* Button Styles */
 .inventory-buttons {
@@ -304,4 +308,46 @@ h1 {
 
 .submit-btn:hover {
     background-color: #27ae60;
+}
+
+.inventory-buttons.active {
+    background-color: #007bff;
+    color: white;
+}
+
+
+
+
+.success-message {
+    position: fixed;
+    bottom: -80px; /* Start off-screen */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #11942f; /* Green for success */
+    color: white;
+    padding: 15px;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 10px;
+    visibility: hidden; /* Hidden by default */
+    opacity: 0; /* Start as invisible */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1001;
+    text-align: center;
+    transition: opacity 0.5s ease, bottom 0.5s ease, visibility 0s 0.5s; /* Smooth transition */
+}
+
+/* Show the success message with smooth transition */
+.success-message.show {
+    visibility: visible; /* Make it visible */
+    opacity: 1; /* Make it fully visible */
+    bottom: 30px; /* Slide up to 30px from the bottom */
+    transition: opacity 0.5s ease, bottom 0.5s ease, visibility 0s 0s; /* Smooth transition */
+}
+
+/* Optional: Animation to fade out the success message after a few seconds */
+.success-message.hide {
+    opacity: 0;
+    bottom: -80px; /* Slide back off-screen */
+    transition: opacity 0.5s ease, bottom 0.5s ease; /* Smooth slide-out */
 }

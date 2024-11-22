@@ -310,67 +310,7 @@ error_reporting(E_ALL);
             </div>
 
             <div class="bottom-bar">
-                <!-- <div class="dropdown-box">
-                    <select name="category" id="category-dropdown">
-                       
-                        <option value="all-categories">All Categories</option>
-                        <option value="electronics">Electronics</option>
-                        <option value="home">Home</option>
-                        <option value="fashion">Fashion</option>
-                        <img class="dropdown-logo" src="images/icons/category.png">
-                    </select>
-                </div> -->
-
-                <!-- <div class="custom-dropdown-box">
-                    <div id="custom-category-dropdown" class="custom-dropdown">
-                        <div class="custom-dropdown-toggle">Select Category</div>
-                        <div class="custom-dropdown-content">
-                            <?php
-                            include('php-config/db-conn.php');
-
-                            // Initialize an array to store categories
-                            $categories = [];
-
-                            // Fetch all categories with their parent relationships
-                            $result = $conn->query("SELECT category_id, category_name, parent_category_id FROM category ORDER BY parent_category_id, category_name");
-
-                            // Organize categories into parent-child structure
-                            while ($row = $result->fetch_assoc()) {
-                                if ($row['parent_category_id'] === null) {
-                                    // Add parent category
-                                    $categories[$row['category_id']] = [
-                                        'name' => $row['category_name'],
-                                        'children' => []
-                                    ];
-                                } else {
-                                    // Add child category under the respective parent
-                                    if (isset($categories[$row['parent_category_id']])) {
-                                        $categories[$row['parent_category_id']]['children'][] = [
-                                            'id' => $row['category_id'],
-                                            'name' => $row['category_name']
-                                        ];
-                                    }
-                                }
-                            }
-
-                            // Display categories
-                            foreach ($categories as $parent_id => $category): ?>
-                                <div class="custom-parent-category" data-id="<?php echo $parent_id; ?>">
-                                    <span><?php echo htmlspecialchars($category['name']); ?></span>
-                                </div>
-                                <?php if (!empty($category['children'])): ?>
-                                    <div class="custom-subcategory-content" style="display: none;">
-                                        <?php foreach ($category['children'] as $child): ?>
-                                            <div class="custom-child-category" data-id="<?php echo $child['id']; ?>" style="padding-left: 15px;">
-                                                <span><?php echo htmlspecialchars($child['name']); ?></span>
-                                            </div>
-                                        <?php endforeach; ?>
-                                    </div>
-                                <?php endif; ?>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-                </div> -->
+                
 
                 <div class="shortcut-links">
                     <?php if (isset($_SESSION['user_id'])): ?>
@@ -496,10 +436,10 @@ error_reporting(E_ALL);
                                     $picturePath = 'images\product-images\no_picture.jpg';
                                 }
                                 ?>
-                                <a href="signin-page.php"><img src="<?php echo "../" . $picturePath; ?>" alt="Product Image" class="product-img"></a>
+                                <img src="<?php echo "../" . $picturePath; ?>" alt="Product Image" class="product-img">
                             </div>
                             <div class="product-details">
-                                <a href="signin-page.php">
+                                
                                     <h2 class="product-name"><?php echo $row["product_name"]; ?></h2>
                                     <div class="rating">
                                         <?php
@@ -590,7 +530,7 @@ error_reporting(E_ALL);
                                             ?>
                                         </span>
                                     </div>
-                                </a>
+                                
                                 <div class="buttons">
 
                                     <?php
@@ -623,11 +563,11 @@ error_reporting(E_ALL);
 
                 <div id="product-preview-modal" class="modal">
                     <div class="modal-content">
-                        <!-- Close Button -->
+                        
                         <span class="close-button">&times;</span>
 
                         <div class="modal-body">
-                            <!-- Left Section - Product Image -->
+                            
                             <div class="modal-product-details">
                                 <div class="modal-left">
                                     <div id="carousel-container">
@@ -637,15 +577,12 @@ error_reporting(E_ALL);
                                     </div>
                                 </div>
 
-                                <!-- Right Section - Product Details -->
                                 <div class="modal-middle">
                                     <h2 id="modal-product-name">Product Name</h2>
                                     <div id="modal-product-description"></div>
 
                                     <div id="modal-product-rating"></div>
-                                    <!-- Add Rating Star/Icons Here -->
-
-                                    <!-- Price Section -->
+                                    
                                     <div class="price">
                                         <span id="modal-discounted-price">LKR. 1000</span>
                                         <span id="modal-original-price">LKR. 1500</span>
@@ -657,13 +594,11 @@ error_reporting(E_ALL);
 
                                     </div>
 
-                                    <!-- Stock and Shipping Section -->
                                     <div class="stock-shipping">
                                         <p class="stock-info" id="modal-stock-info">Stock: 10 available</p>
                                         <p class="shipping-info" id="modal-shipping-info">Shipping Fee: LKR. 200</p>
                                     </div>
 
-                                    <!-- Quantity Controller -->
                                     <div class="quantity-controller">
                                         <button id="decrease-quantity">-</button>
                                         <input type="text" id="quantity-input" value="1" min="1" disabled />

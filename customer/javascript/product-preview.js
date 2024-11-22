@@ -5,7 +5,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentIndex = 0;
     let productId = 0;
 
-    // Event listener for Add to Cart and Buy Now buttons
     document.querySelectorAll(".add-to-cart, .buy-now, .place-bid").forEach((button) => {
         button.addEventListener("click", function () {
             productId = this.dataset.productId;
@@ -15,9 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            // alert("Product ID: " + productId);
-
-            // Fetch product details
+            
             fetch(`other-php/fetch_product_details.php?product_id=${productId}`)
                 .then((response) => {
                     if (!response.ok) {
@@ -27,16 +24,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 })
                 .then((data) => {
                     if (data.success) {
-                        // console.log(JSON.stringify(data));
-                        // Populate modal
+                        
                         document.getElementById("modal-product-name").textContent = data.product_name;
                         data.description == null ? document.getElementById("modal-product-description").textContent = "No description" : document.getElementById("modal-product-description").textContent = data.description;;
                         document.getElementById("modal-discounted-price").textContent = "LKR. " + data.discounted_price;
 
                         const ratingContainer = document.getElementById("modal-product-rating");
 
-                        // Clear previous ratings and reviews to prevent duplicates
-                        ratingContainer.innerHTML = ""; // This will clear the old stars and review count
+                        ratingContainer.innerHTML = ""; 
 
                         if (data.product_rating && data.product_review_count) {
                             const rating = data.product_rating;
@@ -45,9 +40,9 @@ document.addEventListener("DOMContentLoaded", () => {
                                 const star = document.createElement("span");
                                 star.classList.add("fa");
                                 if (i <= rating) {
-                                    star.classList.add("fa-star", "checked"); // Add both classes separately
+                                    star.classList.add("fa-star", "checked");
                                 } else {
-                                    star.classList.add("fa-star"); // Add only the "fa-star" class
+                                    star.classList.add("fa-star"); 
                                 }
                                 ratingContainer.appendChild(star);
                             }
@@ -133,14 +128,9 @@ document.addEventListener("DOMContentLoaded", () => {
                                 let highest_bid = getHighestBidAmount(data, data.auction_history.auction_id);
                                 document.getElementById("modal-highest-bid-price").style.display = "inline-block";
                                 
-                                document.querySelector('.highest-bid-price').innerText = `${Number(highest_bid).toFixed(2)}`;
+                                document.querySelector('.highest-bid-price').innerText = `${Number(highest_bid)}`;
 
-                                // const highestBidSpan = document.createElement("span");
-                                // highestBidSpan.classList.add("highest-bid-price");
-                                // highestBidSpan.textContent = `${Number(highest_bid).toFixed(2)}`;
-                                // document.getElementById('modal-highest-bid-price').appendChild(highestBidSpan);
-                                // document.getElementById('modal-highest-bid-price').innerText = `Highest Bid Amount: LKR. ${parseFloat(highest_bid).toFixed(2)}`;
-                                document.getElementById('place-bid-price-input').value = parseFloat(highest_bid).toFixed(2);
+                                document.getElementById('place-bid-price-input').value = parseFloat(highest_bid);
                                 
                             }
 
@@ -254,32 +244,6 @@ document.addEventListener("DOMContentLoaded", () => {
                         inputController(data);
 
                         
-
-                        // if (data.review_details) { // Explicitly check for undefined
-                        //     if (data.shipping_fee > 0) {
-                        //         document.getElementById('no-review-label').style.display = "none";
-
-                                
-
-                        //         // Add base text for the shipping fee
-                        //         const baseText = document.createTextNode("Shipping Fee: LKR.");
-                        //         shippingFeeDetail.appendChild(baseText);
-
-                        //         // Create and append a span element for the fee value
-                        //         const shippingFee = document.createElement("span");
-                        //         shippingFee.classList.add("shipping-fee");
-                        //         shippingFee.textContent = ` ${Number(data.shipping_fee).toFixed(2)}`; // Add space before value
-                        //         shippingFeeDetail.appendChild(shippingFee);
-
-                        //     } else {
-                        //         document.getElementById('no-review-label').style.display = "block";
-                        //         shippingFeeDetail.style.display = "inline";
-                        //     }
-                        // } else {
-                        //     // Hide the element if no shipping fee is provided
-                        //     shippingFeeDetail.style.display = "none";
-                        // }
-
 
 
                         // console.log(data.review_details);
@@ -478,18 +442,17 @@ document.addEventListener("DOMContentLoaded", () => {
                     decreaseButton.style.opacity = "0.6";
                 }
     
-                // Attach event listeners initially
                 attachEventListeners();
     
-                // Close the preview and reset buttons
+                
                 document.querySelector(".close-button").addEventListener("click", () => {
-                    // Close the modal
+                    
                     const modal = document.querySelector(".modal");
                     if (modal) {
                         modal.classList.remove("show");
                     }
     
-                    // Reset buttons when closing the preview
+                    
                     resetPreview();
                 });
             } else {
