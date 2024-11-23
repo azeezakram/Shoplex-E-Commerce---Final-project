@@ -39,50 +39,49 @@ error_reporting(E_ALL);
             </a>
 
             <div class="sidenav-category-section">
-                <label for="categories" class="dropdown-label">Categories</label>
-                <div class="dropdown-content">
-                    <?php
-                    // Initialize an array to store categories
-                    $categories = [];
+    <label for="categories" class="dropdown-label">Categories</label>
+    <div class="dropdown-content">
+        <?php
+        // Initialize an array to store categories
+        $categories = [];
 
-                    // Fetch all categories with their parent relationships
-                    $result = $conn->query("SELECT category_id, category_name, parent_category_id FROM category ORDER BY parent_category_id, category_name");
+        // Fetch all categories with their parent relationships
+        $result = $conn->query("SELECT category_id, category_name, parent_category_id FROM category ORDER BY parent_category_id, category_name");
 
-                    // Organize categories into parent-child structure
-                    while ($row = $result->fetch_assoc()) {
-                        if ($row['parent_category_id'] === null) {
-                            // Add parent category
-                            $categories[$row['category_id']] = [
-                                'name' => $row['category_name'],
-                                'children' => []
-                            ];
-                        } else {
-                            // Add child category under the respective parent
-                            $categories[$row['parent_category_id']]['children'][] = [
-                                'id' => $row['category_id'],
-                                'name' => $row['category_name']
-                            ];
-                        }
-                    }
+        // Organize categories into parent-child structure
+        while ($row = $result->fetch_assoc()) {
+            if ($row['parent_category_id'] === null) {
+                // Add parent category
+                $categories[$row['category_id']] = [
+                    'name' => $row['category_name'],
+                    'children' => []
+                ];
+            } else {
+                // Add child category under the respective parent
+                $categories[$row['parent_category_id']]['children'][] = [
+                    'id' => $row['category_id'],
+                    'name' => $row['category_name']
+                ];
+            }
+        }
 
-                    // Display categories
-                    foreach ($categories as $parent_id => $category): ?>
-                        <a href="#" class="subject parent-category" data-id="<?php echo $parent_id; ?>">
-                            <div><?php echo htmlspecialchars($category['name']); ?></div>
+        // Display categories
+        foreach ($categories as $parent_id => $category): ?>
+            <a href="index.php?category_id=<?php echo $parent_id; ?>" class="subject parent-category" data-id="<?php echo $parent_id; ?>">
+                <div><?php echo htmlspecialchars($category['name']); ?></div>
+            </a>
+            <?php if (!empty($category['children'])): ?>
+                <div class="subcategory-content">
+                    <?php foreach ($category['children'] as $child): ?>
+                        <a href="index.php?category_id=<?php echo $child['id']; ?>" class="subject child-category" data-id="<?php echo $child['id']; ?>" style="padding-left: 25px;">
+                            <div><?php echo htmlspecialchars($child['name']); ?></div>
                         </a>
-                        <?php if (!empty($category['children'])): ?>
-                            <div class="subcategory-content">
-                                <?php foreach ($category['children'] as $child): ?>
-                                    <a href="#" class="subject child-category" data-id="<?php echo $child['id']; ?>" style="padding-left: 25px;">
-                                        <div><?php echo htmlspecialchars($child['name']); ?></div>
-                                    </a>
-                                <?php endforeach; ?>
-                            </div>
-                        <?php endif; ?>
                     <?php endforeach; ?>
                 </div>
-            </div>
-
+            <?php endif; ?>
+        <?php endforeach; ?>
+    </div>
+</div>
 
 
 
@@ -164,13 +163,19 @@ error_reporting(E_ALL);
                         <img class="comp-logo" src="images/logo/green-logo.png">
                     </a>
                 </div>
-
-                <div class="mid-section">
-                    <input class="search-bar" type="text" placeholder="Search" />
+                <form method="GET" action=" ">
+                <div class="mid-section"> 
+                    
+                    <input class="search-bar" type="text" name="search" placeholder="Search" />
                     <button class="search-button">
                         <img src="images/icons/search.png">
                         <div class="tooltip">Search</div>
                     </button>
+                   
+
+                   
+
+
 
                     <!-- <div class="image-search-button" onclick="toggleUploadBox()">
                         <img src="images/icons/image-search.png" alt="Upload Icon">
@@ -182,7 +187,7 @@ error_reporting(E_ALL);
                     <!-- </div> -->
 
                 </div>
-
+                </form>
                 <div class="right-section">
                     <?php if (isset($_SESSION['user_id'])): ?>
                         <div class="right-button" id="cart-button">
@@ -459,24 +464,80 @@ error_reporting(E_ALL);
                 </div>
             </div>
         </section> -->
+        
+
+      
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         <section class="for-you-products-section">
-            <div class="list-type">
-                <h1>For You</h1>
-            </div>
-            <div class="products-grid">
-                <?php
-                $sql = "SELECT * FROM product";
+    <div class="list-type">
+        <h1>For You</h1>
+    </div>
+    
 
-                $productsResult = $conn->query($sql);
-                ?>
+    <div class="products-grid">
+    <?php
+    // Check for search term or category filter
+    $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
+    $categoryId = isset($_GET['category_id']) ? (int)$_GET['category_id'] : null;
 
-                <?php
-                if ($productsResult->num_rows > 0) {
-                    while ($row = $productsResult->fetch_assoc()) {
-                ?>
+    if ($categoryId) {
+        // Query to fetch products by category
+        $sql = "SELECT p.* FROM product p
+                JOIN category_item ci ON p.product_id = ci.product_id
+                WHERE ci.category_id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $categoryId);
+    } else {
+        // Query to fetch products by search term
+        $sql = "SELECT * FROM product WHERE product_name LIKE ? OR description LIKE ?";
+        $stmt = $conn->prepare($sql);
+        $searchTermWithWildcard = "%" . $searchTerm . "%";
+        $stmt->bind_param("ss", $searchTermWithWildcard, $searchTermWithWildcard);
+    }
 
-                        <div class="product-card">
+    $stmt->execute();
+    $productsResult = $stmt->get_result();
+
+    if ($productsResult->num_rows > 0) {
+        while ($row = $productsResult->fetch_assoc()) {
+            ?>
+            <div class="product-card">
                             <p class="product-id" hidden><?php $row["product_id"]; ?></p>
 
                             <div class="product-image">
@@ -618,6 +679,9 @@ error_reporting(E_ALL);
                     echo "No products found.";
                 }
                 ?>
+</div>
+
+
 
 
 
@@ -745,6 +809,7 @@ error_reporting(E_ALL);
     <script src="javascript/signin-validation.js"></script>
     <script src="javascript/slideshow.js"></script>
     <script src="javascript/product-preview.js"></script>
+ 
 </body>
 
 </html>

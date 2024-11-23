@@ -131,7 +131,7 @@
     position: absolute;
     background-color: rgb(204, 204, 204);
     padding: 4px 6px;
-    bottom: -35px;
+    bottom: -9px;
     border-radius: 4px;
     opacity: 0;
     transition: opacity 0.15s;
