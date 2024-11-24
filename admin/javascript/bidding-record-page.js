@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             // Show the popup
-            document.getElementById("biddingDetailsPopup").style.display = "block";
+            document.getElementById("biddingDetailsPopup").style.display = "flex";
         });
     });
 
@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
-// Close Popup
-function closePopup() {
+function closeModal() {
     document.getElementById("biddingDetailsPopup").style.display = "none";
 }
+

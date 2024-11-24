@@ -367,39 +367,7 @@ error_reporting(E_ALL);
             </div>
         </section>
 
-        <!-- <section class="hero">
-            <div class="hero-content">
-                <h1>Welcome to&nbsp;<span><img src="images/logo/green-logo.png"></span></h1>
-                <p>Your one-stop shop for everything!</p>
-                <a href="#shop" class="cta-button">Shop Now</a>
-            </div>
-            <div class="service-cards">
-                <div class="service-card">
-                    <img src="images/services/shipping.png" alt="Free Shipping" class="service-icon">
-                    <h3>Free Shipping</h3>
-                    <p>Enjoy free shipping on orders over LKR.3000</p>
-                  
-                </div>
-                <div class="service-card">
-                    <img src="images/services/247.png" alt="24/7 Support" class="service-icon">
-                    <h3>24/7 Support</h3>
-                    <p>Our support team is available 24/7 to assist you.</p>
-                   
-                </div>
-                <div class="service-card">
-                    <img src="images/services/bid.png" alt="Bid" class="service-icon">
-                    <h3>Place bids</h3>
-                    <p>You can place bids for auction products.</p>
-                   
-                </div>
-                <div class="service-card">
-                    <img src="images/services/payment.png" alt="Secure Payments" class="service-icon">
-                    <h3>Secure Payments</h3>
-                    <p>Your payments are safe and secure with us.</p>
-                    
-                </div>
-            </div>
-        </section> -->
+        
 
         <section class="for-you-products-section">
             <div class="list-type">

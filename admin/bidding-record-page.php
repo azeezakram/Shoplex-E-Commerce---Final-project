@@ -119,15 +119,31 @@ session_start();
                     echo "<tr><td colspan='9'>No auctions found.</td></tr>";
                 }
                 ?>
-
-
-
-
-
             </tbody>
         </table>
-
     </div>
+
+    <div class="popup-overlay" id="biddingDetailsPopup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closeModal()">×</span>
+            <h2 id="title-head">Bidding Records</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Bid ID</th>
+                        <th>Bidder Name</th>
+                        <th>Bid Amount</th>
+                        <th>Bid Time</th>
+                    </tr>
+                </thead>
+                <tbody id="biddingDetailsBody">
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
 
     <script src="javascript/bidding-record-page.js"></script>
     <script src="javascript/side-navbar.js"></script>

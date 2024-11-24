@@ -38,6 +38,7 @@ function confirmDelivered(orderItemId) {
 document.getElementById('closeModal').onclick = function() {
     const modal = document.getElementById('reviewModal');
     modal.classList.remove('show');
+    window.location.reload();
 };
 
 // Function to handle review submission
