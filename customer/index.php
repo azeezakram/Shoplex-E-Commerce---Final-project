@@ -41,7 +41,7 @@ error_reporting(E_ALL);
             <div class="sidenav-category-section">
                 <label for="categories" class="dropdown-label">Categories</label>
                 <div class="dropdown-content">
-                    <?php
+                <?php
                     // Initialize an array to store categories
                     $categories = [];
 
@@ -67,13 +67,13 @@ error_reporting(E_ALL);
 
                     // Display categories
                     foreach ($categories as $parent_id => $category): ?>
-                        <a href="#" class="subject parent-category" data-id="<?php echo $parent_id; ?>">
+                        <a href="index.php?category_id=<?php echo $parent_id; ?>" class="subject parent-category" data-id="<?php echo $parent_id; ?>">
                             <div><?php echo htmlspecialchars($category['name']); ?></div>
                         </a>
                         <?php if (!empty($category['children'])): ?>
                             <div class="subcategory-content">
                                 <?php foreach ($category['children'] as $child): ?>
-                                    <a href="#" class="subject child-category" data-id="<?php echo $child['id']; ?>" style="padding-left: 25px;">
+                                    <a href="index.php?category_id=<?php echo $child['id']; ?>" class="subject child-category" data-id="<?php echo $child['id']; ?>" style="padding-left: 25px;">
                                         <div><?php echo htmlspecialchars($child['name']); ?></div>
                                     </a>
                                 <?php endforeach; ?>
@@ -406,13 +406,43 @@ error_reporting(E_ALL);
                 <h1>For You</h1>
             </div>
             <div class="products-grid">
-                <?php
-                $sql = "SELECT * FROM product";
+            <?php
+                $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
+                $categoryId = isset($_GET['category_id']) ? (int)$_GET['category_id'] : null;
 
-                $productsResult = $conn->query($sql);
-                ?>
+                if ($categoryId) {
+                    $categories = [$categoryId]; 
+                    $categoryQuery = "SELECT category_id FROM category WHERE parent_category_id = ?";
+                    $stmt = $conn->prepare($categoryQuery);
 
-                <?php
+                    $queue = [$categoryId];
+                    while (!empty($queue)) {
+                        $currentCategory = array_shift($queue);
+                        $stmt->bind_param("i", $currentCategory);
+                        $stmt->execute();
+                        $result = $stmt->get_result();
+                        while ($row = $result->fetch_assoc()) {
+                            $categories[] = $row['category_id'];
+                            $queue[] = $row['category_id']; 
+                        }
+                    }
+
+                    $placeholders = implode(',', array_fill(0, count($categories), '?'));
+                    $sql = "SELECT * FROM product WHERE category_id IN ($placeholders)";
+                    $stmt = $conn->prepare($sql);
+
+                    $types = str_repeat('i', count($categories)); 
+                    $stmt->bind_param($types, ...$categories);
+                } else {
+                    $sql = "SELECT * FROM product WHERE product_name LIKE ? OR description LIKE ?";
+                    $stmt = $conn->prepare($sql);
+                    $searchTermWithWildcard = "%" . $searchTerm . "%";
+                    $stmt->bind_param("ss", $searchTermWithWildcard, $searchTermWithWildcard);
+                }
+
+                $stmt->execute();
+                $productsResult = $stmt->get_result();
+
                 if ($productsResult->num_rows > 0) {
                     while ($row = $productsResult->fetch_assoc()) {
                 ?>
