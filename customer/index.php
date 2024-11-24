@@ -86,7 +86,7 @@ error_reporting(E_ALL);
 
 
 
-            <div class="sidenav-program-section">
+            <!-- <div class="sidenav-program-section">
                 <label for="Programs & Events">Programs & Events</label>
                 <a href="#" class="subject">
                     <div>All</div>
@@ -100,7 +100,7 @@ error_reporting(E_ALL);
                 <a href="#" class="subject">
                     <div>Fashion</div>
                 </a>
-            </div>
+            </div> -->
 
             <div class="sidenav-setting-section">
                 <label for="categories">Settings & Helps</label>
@@ -124,6 +124,9 @@ error_reporting(E_ALL);
                     <a href="profile.php" class="subject">
                         <div>Profile</div>
                     </a>
+                    <a href="view-auction-records-page.php" class="subject">
+                        <div>Auction History</div>
+                    </a>
                     <a href="cart-page.php" class="subject">
                         <div>Cart</div>
                     </a>
@@ -133,6 +136,9 @@ error_reporting(E_ALL);
                 <?php else: ?>
                     <a href="signin-page.php" class="subject">
                         <div>Profile</div>
+                    </a>
+                    <a href="signin-page.php" class="subject">
+                        <div>Auction History</div>
                     </a>
                     <a href="signin-page.php" class="subject">
                         <div>Cart</div>
@@ -171,15 +177,6 @@ error_reporting(E_ALL);
                         <img src="images/icons/search.png">
                         <div class="tooltip">Search</div>
                     </button>
-
-                    <!-- <div class="image-search-button" onclick="toggleUploadBox()">
-                        <img src="images/icons/image-search.png" alt="Upload Icon">
-                        <div class="image-upload-box" id="uploadBox">
-                            <p>Search by image</p>
-                            <input type="file" accept="image/*">
-                        </div> -->
-                    <!-- <div class="tooltip">Search by image</div> -->
-                    <!-- </div> -->
 
                 </div>
 
@@ -255,6 +252,11 @@ error_reporting(E_ALL);
                                         <div>Profile</div>
                                     </a>
 
+                                    <a href="view-auction-records-page.php">
+                                        <img src="images/icons/cart.png">
+                                        <div>Auction History</div>
+                                    </a>
+
                                     <a href="cart-page.php">
                                         <img src="images/icons/cart.png">
                                         <div>Cart</div>
@@ -263,10 +265,7 @@ error_reporting(E_ALL);
                                         <img src="images/icons/order.png">
                                         <div>Orders</div>
                                     </a>
-                                    <!-- <a href="#">
-                                        <img src="images/icons/wishlist.png">
-                                        <div>Wishlist</div>
-                                    </a> -->
+
                                     <a href="#">
                                         <img src="images/icons/message-center.png">
                                         <div>Message Center</div>
@@ -283,16 +282,18 @@ error_reporting(E_ALL);
 
                                     <a href="signin-page.php">
                                         <img src="images/icons/cart.png">
+                                        <div>Auction History</div>
+                                    </a>
+
+                                    <a href="signin-page.php">
+                                        <img src="images/icons/cart.png">
                                         <div>Cart</div>
                                     </a>
                                     <a href="signin-page.php">
                                         <img src="images/icons/order.png">
                                         <div>Orders</div>
                                     </a>
-                                    <!-- <a href="signin-page.php">
-                                        <img src="images/icons/wishlist.png">
-                                        <div>Wishlist</div>
-                                    </a> -->
+
                                     <a href="signin-page.php">
                                         <img src="images/icons/message-center.png">
                                         <div>Message Center</div>
@@ -310,7 +311,7 @@ error_reporting(E_ALL);
             </div>
 
             <div class="bottom-bar">
-                
+
 
                 <div class="shortcut-links">
                     <?php if (isset($_SESSION['user_id'])): ?>
@@ -439,39 +440,39 @@ error_reporting(E_ALL);
                                 <img src="<?php echo "../" . $picturePath; ?>" alt="Product Image" class="product-img">
                             </div>
                             <div class="product-details">
-                                
-                                    <h2 class="product-name"><?php echo $row["product_name"]; ?></h2>
-                                    <div class="rating">
-                                        <?php
-                                        $productId = (int)$row["product_id"];
-                                        $sql = "SELECT * FROM product_review WHERE product_id = $productId";
 
-                                        $reviewResult = $conn->query($sql);
+                                <h2 class="product-name"><?php echo $row["product_name"]; ?></h2>
+                                <div class="rating">
+                                    <?php
+                                    $productId = (int)$row["product_id"];
+                                    $sql = "SELECT * FROM product_review WHERE product_id = $productId";
 
-
-                                        $totalRating = 0;
-                                        $count = 0;
+                                    $reviewResult = $conn->query($sql);
 
 
-                                        if ($reviewResult && $reviewResult->num_rows > 0) {
-                                            while ($reviewRow = $reviewResult->fetch_assoc()) {
-                                                $totalRating += (int)$reviewRow["rating"];
-                                                $count++;
+                                    $totalRating = 0;
+                                    $count = 0;
+
+
+                                    if ($reviewResult && $reviewResult->num_rows > 0) {
+                                        while ($reviewRow = $reviewResult->fetch_assoc()) {
+                                            $totalRating += (int)$reviewRow["rating"];
+                                            $count++;
+                                        }
+
+                                        $productRating = $totalRating / $count;
+
+                                        for ($i = 1; $i <= 5; $i++) {
+                                            if ($i <= $productRating) {
+                                                echo '<span class="fa fa-star checked"></span>';
+                                            } else {
+                                                echo '<span class="fa fa-star"></span>';
                                             }
-
-                                            $productRating = $totalRating / $count;
-
-                                            for ($i = 1; $i <= 5; $i++) {
-                                                if ($i <= $productRating) {
-                                                    echo '<span class="fa fa-star checked"></span>';
-                                                } else {
-                                                    echo '<span class="fa fa-star"></span>';
-                                                }
-                                            }
-                                            echo '<span class="rating-point">(' . number_format($productRating, 1) . ')</span>';
-                                            echo '<span class="review-count">(' . $count . ' reviews)</span>';
-                                        } else {
-                                            echo '
+                                        }
+                                        echo '<span class="rating-point">(' . number_format($productRating, 1) . ')</span>';
+                                        echo '<span class="review-count">(' . $count . ' reviews)</span>';
+                                    } else {
+                                        echo '
                                             <span class="fa fa-star"></span>
                                             <span class="fa fa-star"></span>
                                             <span class="fa fa-star"></span>
@@ -480,57 +481,57 @@ error_reporting(E_ALL);
                                             <span class="rating-point">(0.0)</span>
                                             <span class="review-count">(0 reviews)</span>
                                         ';
+                                    }
+                                    ?>
+                                </div>
+                                <div class="price">
+                                    <?php
+                                    if ((int)$row["bid_activate"] === 1) {
+                                        // If it's a bid product, show bid starting price
+                                        echo '<span class="bid-starting-price price-label">Starting Bid: </span>';
+                                        echo '<span class="bid-starting-price bid-price">LKR. ' . number_format((float)$row["bid_starting_price"], 2) . '</span>';
+                                    } else {
+                                        // If it's a regular product, show discounted price and original price
+                                        $discount = (float)$row["discount"] > 0 ? (float)$row["discount"] : 0;
+                                        $price = (float)$row["price"];
+                                        $discountPrice = $price - ($price * $discount);
+
+                                        echo '<span class="discounted-price">LKR. ' . number_format($discountPrice, 2) . '</span>';
+
+                                        if ($discount > 0) {
+                                            echo '<span class="original-price">LKR. ' . number_format($price, 2) . '</span>';
+                                            echo '<span class="discount-badge">' . ($discount * 100) . '% off</span>';
                                         }
-                                        ?>
-                                    </div>
-                                    <div class="price">
+                                    }
+                                    ?>
+                                </div>
+
+
+                                <div class="shipping">
+                                    <span>
                                         <?php
-                                        if ((int)$row["bid_activate"] === 1) {
-                                            // If it's a bid product, show bid starting price
-                                            echo '<span class="bid-starting-price price-label">Starting Bid: </span>';
-                                            echo '<span class="bid-starting-price bid-price">LKR. ' . number_format((float)$row["bid_starting_price"], 2) . '</span>';
+                                        if ((float)$row["shipping_fee"] > 0) {
+                                            echo "Shipping Fee: LKR. " . $row["shipping_fee"];
                                         } else {
-                                            // If it's a regular product, show discounted price and original price
-                                            $discount = (float)$row["discount"] > 0 ? (float)$row["discount"] : 0;
-                                            $price = (float)$row["price"];
-                                            $discountPrice = $price - ($price * $discount);
-
-                                            echo '<span class="discounted-price">LKR. ' . number_format($discountPrice, 2) . '</span>';
-
-                                            if ($discount > 0) {
-                                                echo '<span class="original-price">LKR. ' . number_format($price, 2) . '</span>';
-                                                echo '<span class="discount-badge">' . ($discount * 100) . '% off</span>';
-                                            }
+                                            echo "Free Shipping";
                                         }
+
                                         ?>
-                                    </div>
+                                    </span>
+                                </div>
+                                <div class="stock-status">Availability:
+                                    <span>
+                                        <?php
+                                        if ((int)$row["stock"] > 10) {
+                                            echo "In Stock";
+                                        } else {
+                                            echo $row["stock"];
+                                        }
 
+                                        ?>
+                                    </span>
+                                </div>
 
-                                    <div class="shipping">
-                                        <span>
-                                            <?php
-                                            if ((float)$row["shipping_fee"] > 0) {
-                                                echo "Shipping Fee: LKR. " . $row["shipping_fee"];
-                                            } else {
-                                                echo "Free Shipping";
-                                            }
-
-                                            ?>
-                                        </span>
-                                    </div>
-                                    <div class="stock-status">Availability:
-                                        <span>
-                                            <?php
-                                            if ((int)$row["stock"] > 10) {
-                                                echo "In Stock";
-                                            } else {
-                                                echo $row["stock"];
-                                            }
-
-                                            ?>
-                                        </span>
-                                    </div>
-                                
                                 <div class="buttons">
 
                                     <?php
@@ -563,11 +564,11 @@ error_reporting(E_ALL);
 
                 <div id="product-preview-modal" class="modal">
                     <div class="modal-content">
-                        
+
                         <span class="close-button">&times;</span>
 
                         <div class="modal-body">
-                            
+
                             <div class="modal-product-details">
                                 <div class="modal-left">
                                     <div id="carousel-container">
@@ -582,7 +583,7 @@ error_reporting(E_ALL);
                                     <div id="modal-product-description"></div>
 
                                     <div id="modal-product-rating"></div>
-                                    
+
                                     <div class="price">
                                         <span id="modal-discounted-price">LKR. 1000</span>
                                         <span id="modal-original-price">LKR. 1500</span>
@@ -637,7 +638,7 @@ error_reporting(E_ALL);
                                 <h3>Customer Reviews</h3>
                                 <h3 id="no-review-label">No reviews</h3>
                                 <div id="reviews-container">
-                                    
+
                                     <!-- Example Review -->
                                     <!-- <div class="review-item">
                                         <p class="reviewer-name">John Doe</p>

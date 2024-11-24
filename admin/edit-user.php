@@ -119,11 +119,13 @@ $resultUserTypes = $conn->query($sqlUserTypes);
             <br>
             
             <button type="submit">Update</button>
-            <a href="../user-page.php" class="cancel-btn">Cancel</a>
+            <a href="user-page.php" class="cancel-btn">Cancel</a>
         </form>
     </div>
 
-    <script type="module" src="../javascript/add-user.js"></script>
+    <script type="module" src="javascript/add-user.js"></script>
+    <script src="javascript/inventory-page.js"></script>
+
 </body>
 </html>
 

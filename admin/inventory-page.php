@@ -56,16 +56,15 @@ session_start();
             <button class="inventory-buttons" id="normalProductBtn">Normal Products</button>
             <button class="inventory-buttons" id="biddingProductBtn">Bidding Products</button>
         </div>
-
-        <!-- Table to display users -->
+        
         <table id="productsTable" class="inventory-table">
             <thead>
                 <tr id="tableHeaders">
-                    <!-- Headers will be updated dynamically -->
+                    
                 </tr>
             </thead>
             <tbody id="productsTableBody">
-                <!-- Products will be loaded here -->
+                
             </tbody>
         </table>
 
@@ -176,6 +175,7 @@ session_start();
 
     <script src="javascript/user-page.js"></script>
     <script src="javascript/inventory-page.js"></script>
+    <script src="javascript/side-navbar.js"></script>
 </body>
 
 </html>

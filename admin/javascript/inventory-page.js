@@ -1,7 +1,4 @@
-function toggleSidebar() {
-    const sidebar = document.querySelector(".sidebar");
-    sidebar.classList.toggle("collapsed");
-}
+
 
 
 
@@ -70,6 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     return;
                 }
 
+                // console.log(data)
                
                 tableHeaders.innerHTML = "";
                 productsTable.innerHTML = "";
@@ -113,52 +111,63 @@ document.addEventListener("DOMContentLoaded", () => {
                     } else {
                         row.dataset.productType = "bidding";
                     }
-
+                
                     if (type === "normal") {
                         row.innerHTML = `
-                        <td>${product.product_id}</td>
-                        <td>${product.product_name}</td>
-                        <td class="description-container"><div class="description">${product.description}</div></td>
-                        <td>${product.category_name}</td>
-                        <td>${product.price}</td>
-                        <td>${parseFloat(product.discount * 100).toFixed(2)}</td>
-                        <td>${product.stock}</td>
-                        <td>${product.shipping_fee}</td>
-                        <td>${product.created_at}</td>
-                        <td>${product.updated_at}</td>
-                        <td>
-                            <button class="action-buttons edit-btn" data-id="${product.product_id}">Edit</button>
-                            <button class="action-buttons delete-btn" data-id="${product.product_id}">Delete</button>
-                        </td>`;
+                            <td>${product.product_id}</td>
+                            <td>${product.product_name}</td>
+                            <td class="description-container"><div class="description">${product.description}</div></td>
+                            <td>${product.category_name}</td>
+                            <td>${product.price}</td>
+                            <td>${parseFloat(product.discount * 100).toFixed(2)}</td>
+                            <td>${product.stock}</td>
+                            <td>${product.shipping_fee}</td>
+                            <td>${product.created_at}</td>
+                            <td>${product.updated_at}</td>
+                            <td>
+                                <button class="action-buttons edit-btn" data-id="${product.product_id}">Edit</button>
+                                <button class="action-buttons delete-btn" data-id="${product.product_id}">Delete</button>
+                            </td>`;
                     } else if (type === "bidding") {
+                        // Filter auction history for entries where winning_bidder_id is null
+                        const activeAuction = product.auction_history.find(auction => auction.winning_bidder_id === null);
+                        
+                        let start_time = "Not Decided";
+                        let end_time = "Not Decided";
+                        
+                        if (activeAuction) {
+                            start_time = new Date(activeAuction.start_time).toLocaleDateString();
+                            end_time = activeAuction.end_time ? new Date(activeAuction.end_time).toLocaleDateString() : 'Not Decided';
+                        }
+                
                         row.innerHTML = `
-                        <td>${product.product_id}</td>
-                        <td>${product.product_name}</td>
-                        <td class="description-container"><div class="description">${product.description}</div></td>
-                        <td>${product.category_name}</td>
-                        <td>${product.stock}</td>
-                        <td>${product.bid_starting_price}</td>
-                        <td>${product.shipping_fee}</td>
-                        <td>${new Date(product.start_time).toLocaleDateString()}</td>
-                        <td>${new Date(product.end_time).toLocaleDateString()}</td>
-                        <td>${product.created_at}</td>
-                        <td>${product.updated_at}</td>
-                        <td>
-                            <button class="action-buttons edit-btn" data-id="${product.product_id}">Edit</button>
-                            <button class="action-buttons delete-btn" data-id="${product.product_id}">Delete</button>
-                        </td>`;
+                            <td>${product.product_id}</td>
+                            <td>${product.product_name}</td>
+                            <td class="description-container"><div class="description">${product.description}</div></td>
+                            <td>${product.category_name}</td>
+                            <td>${product.stock}</td>
+                            <td>${product.bid_starting_price}</td>
+                            <td>${product.shipping_fee}</td>
+                            <td>${start_time}</td>
+                            <td>${end_time}</td>
+                            <td>${product.created_at}</td>
+                            <td>${product.updated_at}</td>
+                            <td>
+                                <button class="action-buttons edit-btn" data-id="${product.product_id}">Edit</button>
+                                <button class="action-buttons delete-btn" data-id="${product.product_id}">Delete</button>
+                            </td>`;
                     }
-
+                
                     productsTable.appendChild(row);
                 });
-
+                
                 document.querySelector("#productsTableBody").addEventListener("click", function (event) {
                     if (event.target.classList.contains("edit-btn")) {
                         handleEdit(event);
                     } else if (event.target.classList.contains("delete-btn")) {
                         handleDelete(event);
                     }
-                });
+                });                
             })
             .catch((err) => {
                 console.error("Error loading products:", err);
@@ -220,7 +229,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
             productForm.bidStartingPrice.value = bidStartingPrice;
             productForm.bidStartDate.value = formatDateToYYYYMMDD(bidStartDate);
-            productForm.bidEndDate.value = formatDateToYYYYMMDD(bidEndDate);
+            if (bidEndDate == null || bidEndDate == "Not Decided") {
+                productForm.bidEndDate.value = "";
+            } else {
+                productForm.bidEndDate.value = formatDateToYYYYMMDD(bidEndDate);
+            }
+            
+            
         }
 
         

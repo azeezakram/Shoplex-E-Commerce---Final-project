@@ -121,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $updateAuctionHistoryQuery = "
                 UPDATE auction_history 
                 SET starting_bid = ?, start_time = ?, end_time = ? 
-                WHERE product_id = ? AND winning_bidder_id IS NULL";
+                WHERE product_id = ? AND is_end = 0";
             
             $stmt = $conn->prepare($updateAuctionHistoryQuery);
             $stmt->bind_param("dssi", $bidStartingPrice, $bidStartDate, $bidEndDate, $productId);

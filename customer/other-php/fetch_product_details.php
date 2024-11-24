@@ -89,13 +89,13 @@ if (isset($_GET['product_id'])) {
             'stock' => $stock,
             'shipping_fee' => number_format($shippingFee, 2),
             'bid_activate' => (int)$product['bid_activate'],
-            'bid_starting_price' => number_format((float)$product['bid_starting_price'], 2),
+            'bid_starting_price' => (float)$product['bid_starting_price'],
             'review_details' => $reviewDetails // Add review details to the response
         ];
 
         // If the product has auction details, fetch auction history and bidding records
         if ($product["bid_activate"] == 1) {
-            $auctionHistoryQuery = $conn->prepare("SELECT * FROM auction_history WHERE product_id = ? AND end_time > ?");
+            $auctionHistoryQuery = $conn->prepare("SELECT * FROM auction_history WHERE product_id = ? AND end_time > ? AND is_end = 0");
             $currentDt = date('Y-m-d H:i:s');
             $auctionHistoryQuery->bind_param("is", $productId, $currentDt);
             $auctionHistoryQuery->execute();

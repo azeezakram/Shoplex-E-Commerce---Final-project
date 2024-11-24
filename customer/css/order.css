@@ -1,121 +1,195 @@
-/* General styles */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
+
+.container {
+    margin-top: 140px;
 }
 
-/* Container for orders */
-.order-container {
-    width: 80%;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: white;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-}
-
-/* Title for orders */
-.order-container h2 {
+h1 {
     text-align: center;
-    font-size: 2em;
-    color: #333;
+    margin-top: 40px;
+    font-size: 2.5rem;
+    color: #2d3748;
 }
 
-/* Individual order box */
-.order-box {
-    margin-bottom: 30px;
+
+.order-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
     padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f9f9f9;
 }
 
-/* Order header (Order ID and dates) */
-.order-box h3 {
-    font-size: 1.5em;
-    color: #333;
+/* Card for each order */
+.order-card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.order-box p {
-    font-size: 1.1em;
-    color: #555;
-}
-
-/* Table for order details */
-.order-details-table {
+/* Table for order items */
+.order-items-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
 }
 
-.order-details-table th,
-.order-details-table td {
+.order-items-table th, .order-items-table td {
+    border: 1px solid #ddd;
     padding: 10px;
     text-align: left;
-    border: 1px solid #ddd;
 }
 
-.order-details-table th {
-    background-color: #4CAF50;
+.order-items-table th {
+    background-color: #f4f4f4;
+}
+
+button.confirm-delivery-btn {
+    background-color: #28a745;
     color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
-.order-details-table tr:nth-child(even) {
-    background-color: #f2f2f2;
+button.confirm-delivery-btn:hover {
+    background-color: #218838;
 }
 
-.order-details-table tr:hover {
-    background-color: #ddd;
+button.confirm-delivery-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
 }
 
-/* Adjustments for specific columns */
-.order-details-table th, .order-details-table td {
-    font-size: 1em;
+
+
+/* Modal */
+.modal {
+    display: none;
+    /* Hide the modal by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 30px;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 500px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    transform: translateY(-30px);
+    position: relative; /* Position relative to contain the close button */
+}
+
+/* Close Button */
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #000000;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    z-index: 1001; /* Ensure it stays on top of other modal elements */
+}
+
+/* Change color on hover */
+.close-btn:hover {
     color: #333;
 }
 
-/* Order item status styling */
-.order-details-table .status-shipped {
-    color: green;
-    font-weight: bold;
-}
-
-.order-details-table .status-pending {
-    color: orange;
-    font-weight: bold;
-}
-
-.order-details-table .status-delivered {
-    color: blue;
-    font-weight: bold;
-}
-
-/* Shipping and delivery columns */
-.order-details-table td:nth-child(7), /* Shipped Date */
-.order-details-table td:nth-child(8), /* Expected Delivery Date */
-.order-details-table td:nth-child(9) { /* Delivered Date */
+/* Header Style */
+.modal h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
     text-align: center;
 }
 
-/* Empty or "N/A" cells */
-.order-details-table td:empty {
-    color: #ccc;
+/* Form Fields */
+label {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 8px;
+    display: block;
 }
 
-/* Responsive design for smaller screens */
-@media screen and (max-width: 768px) {
-    .order-container {
-        width: 95%;
-        padding: 15px;
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+select:focus,
+textarea:focus {
+    border-color: #5e72e4;
+}
+
+/* Button Style */
+button {
+    background-color: #5e72e4;
+    color: #fff;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #4a60d1;
+}
+
+/* Responsive for small screens */
+@media (max-width: 600px) {
+    .modal-content {
+        width: 90%;
+        padding: 20px;
     }
 
-    .order-details-table th, .order-details-table td {
-        font-size: 0.9em;
+    .modal h2 {
+        font-size: 20px;
     }
 
-    .order-box h3 {
-        font-size: 1.2em;
+    .close-btn {
+        font-size: 25px;
+    }
+
+    select,
+    textarea,
+    button {
+        font-size: 14px;
     }
 }
+
+/* When Modal is Active */
+.modal.show {
+    display: block;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal.show .modal-content {
+    transform: translateY(0); /* Modal will appear smoothly */
+}
+

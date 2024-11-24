@@ -68,12 +68,8 @@
         </div>
     </main>
 
-    <script>
-        function toggleSidebar() {
-            const sidebar = document.querySelector('.sidebar');
-            sidebar.classList.toggle('collapsed');
-        }
-    </script>
+
+    <script src="javascript/side-navbar.js"></script>
 </body>
 
 </html>

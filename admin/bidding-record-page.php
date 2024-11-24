@@ -1,16 +1,22 @@
+<?php
+include 'php-config/db-conn.php';
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Management</title>
+    <title>Bidding Records</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="css/styles.css">
+    <!-- <link rel="stylesheet" href="css/inventory-page.css"> -->
+    <link rel="stylesheet" href="css/bidding-records.css">
 </head>
 
 <body>
-
     <div class="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-header-content">
@@ -27,53 +33,104 @@
             <a href="user-page.php"><i class="fas fa-users"></i> <span>Users</span></a>
             <a href="inventory-page.php"><i class="fas fa-archive"></i> <span>Inventories</span></a>
             <a href="order-page.php"><i class="fas fa-box"></i> <span>Orders</span></a>
-            <a href="bidding-record-page.php"><i class="fas fa-gavel"></i> <span>Bidding Records</span></a>
+            <a href="bidding-record-page.php" class="active"><i class="fas fa-gavel"></i> <span>Bidding Records</span></a>
             <a href="message-page.php"><i class="fas fa-inbox"></i> <span>Messages</span></a>
             <a href="banner-page.php"><i class="fas fa-ad"></i> <span>Banners</span></a>
-            <!-- <a href="analytics.php"><i class="fas fa-chart-bar"></i> <span>Analytics</span></a> -->
-            <!-- <a href="settings.php"><i class="fas fa-cog"></i> <span>Settings</span></a> -->
             <a href="logout.php"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
         </nav>
     </div>
+
     <div class="main-content">
         <div class="header">
             <h1>Bidding Records Management</h1>
-            <div>
-                <button>Add User</button>
-            </div>
         </div>
 
-        <!-- Table to display users -->
-        <table class="user-table">
+        <!-- Table for Bidding Records -->
+        <table id="biddingRecordsTable" class="inventory-table">
             <thead>
                 <tr>
-                    <th>User ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Actions</th>
+                    <th>Auction ID</th>
+
+                    <th>Product Name</th>
+                    <th>Winner Bidder ID</th>
+                    <th>Starting Bid</th>
+                    <th>Ending Bid</th>
+                    <th>Bidding Status</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                <!-- Placeholder for dynamically loaded user data -->
-                <tr>
-                    <td>1</td>
-                    <td>John Doe</td>
-                    <td>john@example.com</td>
-                    <td>Admin</td>
-                    <td><button>Edit</button> <button>Delete</button></td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Jane Smith</td>
-                    <td>jane@example.com</td>
-                    <td>User</td>
-                    <td><button>Edit</button> <button>Delete</button></td>
-                </tr>
-                <!-- More users can be added here dynamically -->
+                <?php
+                $query = "SELECT auctions.auction_id, auctions.product_id, auctions.winning_bidder_id, auctions.starting_bid, auctions.ending_bid,
+                    auctions.start_time, auctions.end_time, auctions.is_end, product.product_name 
+                    FROM auction_history as auctions
+                    LEFT JOIN product ON auctions.product_id = product.product_id";
+
+                $result = mysqli_query($conn, $query);
+
+                if ($result) {
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        $auctionId = $row['auction_id'];
+                        $productId = $row['product_id'];
+                        $productName = $row['product_name'];
+                        $winnerBidderId = $row['winning_bidder_id'] ?? "Not Decided";
+                        $startingBid = $row['starting_bid'];
+                        $endingBid = ($row['ending_bid'] === null || $row['ending_bid'] == 0) ? "Not Decided" : $row['ending_bid'];
+                        $startTime = $row['start_time'];
+                        $endTime = $row['end_time'];
+                        $isEnd = $row['is_end'];
+
+                        $currentDate = date('Y-m-d H:i:s');  // Get the current date in the same format
+
+                        // Determine status using is_end column
+                        if ($isEnd) {
+                            // If is_end is true, auction has ended
+                            $status = "Ended";
+                        } elseif ($currentDate < $startTime || (is_null($endTime))) {
+                            // If current date is before the start time
+                            $status = "Not Started";
+                        } elseif ($currentDate >= $startTime && $currentDate <= $endTime) {
+                            // If current date is within the range of start_time and end_time or end_time is not set
+                            $status = "Ongoing";
+                        } else {
+                            // Default to "Ended" if no other conditions are met
+                            $status = "Ended";
+                        }
+
+                        // Output the auction data
+                        echo "<tr>
+                        <td>$auctionId</td>
+                        <td>$productName</td>
+                        <td>$winnerBidderId</td>
+                        <td>$startingBid</td>
+                        <td>$endingBid</td>
+                        <td>$status</td>
+                        <td>" . date('Y-m-d', strtotime($startTime)) . "</td>
+                        <td>" . (is_null($endTime) ? "Not Decided" : date('Y-m-d', strtotime($endTime))) . "</td>
+                        <td>
+                            <button class='action-buttons view-more-btn' data-auction-id='$auctionId'>View More</button>
+                            <button class='action-buttons end-auction-btn' data-auction-id='$auctionId' data-product-id='$productId'" . ($status == 'Ended' ? ' disabled' : '') . ">End Auction</button>
+                        </td>
+                    </tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='9'>No auctions found.</td></tr>";
+                }
+                ?>
+
+
+
+
+
             </tbody>
         </table>
+
     </div>
+
+    <script src="javascript/bidding-record-page.js"></script>
+    <script src="javascript/side-navbar.js"></script>
 </body>
 
 </html>

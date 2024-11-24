@@ -93,8 +93,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="form-group">
                 <label for="user_type_id">User Type:</label>
                 <select name="user_type_id" id="user_type_id" required>
-                    <option value="1">Admin</option>
-                    <option value="2">Buyer</option>
+                    <option value="4">Admin</option>
+                    <option value="1">Buyer</option>
                 </select>
             </div>
             <div class="form-group">

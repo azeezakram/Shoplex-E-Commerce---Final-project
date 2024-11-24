@@ -74,6 +74,8 @@
             </tbody>
         </table>
     </div>
+
+    <script src="javascript/side-navbar.js"></script>
 </body>
 
 </html>

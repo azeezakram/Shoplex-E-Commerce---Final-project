@@ -43,7 +43,11 @@ if ($type === 'normal') {
             ah.winning_bidder_id,
             ah.start_time,  
             ah.end_time,
-            pp.picture_path AS picture_path
+            ah.starting_bid,
+            ah.ending_bid,
+            pp.picture_path AS picture_path,
+            ah.auction_id,
+            ah.product_id AS auction_product_id
         FROM 
             product p
         LEFT JOIN 
@@ -85,11 +89,26 @@ if ($result && $result->num_rows > 0) {
                 'end_time' => $row['end_time'] ?? null, 
                 'created_at' => $row['created_at'],
                 'updated_at' => $row['updated_at'],
-                'product_images' => [] 
+                'product_images' => [],
+                'auction_history' => [] // Add auction_history array
             ];
         }
 
+        // Add product images
         $products[$row['product_id']]['product_images'][] = $row['picture_path'];
+
+        // Add auction history if this product has auction data
+        if (isset($row['auction_id'])) {
+            $auctionData = [
+                'auction_id' => $row['auction_id'],
+                'start_time' => $row['start_time'],
+                'end_time' => $row['end_time'],
+                'starting_bid' => $row['starting_bid'], // Include starting_bid
+                'ending_bid' => $row['ending_bid'], // Include ending_bid
+                'winning_bidder_id' => $row['winning_bidder_id']
+            ];
+            $products[$row['product_id']]['auction_history'][] = $auctionData;
+        }
     }
 }
 

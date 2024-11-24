@@ -135,7 +135,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             }
 
                             if (data.bid_starting_price) {
-                                document.getElementById("modal-bid-starting-price").textContent = "LKR. " + data.bid_starting_price;
+                                document.getElementById("modal-bid-starting-price").textContent = "LKR. " + parseFloat(data.bid_starting_price).toFixed(2);
                                 
                                 document.getElementById("modal-bid-starting-price").style.display = "inline-block";
                                 
