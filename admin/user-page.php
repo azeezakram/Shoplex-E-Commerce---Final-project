@@ -3,17 +3,31 @@ include('php-config/ssession-config.php');
 include('php-config/db-conn.php');
 session_start();
 
-// Check if a search query is provided
+
+if (isset($_SESSION['admin_id'])) {
+    $userId = $_SESSION['admin_id'];
+    $adminName = isset($_SESSION['admin_name']) ? $_SESSION['admin_name'] : 'Admin'; 
+
+    $sql = "SELECT email FROM user WHERE user_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $email = $result->fetch_assoc()['email'];
+} else {
+
+    header("Location: index.php"); 
+}
+
 $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
 
-// Modify the SQL query to join the user_type table and fetch the user type name
 $sql = "SELECT u.user_id, u.user_type_id, u.name, u.email, u.profile_picture, u.last_login, u.created_at, u.updated_at, u.password, ut.type_name 
         FROM user u 
         LEFT JOIN user_type ut ON u.user_type_id = ut.user_type_id 
         WHERE u.name LIKE ? OR u.email LIKE ?";
 
 $stmt = $conn->prepare($sql);
-$searchTermWithWildcard = "%" . $searchTerm . "%"; // Add wildcards for partial matching
+$searchTermWithWildcard = "%" . $searchTerm . "%"; 
 $stmt->bind_param("ss", $searchTermWithWildcard, $searchTermWithWildcard);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -35,7 +49,9 @@ $result = $stmt->get_result();
     <div class="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-header-content">
-                <span>Admin Panel</span>
+                <span>Admin Panel</span> 
+                <span style="font-weight: bold; color: #fff;"><?php echo htmlspecialchars($adminName); ?></span>
+                <span style="font-weight: bold; color: #fff;"><?php echo htmlspecialchars($email); ?></span>
             </div>
             <div class="hamburger" onclick="toggleSidebar()">
                 <div class="hamburger-line"></div>
@@ -49,16 +65,16 @@ $result = $stmt->get_result();
             <a href="inventory-page.php"><i class="fas fa-archive"></i> <span>Inventories</span></a>
             <a href="order-page.php"><i class="fas fa-box"></i> <span>Orders</span></a>
             <a href="bidding-record-page.php"><i class="fas fa-gavel"></i> <span>Bidding Records</span></a>
+            <a href="sales-analysis.php"><i class="fas fa-chart-line"></i> <span>Sales Analysis</span></a>
             <a href="message-page.php"><i class="fas fa-inbox"></i> <span>Messages</span></a>
             <a href="banner-page.php"><i class="fas fa-ad"></i> <span>Banners</span></a>
-            <a href="logout.php"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
+            <a href="php-config/logout.php"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
         </nav>
     </div>
 
     <div class="main-content">
         <h2>User Management</h2>
 
-        <!-- Search Bar -->
         <div class="search-container">
             <form method="get" action="user-page.php">
                 <input type="text" name="search" placeholder="Search by name or email..." value="<?php echo htmlspecialchars($searchTerm); ?>">

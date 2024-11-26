@@ -1,4 +1,4 @@
-<?php 
+<?php
 include('php-config/db-conn.php');
 include('php-config/ssession-config.php');
 session_start();
@@ -14,18 +14,18 @@ $userid = $_SESSION['user_id'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Check if profile image is being uploaded
-    if (isset($_FILES['profile_image'])) {
+    if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === UPLOAD_ERR_OK) {
         $image = $_FILES['profile_image'];
 
         // Validate file type
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
         if (!in_array($image['type'], $allowedTypes)) {
-            echo "<script>alert('Only JPG, PNG, and GIF files are allowed.');</script>";
+            echo "<script>alert('Only JPG, PNG, WebP, and GIF files are allowed.');</script>";
             exit();
         }
 
         // Upload the image
-        $targetDir = "profile_images/";
+        $targetDir = "../images/user-dp/";
         $fileName = uniqid() . "-" . basename($image['name']);
         $targetFile = $targetDir . $fileName;
 
@@ -46,22 +46,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Update profile details
         $name = $_POST['name'];
         $email = $_POST['email'];
-        $address = $_POST['address'];
-        $contact = $_POST['contact'];
+        $password = $_POST['password'];
 
-        if (empty($name) || empty($email)) {
-            echo "<script>alert('Name and Email cannot be empty.'); window.location.href='profile.php';</script>";
-            exit();
+        if (!empty($password)) {
+            $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+        } else {
+            // Fetch current password if not updating
+            $query = "SELECT password FROM user WHERE user_id = ?";
+            $stmt = $conn->prepare($query);
+            $stmt->bind_param("i", $userid);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $row = $result->fetch_assoc();
+            $hashed_password = $row['password'];
         }
 
-        $query = "UPDATE user SET name = ?, email = ?, address = ?, contact = ? WHERE user_id = ?";
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param("ssssi", $name, $email, $address, $contact, $userid);
+        if (!empty($name) && !empty($email)) {
+            $query = "UPDATE user SET name = ?, email = ?, password = ? WHERE user_id = ?";
+            $stmt = $conn->prepare($query);
+            $stmt->bind_param("sssi", $name, $email, $hashed_password, $userid);
 
-        if ($stmt->execute()) {
-            echo "<script>alert('Profile updated successfully.'); window.location.href='profile.php';</script>";
+            if ($stmt->execute()) {
+                echo "<script>alert('Profile updated successfully.'); window.location.href='profile.php';</script>";
+            } else {
+                echo "<script>alert('Failed to update profile.'); window.location.href='profile.php';</script>";
+            }
         } else {
-            echo "<script>alert('Failed to update profile.'); window.location.href='profile.php';</script>";
+            echo "<script>alert('Name and Email cannot be empty.'); window.location.href='profile.php';</script>";
+            exit();
         }
     }
 }
@@ -75,24 +87,361 @@ $result = $stmt->get_result();
 $user = $result->fetch_assoc();
 
 if (!$user) {
-    header('Location: login.php');
+    header('Location: signin-page.php');
     exit();
 }
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
     <link rel="stylesheet" href="css/user-profil.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
+
+    <nav>
+        <div class="side-navbar" id="sideNavBar">
+            <!-- <span class="close-btn" id="closeBtn">&times;</span> -->
+            <img src="images/icons/close.svg" class="close-btn" id="closeBtn">
+            <a href="index.php">
+                <img class="sidebar-logo" src="images/logo/white-logo.png">
+            </a>
+
+            <div class="sidenav-category-section">
+                <label for="categories" class="dropdown-label">Categories</label>
+                <div class="dropdown-content">
+                    <?php
+                    // Initialize an array to store categories
+                    $categories = [];
+
+                    // Fetch all categories with their parent relationships
+                    $result = $conn->query("SELECT category_id, category_name, parent_category_id FROM category ORDER BY parent_category_id, category_name");
+
+                    // Organize categories into parent-child structure
+                    while ($row = $result->fetch_assoc()) {
+                        if ($row['parent_category_id'] === null) {
+                            // Add parent category
+                            $categories[$row['category_id']] = [
+                                'name' => $row['category_name'],
+                                'children' => []
+                            ];
+                        } else {
+                            // Add child category under the respective parent
+                            $categories[$row['parent_category_id']]['children'][] = [
+                                'id' => $row['category_id'],
+                                'name' => $row['category_name']
+                            ];
+                        }
+                    }
+
+                    // Display categories
+                    foreach ($categories as $parent_id => $category): ?>
+                        <a href="index.php?category_id=<?php echo $parent_id; ?>" class="subject parent-category" data-id="<?php echo $parent_id; ?>">
+                            <div><?php echo htmlspecialchars($category['name']); ?></div>
+                        </a>
+                        <?php if (!empty($category['children'])): ?>
+                            <div class="subcategory-content">
+                                <?php foreach ($category['children'] as $child): ?>
+                                    <a href="index.php?category_id=<?php echo $child['id']; ?>" class="subject child-category" data-id="<?php echo $child['id']; ?>" style="padding-left: 25px;">
+                                        <div><?php echo htmlspecialchars($child['name']); ?></div>
+                                    </a>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+
+
+
+            <!-- <div class="sidenav-program-section">
+                <label for="Programs & Events">Programs & Events</label>
+                <a href="#" class="subject">
+                    <div>All</div>
+                </a>
+                <a href="#" class="subject">
+                    <div>Electrical</div>
+                </a>
+                <a href="#" class="subject">
+                    <div>Home ware</div>
+                </a>
+                <a href="#" class="subject">
+                    <div>Fashion</div>
+                </a>
+            </div> -->
+
+            <div class="sidenav-setting-section">
+                <label for="categories">Settings & Helps</label>
+
+
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <div class="subject" id="greeting">
+                        <span class="username">Hi,&#xA0;<?php echo $_SESSION['name']; ?></span>
+                    </div>
+                <?php else: ?>
+                    <a href="signin-page.php" class="subject">
+                        <div>Sign in</div>
+                    </a>
+                    <a href="register-page.html" class="subject">
+                        <div>Register</div>
+                    </a>
+                <?php endif; ?>
+
+
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <a href="profile.php" class="subject">
+                        <div>Profile</div>
+                    </a>
+                    <a href="view-auction-records-page.php" class="subject">
+                        <div>Auction History</div>
+                    </a>
+                    <a href="cart-page.php" class="subject">
+                        <div>Cart</div>
+                    </a>
+                    <a href="order-page.php" class="subject">
+                        <div>Orders</div>
+                    </a>
+                <?php else: ?>
+                    <a href="signin-page.php" class="subject">
+                        <div>Profile</div>
+                    </a>
+                    <a href="signin-page.php" class="subject">
+                        <div>Auction History</div>
+                    </a>
+                    <a href="signin-page.php" class="subject">
+                        <div>Cart</div>
+                    </a>
+                    <a href="signin-page.php" class="subject">
+                        <div>Orders</div>
+                    </a>
+                <?php endif; ?>
+
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <a href="php-config/logout.php" class="subject">
+                        <div>Log out</div>
+                    </a>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <div id="overlay" class="overlay"></div>
+
+
+        <div class="nav-bar">
+            <div class="top-bar">
+                <div class="left-section">
+                    <button class="hamburger-button">
+                        <img class="hamburger-menu" src="images/icons/hamburger-menu.png">
+                    </button>
+
+                    <a href="index.php">
+                        <img class="comp-logo" src="images/logo/green-logo.png">
+                    </a>
+                </div>
+
+                <form method="GET" action=" " class="mid-section">
+                    <div class="mid-section">
+                        <input class="search-bar" type="text" name="search" name="search" placeholder="Search" />
+                        <button class="search-button">
+                            <img src="images/icons/search.png">
+                            <div class="tooltip">Search</div>
+                        </button>
+                    </div>
+                </form>
+
+
+
+                <div class="right-section">
+                    <?php if (isset($_SESSION['user_id'])): ?>
+                        <div class="right-button" id="cart-button">
+                            <a href="cart-page.php">
+                                <img class="cart-icon" src="images/icons/cart.png">
+                                <div class="tooltip">Cart</div>
+                            </a>
+                        </div>
+                        <div class="right-button" id="order-button">
+                            <a href="order-page.php">
+                                <img class="order-icon" src="images/icons/order.png">
+                                <div class="tooltip">Order</div>
+                            </a>
+                        </div>
+                        <!-- <div class="right-button" id="notfication-button">
+                            <a href="message-centre-page.php">
+                                <img class="notfications-icon" src="images/icons/notification.png">
+                                <div class="notfication-count">5</div>
+                                <div class="tooltip">Notification</div>
+                            </a>
+                        </div> -->
+                    <?php else: ?>
+                        <div class="right-button" id="cart-button">
+                            <a href="signin-page.php">
+                                <img class="cart-icon" src="images/icons/cart.png">
+                                <div class="tooltip">Cart</div>
+                            </a>
+                        </div>
+                        <div class="right-button" id="order-button">
+                            <a href="signin-page.php">
+                                <img class="order-icon" src="images/icons/order.png">
+                                <div class="tooltip">Order</div>
+                            </a>
+                        </div>
+                        <!-- <div class="right-button" id="notfication-button">
+                            <a href="signin-page.php">
+                                <img class="notfications-icon" src="images/icons/notification.png">
+                                <div class="notfication-count">5</div>
+                                <div class="tooltip">Notification</div>
+                            </a>
+                        </div> -->
+                    <?php endif; ?>
+
+                    <div class="right-button" id="profileButton">
+                        <?php
+                        if (session_status() === PHP_SESSION_NONE) {
+                            session_start();
+                        }
+
+                        $user = null;
+                        if (isset($_SESSION['user_id'])) {
+                            $userid = intval($_SESSION['user_id']);
+                            $query = "SELECT * FROM user WHERE user_id = ?";
+                            $stmt = $conn->prepare($query);
+                            $stmt->bind_param("i", $userid);
+                            $stmt->execute();
+                            $result = $stmt->get_result();
+                            $user = $result->fetch_assoc();
+                        }
+
+                        // Determine profile picture path
+                        $profilePicture = isset($_SESSION['user_id']) && !empty($user['profile_picture'])
+                            ? "../images/user-dp/" . htmlspecialchars($user['profile_picture'], ENT_QUOTES, 'UTF-8')
+                            : "images/icons/profile.png";
+                        ?>
+                        <img class="current-user-picture" src="<?php echo $profilePicture; ?>" onclick="toggleProfilePopupBox()">
+                        <div class="profile-popup" id="profilePopup">
+
+                            <div class="top-section">
+                                <?php if (isset($_SESSION['user_id'])): ?>
+                                    <span class="username"><?php echo $user['name']; ?></span>
+                                    <a href="php-config/logout.php">
+                                        <button class="sigin-btn">Logout</button>
+                                    </a>
+                                <?php else: ?>
+                                    <a href="signin-page.php">
+                                        <button class="sigin-btn">Sign in</button>
+                                    </a>
+                                    <a class="register" href="register-page.html">Register</a>
+                                <?php endif; ?>
+                            </div>
+
+                            <div class="profile-mid-section">
+
+                                <?php if (isset($_SESSION['user_id'])): ?>
+                                    <a href="profile.php">
+                                        <img src="images/icons/profile-p.png">
+                                        <div>Profile</div>
+                                    </a>
+
+                                    <a href="view-auction-records-page.php">
+                                        <img src="images/icons/cart.png">
+                                        <div>Auction History</div>
+                                    </a>
+
+                                    <a href="cart-page.php">
+                                        <img src="images/icons/cart.png">
+                                        <div>Cart</div>
+                                    </a>
+                                    <a href="order-page.php">
+                                        <img src="images/icons/order.png">
+                                        <div>Orders</div>
+                                    </a>
+
+                                    <a href="message-centre-page.php">
+                                        <img src="images/icons/message-center.png">
+                                        <div>Message Center</div>
+                                    </a>
+                                    <a href="#">
+                                        <img src="images/icons/about-us.png">
+                                        <div>About</div>
+                                    </a>
+                                <?php else: ?>
+                                    <a href="signin-page.php">
+                                        <img src="images/icons/profile-p.png">
+                                        <div>Profile</div>
+                                    </a>
+
+                                    <a href="signin-page.php">
+                                        <img src="images/icons/cart.png">
+                                        <div>Auction History</div>
+                                    </a>
+
+                                    <a href="signin-page.php">
+                                        <img src="images/icons/cart.png">
+                                        <div>Cart</div>
+                                    </a>
+                                    <a href="signin-page.php">
+                                        <img src="images/icons/order.png">
+                                        <div>Orders</div>
+                                    </a>
+
+                                    <a href="signin-page.php">
+                                        <img src="images/icons/message-center.png">
+                                        <div>Message Center</div>
+                                    </a>
+                                    <a href="signin-page.php">
+                                        <img src="images/icons/about-us.png">
+                                        <div>About</div>
+                                    </a>
+                                <?php endif; ?>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-bar">
+
+
+                <!-- <div class="shortcut-links">
+                    <?php if (isset($_SESSION['user_id'])): ?>
+                        <a href="#">
+                            <div>Today's Deals</div>
+                        </a>
+
+                        <a href="#">
+                            <div>Customer Service</div>
+                        </a>
+
+                    <?php else: ?>
+                        <a href="signin-page.php">
+                            <div>Today's Deals</div>
+                        </a>
+
+                        <a href="signin-page.php">
+                            <div>Customer Service</div>
+                        </a>
+                    <?php endif; ?>
+
+                    
+                </div> -->
+
+            </div>
+        </div>
+    </nav>
+
     <div class="profile-container">
         <div class="profile-sidebar">
             <div class="avatar">
-                <img src="profile_images/<?php echo htmlspecialchars($user['profile_picture'] ?? 'default-avatar.png'); ?>" alt="User Avatar">
+                <img src="../images/user-dp/<?php echo htmlspecialchars($user['profile_picture'] ?? 'default-dp.jpg'); ?>" alt="User Avatar">
                 <button onclick="toggleImageUpload()" class="change-image-btn">Change Image</button>
                 <form id="uploadForm" method="POST" action="profile.php" enctype="multipart/form-data" style="display: none;">
                     <input type="file" name="profile_image" accept="image/*" required>
@@ -100,23 +449,21 @@ if (!$user) {
                 </form>
             </div>
             <div class="menu">
-                <button onclick="showSection('information')">INFORMATION</button>
-                <button onclick="showSection('profileUpdate')">PROFILE UPDATE</button>
-                <button onclick="showSection('sendText')">SEND TEXT</button>
-                <button onclick="showSection('messages')">MESSAGES</button>
- 
+                <button onclick="showSection('information')">Profile</button>
+                <button onclick="showSection('profileUpdate')">Profile Update</button>
+
             </div>
         </div>
-        
+
         <div class="profile-details">
             <!-- Information Section -->
             <div id="information" class="section">
                 <p><strong>Name:</strong> <?php echo htmlspecialchars($user['name']); ?></p>
                 <p><strong>Email:</strong> <?php echo htmlspecialchars($user['email']); ?></p>
-                <p><strong>Address:</strong> <?php echo htmlspecialchars($user['address'] ?? 'Not provided'); ?></p>
-                <p><strong>Contact:</strong> <?php echo htmlspecialchars($user['contact'] ?? 'Not provided'); ?></p>
+                <p><strong>Joined:</strong> <?php echo htmlspecialchars($user['created_at'] ?? 'Not provided'); ?></p>
+                <p><strong>Last login:</strong> <?php echo htmlspecialchars($user['last_login'] ?? 'Not provided'); ?></p>
             </div>
-            
+
             <!-- Profile Update Section -->
             <div id="profileUpdate" class="section" style="display: none;">
                 <h2>Update Profile</h2>
@@ -125,31 +472,10 @@ if (!$user) {
                     <input type="text" name="name" value="<?php echo htmlspecialchars($user['name']); ?>" /><br>
                     <label>Email:</label>
                     <input type="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" /><br>
-                    <label>Address:</label>
-                    <input type="text" name="address" value="<?php echo htmlspecialchars($user['address'] ?? ''); ?>" /><br>
-                    <label>Contact:</label>
-                    <input type="text" name="contact" value="<?php echo htmlspecialchars($user['contact'] ?? ''); ?>" /><br>
+                    <label>Password:</label>
+                    <input type="text" name="password" /><br>
                     <button type="submit">Save Changes</button>
                 </form>
-            </div>
-
-            <!-- Additional Sections -->
-            <div id="sendText" class="section" style="display: none;">
-                <h2>Send Text</h2>
-                <p>This is the send text section.</p>
-            </div>
-            <div id="messages" class="section" style="display: none;">
-                <h2>Messages</h2>
-                <p>This is the messages section.</p>
-            </div>
-            <div id="myCart" class="section" style="display: none;">
-                <h2>My Cart</h2>
-                <p>This is the cart section.</p>
-            </div>
-            <div id="logout" class="section" style="display: none;">
-                <h2>Logout</h2>
-                <p>Are you sure you want to logout?</p>
-                <a href="logout.php">Logout</a>
             </div>
         </div>
     </div>
@@ -167,5 +493,7 @@ if (!$user) {
             form.style.display = form.style.display === 'none' ? 'block' : 'none';
         }
     </script>
+    <script src="javascript/header.js"></script>
 </body>
+
 </html>

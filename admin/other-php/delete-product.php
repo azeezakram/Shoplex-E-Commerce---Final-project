@@ -11,10 +11,8 @@ if (isset($data['productId'])) {
     $stmt->bind_param("i", $productId);
 
     if ($stmt->execute()) {
-        // Success
         echo json_encode(["status" => "success", "message" => "Product deleted successfully."]);
     } else {
-        // Failure
         echo json_encode(["status" => "error", "message" => "Failed to delete the product."]);
     }
 

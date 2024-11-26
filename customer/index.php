@@ -1,7 +1,7 @@
 <?php
 include('php-config/db-conn.php');
-ini_set('session.cookie_lifetime', 60 * 60 * 24 * 365);
-ini_set('session.gc-maxlifetime', 60 * 60 * 24 * 365);
+// ini_set('session.cookie_lifetime', 60 * 60 * 24 * 365);
+// ini_set('session.gc-maxlifetime', 60 * 60 * 24 * 365);
 session_start();
 error_reporting(E_ALL);
 ?>
@@ -41,7 +41,7 @@ error_reporting(E_ALL);
             <div class="sidenav-category-section">
                 <label for="categories" class="dropdown-label">Categories</label>
                 <div class="dropdown-content">
-                <?php
+                    <?php
                     // Initialize an array to store categories
                     $categories = [];
 
@@ -171,14 +171,17 @@ error_reporting(E_ALL);
                     </a>
                 </div>
 
-                <div class="mid-section">
-                    <input class="search-bar" type="text" placeholder="Search" />
-                    <button class="search-button">
-                        <img src="images/icons/search.png">
-                        <div class="tooltip">Search</div>
-                    </button>
+                <form method="GET" action=" " class="mid-section">
+                    <div class="mid-section">
+                        <input class="search-bar" type="text" name="search" name="search" placeholder="Search" />
+                        <button class="search-button">
+                            <img src="images/icons/search.png">
+                            <div class="tooltip">Search</div>
+                        </button>
+                    </div>
+                </form>
 
-                </div>
+
 
                 <div class="right-section">
                     <?php if (isset($_SESSION['user_id'])): ?>
@@ -194,13 +197,13 @@ error_reporting(E_ALL);
                                 <div class="tooltip">Order</div>
                             </a>
                         </div>
-                        <div class="right-button" id="notfication-button">
-                            <a href="#">
+                        <!-- <div class="right-button" id="notfication-button">
+                            <a href="message-centre-page.php">
                                 <img class="notfications-icon" src="images/icons/notification.png">
                                 <div class="notfication-count">5</div>
                                 <div class="tooltip">Notification</div>
                             </a>
-                        </div>
+                        </div> -->
                     <?php else: ?>
                         <div class="right-button" id="cart-button">
                             <a href="signin-page.php">
@@ -214,25 +217,43 @@ error_reporting(E_ALL);
                                 <div class="tooltip">Order</div>
                             </a>
                         </div>
-                        <div class="right-button" id="notfication-button">
+                        <!-- <div class="right-button" id="notfication-button">
                             <a href="signin-page.php">
                                 <img class="notfications-icon" src="images/icons/notification.png">
                                 <div class="notfication-count">5</div>
                                 <div class="tooltip">Notification</div>
                             </a>
-                        </div>
+                        </div> -->
                     <?php endif; ?>
 
                     <div class="right-button" id="profileButton">
+                        <?php
+                        if (session_status() === PHP_SESSION_NONE) {
+                            session_start();
+                        }
 
-                        <img class="current-user-picture" src="images/icons/profile.png"
-                            onclick="toggleProfilePopupBox()">
+                        $user = null;
+                        if (isset($_SESSION['user_id'])) {
+                            $userid = intval($_SESSION['user_id']); 
+                            $query = "SELECT * FROM user WHERE user_id = ?";
+                            $stmt = $conn->prepare($query);
+                            $stmt->bind_param("i", $userid);
+                            $stmt->execute();
+                            $result = $stmt->get_result();
+                            $user = $result->fetch_assoc();
+                        }
 
+                        // Determine profile picture path
+                        $profilePicture = isset($_SESSION['user_id']) && !empty($user['profile_picture'])
+                            ? "../images/user-dp/" . htmlspecialchars($user['profile_picture'], ENT_QUOTES, 'UTF-8')
+                            : "images/icons/profile.png";
+                        ?>
+                        <img class="current-user-picture" src="<?php echo $profilePicture; ?>" onclick="toggleProfilePopupBox()">
                         <div class="profile-popup" id="profilePopup">
 
                             <div class="top-section">
                                 <?php if (isset($_SESSION['user_id'])): ?>
-                                    <span class="username"><?php echo $_SESSION['name']; ?></span>
+                                    <span class="username"><?php echo $user['name']; ?></span>
                                     <a href="php-config/logout.php">
                                         <button class="sigin-btn">Logout</button>
                                     </a>
@@ -266,7 +287,7 @@ error_reporting(E_ALL);
                                         <div>Orders</div>
                                     </a>
 
-                                    <a href="#">
+                                    <a href="message-centre-page.php">
                                         <img src="images/icons/message-center.png">
                                         <div>Message Center</div>
                                     </a>
@@ -313,7 +334,7 @@ error_reporting(E_ALL);
             <div class="bottom-bar">
 
 
-                <div class="shortcut-links">
+                <!-- <div class="shortcut-links">
                     <?php if (isset($_SESSION['user_id'])): ?>
                         <a href="#">
                             <div>Today's Deals</div>
@@ -333,53 +354,49 @@ error_reporting(E_ALL);
                         </a>
                     <?php endif; ?>
 
-                    <!-- <a href="#">
-                        <div>
-                            Sell
-                        </div>
-                    </a> -->
-                </div>
+                    
+                </div> -->
 
             </div>
         </div>
     </nav>
 
     <main>
+        <?php
+        $sql = "SELECT banner_image FROM banner WHERE is_activate = 1";
+        $result = $conn->query($sql);
+        ?>
         <section class="slideshow">
             <div class="arrow-back">
                 <img src="images/icons/arrow-back.png" class="arrow" alt="Previous">
             </div>
             <div class="slideshow-image-box">
-                <div class="slide">
-                    <img src="../images/slideshow-banner/1.jpg" alt="Slide 1">
-                </div>
-                <div class="slide">
-                    <img src="../images/slideshow-banner/1.jpg" alt="Slide 2">
-                </div>
-                <div class="slide">
-                    <img src="../images/slideshow-banner/3.png" alt="Slide 3">
-                </div>
-
+                <?php if ($result && $result->num_rows > 0): ?>
+                    <?php while ($row = $result->fetch_assoc()): ?>
+                        <div class="slide">
+                            <img src="<?php echo htmlspecialchars($row['banner_image']); ?>" alt="Slide">
+                        </div>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <p>No banners available.</p>
+                <?php endif; ?>
             </div>
-
             <div class="arrow-forward">
                 <img src="images/icons/arrow-forward.png" class="arrow" alt="Next">
             </div>
         </section>
-
-        
 
         <section class="for-you-products-section">
             <div class="list-type">
                 <h1>For You</h1>
             </div>
             <div class="products-grid">
-            <?php
+                <?php
                 $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
                 $categoryId = isset($_GET['category_id']) ? (int)$_GET['category_id'] : null;
 
                 if ($categoryId) {
-                    $categories = [$categoryId]; 
+                    $categories = [$categoryId];
                     $categoryQuery = "SELECT category_id FROM category WHERE parent_category_id = ?";
                     $stmt = $conn->prepare($categoryQuery);
 
@@ -391,7 +408,7 @@ error_reporting(E_ALL);
                         $result = $stmt->get_result();
                         while ($row = $result->fetch_assoc()) {
                             $categories[] = $row['category_id'];
-                            $queue[] = $row['category_id']; 
+                            $queue[] = $row['category_id'];
                         }
                     }
 
@@ -399,7 +416,7 @@ error_reporting(E_ALL);
                     $sql = "SELECT * FROM product WHERE category_id IN ($placeholders)";
                     $stmt = $conn->prepare($sql);
 
-                    $types = str_repeat('i', count($categories)); 
+                    $types = str_repeat('i', count($categories));
                     $stmt->bind_param($types, ...$categories);
                 } else {
                     $sql = "SELECT * FROM product WHERE product_name LIKE ? OR description LIKE ?";
@@ -517,18 +534,23 @@ error_reporting(E_ALL);
                                         ?>
                                     </span>
                                 </div>
-                                <div class="stock-status">Availability:
+                                <div class="stock-status">
+                                    Availability:
                                     <span>
                                         <?php
-                                        if ((int)$row["stock"] > 10) {
-                                            echo "In Stock";
-                                        } else {
-                                            echo $row["stock"];
-                                        }
+                                        $stock = (int)$row["stock"];
 
+                                        if ($stock > 10) {
+                                            echo "In Stock";
+                                        } elseif ($stock > 0) {
+                                            echo "Only $stock left in stock!";
+                                        } else {
+                                            echo "Out of Stock";
+                                        }
                                         ?>
                                     </span>
                                 </div>
+
 
                                 <div class="buttons">
 

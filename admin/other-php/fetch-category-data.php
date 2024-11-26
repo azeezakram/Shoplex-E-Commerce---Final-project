@@ -8,7 +8,6 @@ if (!$productId) {
     exit;
 }
 
-// Query to get parent categories (top-level categories)
 $parentCategoriesQuery = "SELECT category_id, category_name FROM category WHERE parent_category_id IS NULL";
 $parentCategoriesResult = $conn->query($parentCategoriesQuery);
 
@@ -17,16 +16,14 @@ while ($row = $parentCategoriesResult->fetch_assoc()) {
     $parentCategories[] = $row;
 }
 
-// Query to get subcategories for each parent category
 $subCategoriesQuery = "SELECT category_id, category_name, parent_category_id FROM category WHERE parent_category_id IS NOT NULL";
 $subCategoriesResult = $conn->query($subCategoriesQuery);
 
 $subCategories = [];
 while ($row = $subCategoriesResult->fetch_assoc()) {
-    $subCategories[$row['parent_category_id']][] = $row; // Group subcategories by parent category ID
+    $subCategories[$row['parent_category_id']][] = $row; 
 }
 
-// Query to get the current parent category and subcategory for the product
 $productQuery = "
     SELECT 
         c1.category_name AS subCategoryName, 
@@ -45,7 +42,6 @@ $stmt->execute();
 $result = $stmt->get_result();
 $productData = $result->fetch_assoc();
 
-// Return the data including parent categories, subcategories, and the current selection for the product
 echo json_encode([
     'parentCategories' => $parentCategories,
     'subCategories' => isset($subCategories[$productData['parentCategoryId']]) ? $subCategories[$productData['parentCategoryId']] : [],

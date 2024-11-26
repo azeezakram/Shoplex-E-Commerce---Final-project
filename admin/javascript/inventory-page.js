@@ -184,7 +184,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelector('input[name="productId"]').value = productId;
         const row = event.target.closest("tr");
         
-        console.log(productId);
+        
 
         const productName = row.cells[1].innerText;
         const description = row.cells[2].innerText;
@@ -303,68 +303,69 @@ document.addEventListener("DOMContentLoaded", () => {
     
 
     function productImageLoad(productId, productType) {
-        
         fetch(`other-php/fetch-products.php?type=${productType}`)
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then((data) => {
-            // console.log(productId)
-            if (data.length === 0) {
-                console.error("No products found.");
-                return;
-            }
-            console.log(data)
-
-            const specificProduct = data.find(product => product.product_id === productId);
-
-            if (!specificProduct) {
-                console.error(`Product with ID ${productId} not found.`);
-                return;
-            }
-
-            
-
-            // Loop through the specific product's images
-            if (specificProduct.product_images && Array.isArray(specificProduct.product_images) && specificProduct.product_images.length > 0) {
-                specificProduct.product_images.forEach(picture_path => {
-                    if (picture_path) {
-                        const img = document.createElement('img');
-                        img.src = `../${picture_path}`;
-                        createImagePreview(img.src, "image");
-                    }
-                });
-            } else {
-                console.error("No product images found for product ID:", specificProductId);
-            }
-        })
-        .catch((error) => {
-            console.error("Error loading images:", error);
-            alert("Failed to load product images.");
-        });
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                if (data.length === 0) {
+                    console.error("No products found.");
+                    return;
+                }
+    
+                const specificProduct = data.find((product) => product.product_id === productId);
+    
+                if (!specificProduct) {
+                    console.error(`Product with ID ${productId} not found.`);
+                    return;
+                }
+    
+                // Loop through the product's images
+                if (
+                    specificProduct.product_images &&
+                    Array.isArray(specificProduct.product_images) &&
+                    specificProduct.product_images.length > 0
+                ) {
+                    specificProduct.product_images.forEach((picture_path) => {
+                        if (picture_path && picture_path.trim() !== "") {
+                            const imgSrc = `../${picture_path}`;
+                            createImagePreview(imgSrc, imgSrc.split("/").pop());
+                        }
+                    });
+                } else {
+                    console.error("No product images found for product ID:", productId);
+                }
+            })
+            .catch((error) => {
+                console.error("Error loading images:", error);
+                alert("Failed to load product images.");
+            });
     }
-
-
-
-
-
-    // Delete button handler
-    // function handleDelete(event) {
-    //     const productId = event.target.dataset.id;
-    //     if (confirm("Are you sure you want to delete this product?")) {
-    //         alert(`Delete product with ID: ${productId}`);
-    //         // Add your delete functionality here
-    //     }
-    // }
 });
 
 
 function createImagePreview(imageSrc, imageName) {
+    const imagePreviewContainer = document.getElementById("imagePreviewContainer");
+    if (!imagePreviewContainer) {
+        console.error("Image preview container not found.");
+        return;
+    }
+
+    const existingPreview = Array.from(imagePreviewContainer.children).find(
+        (child) => child.dataset.name === imageName
+    );
+
+    if (existingPreview) {
+        console.warn(`Preview for the image "${imageName}" already exists.`);
+        return;
+    }
+
     const imagePreview = document.createElement("div");
     imagePreview.className = "image-preview";
+    imagePreview.dataset.name = imageName; 
 
     const img = document.createElement("img");
     img.src = imageSrc;
@@ -374,20 +375,22 @@ function createImagePreview(imageSrc, imageName) {
     removeBtn.className = "remove-btn";
     removeBtn.innerHTML = "&times;";
     removeBtn.onclick = () => {
-        // Remove the preview
         imagePreview.remove();
 
-        // Remove the file from the uploadedFiles array
-        const index = uploadedFiles.findIndex((file) => file.name === imageName);
-        if (index > -1) {
-            uploadedFiles.splice(index, 1);
+        if (typeof uploadedFiles !== "undefined") {
+            const index = uploadedFiles.findIndex((file) => file.name === imageName);
+            if (index > -1) {
+                uploadedFiles.splice(index, 1);
+            }
         }
     };
 
     imagePreview.appendChild(img);
     imagePreview.appendChild(removeBtn);
+
     imagePreviewContainer.appendChild(imagePreview);
 }
+
 
 
 
@@ -640,157 +643,109 @@ function fetchSubCategories(parentId) {
 document.addEventListener("DOMContentLoaded", function () {
     const productForm = document.getElementById("productForm");
 
-    if (productForm) {
-        productForm.addEventListener("submit", async function (event) {
-            event.preventDefault();
-            console.log("Form submitted");
-
-            // Clear previous messages (optional if using UI feedback elements)
-            clearMessages();
-
-            // Collect form data dynamically on each submission
-            const productType = document
-                .querySelector(".product-type-btn.active")
-                ?.getAttribute("data-type");
-            const productName = this.querySelector(
-                'input[name="productName"]'
-            )?.value.trim();
-            const description = this.querySelector(
-                'textarea[name="description"]'
-            )?.value.trim();
-            const parentCategory =
-                this.querySelector("#parentCategory")?.value.trim();
-            const subCategory = this.querySelector("#subCategory")?.value.trim();
-            const price =
-                productType !== "bidding"
-                    ? this.querySelector('input[name="price"]')?.value.trim()
-                    : null;
-            const discount = this.querySelector(
-                'input[name="discount"]'
-            )?.value.trim();
-            const stock = this.querySelector('input[name="stock"]')?.value.trim();
-            const shippingFee = this.querySelector(
-                'input[name="shippingFee"]'
-            )?.value.trim();
-
-            // Bidding-specific fields
-            const bidStartingPrice =
-                productType === "bidding"
-                    ? this.querySelector(
-                        '#biddingProductFields input[name="bidStartingPrice"]'
-                    )?.value.trim()
-                    : null;
-            const bidStartDate =
-                productType === "bidding"
-                    ? this.querySelector(
-                        '#biddingProductFields input[name="bidStartDate"]'
-                    )?.value.trim()
-                    : null;
-            const bidEndDate =
-                productType === "bidding"
-                    ? this.querySelector(
-                        '#biddingProductFields input[name="bidEndDate"]'
-                    )?.value.trim()
-                    : null;
-
-            // Validate fields dynamically
-            const errors = [];
-            if (!productName) errors.push("Product name is required");
-            if (!description) errors.push("Description is required");
-            if (!parentCategory) errors.push("Parent category is required");
-            if (!subCategory || subCategory === "Select Sub Category")
-                errors.push("Subcategory is required");
-            if (productType !== "bidding" && (!price || isNaN(price)))
-                errors.push("Price is required for non-bidding products");
-            if (!stock || isNaN(stock)) errors.push("Stock is required");
-            if (!shippingFee || isNaN(shippingFee))
-                errors.push("Shipping fee is required");
-
-            // Bidding validation
-            // Bidding-specific validation
-            if (productType === "bidding") {
-                if (!bidStartingPrice || isNaN(bidStartingPrice)) {
-                    errors.push("Starting price is required for bidding products");
-                }
-                if (!bidStartDate) {
-                    errors.push("Start date is required for bidding products");
-                }
-                if (!bidEndDate) {
-                    errors.push("End date is required for bidding products");
-                }
-                if (bidStartDate && bidEndDate) {
-                    const startDate = new Date(bidStartDate);
-                    const endDate = new Date(bidEndDate);
-                    if (startDate >= endDate) {
-                        errors.push(
-                            "End date must be greater than the start date for bidding products"
-                        );
-                    }
-                }
-            }
-
-            // If there are errors, display the first one
-            if (errors.length > 0) {
-                displayMessage(errors[0], "#d9534f");
-                return;
-            }
-
-            // Proceed if no errors
-            const formData = new FormData();
-            formData.append("productType", productType);
-            formData.append("productName", productName);
-            formData.append("description", description);
-            formData.append("parentCategory", parentCategory);
-            formData.append("subCategory", subCategory);
-            if (productType !== "bidding") formData.append("price", price);
-            formData.append("discount", discount);
-            formData.append("stock", stock);
-            formData.append("shippingFee", shippingFee);
-
-            if (productType === "bidding") {
-                formData.append("bidStartingPrice", bidStartingPrice);
-                formData.append("bidStartDate", bidStartDate);
-                formData.append("bidEndDate", bidEndDate);
-            }
-
-            // Add images if uploaded
-            const imageFiles = uploadedFiles; // Use the uploadedFiles array, not the input files
-            if (imageFiles.length > 0) {
-                for (const file of imageFiles) {
-                    formData.append("images[]", file);
-                }
-            }
-
-            try {
-                const response = await fetch("other-php/add-product-process.php", {
-                    method: "POST",
-                    body: formData,
-                });
-
-                const result = await response.json();
-
-                if (response.ok && result.status === "success") {
-                    displayMessage("Product added successfully!", "#5cb85c");
-                    closeProductForm();
-                    // location.reload();
-                    setTimeout(() => {
-                        location.reload();
-                    }, 1000);
-                } else {
-                    displayMessage(result.message || "Failed to add product", "#d9534f");
-                }
-            } catch (error) {
-                console.error("Error submitting the form:", error);
-                displayMessage(
-                    "An error occurred while submitting the form.",
-                    "#d9534f"
-                );
-            }
-        });
-    } else {
+    if (!productForm) {
         console.error("Product form not found in the DOM.");
+        return;
     }
+
+    productForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        clearMessages();
+
+        const productType = document.querySelector(".product-type-btn.active")?.getAttribute("data-type");
+        const productName = this.querySelector('input[name="productName"]')?.value.trim();
+        const description = this.querySelector('textarea[name="description"]')?.value.trim();
+        const parentCategory = this.querySelector("#parentCategory")?.value.trim();
+        const subCategory = this.querySelector("#subCategory")?.value.trim();
+        const price = productType !== "bidding" ? this.querySelector('input[name="price"]')?.value.trim() : null;
+        const discount = this.querySelector('input[name="discount"]')?.value.trim();
+        const stock = this.querySelector('input[name="stock"]')?.value.trim();
+        const shippingFee = this.querySelector('input[name="shippingFee"]')?.value.trim();
+
+        const bidStartingPrice = productType === "bidding" ? this.querySelector('#biddingProductFields input[name="bidStartingPrice"]')?.value.trim() : null;
+        const bidStartDate = productType === "bidding" ? this.querySelector('#biddingProductFields input[name="bidStartDate"]')?.value.trim() : null;
+        const bidEndDate = productType === "bidding" ? this.querySelector('#biddingProductFields input[name="bidEndDate"]')?.value.trim() : null;
+
+
+        const errors = [];
+        if (!productName) errors.push("Product name is required.");
+        if (!description) errors.push("Description is required.");
+        if (!parentCategory) errors.push("Parent category is required.");
+        if (!subCategory || subCategory === "Select Sub Category") errors.push("Subcategory is required.");
+        if (productType !== "bidding" && (!price || isNaN(price))) errors.push("Price is required for non-bidding products.");
+        if (!stock || isNaN(stock)) errors.push("Stock is required.");
+        if (!shippingFee || isNaN(shippingFee)) errors.push("Shipping fee is required.");
+
+        
+        if (productType === "bidding") {
+            if (!bidStartingPrice || isNaN(bidStartingPrice)) errors.push("Starting price is required for bidding products.");
+            if (!bidStartDate) errors.push("Start date is required for bidding products.");
+            if (!bidEndDate) errors.push("End date is required for bidding products.");
+            if (bidStartDate && bidEndDate) {
+                const startDate = new Date(bidStartDate);
+                const endDate = new Date(bidEndDate);
+                if (startDate >= endDate) errors.push("End date must be later than the start date for bidding products.");
+            }
+        }
+
+        if (errors.length > 0) {
+            displayMessage(errors[0], "#d9534f");
+            return false;
+        }
+
+
+        const formData = new FormData();
+        formData.append("productType", productType);
+        formData.append("productName", productName);
+        formData.append("description", description);
+        formData.append("parentCategory", parentCategory);
+        formData.append("subCategory", subCategory);
+        if (productType !== "bidding") formData.append("price", price);
+        formData.append("discount", discount);
+        formData.append("stock", stock);
+        formData.append("shippingFee", shippingFee);
+
+        if (productType === "bidding") {
+            formData.append("bidStartingPrice", bidStartingPrice);
+            formData.append("bidStartDate", bidStartDate);
+            formData.append("bidEndDate", bidEndDate);
+        }
+
+        // Add images to FormData
+        if (Array.isArray(uploadedFiles) && uploadedFiles.length > 0) {
+            for (const file of uploadedFiles) {
+                formData.append("images[]", file);
+            }
+        }
+
+        console.log("Fine")
+
+        // Submit form data
+        try {
+            const response = await fetch("other-php/add-product-process.php", {
+                method: "POST",
+                body: formData,
+            });
+            console.log("Fine 2")
+
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            console.log("Fine 3")
+            const result = await response.json();
+            console.log("Fine 4")
+            if (result.status === "success") {
+                displayMessage("Product added successfully!", "#5cb85c");
+                setTimeout(() => location.reload(), 1000);
+            } else {
+                displayMessage(result.message || "Failed to add product", "#d9534f");
+            }
+        } catch (error) {
+            console.error("Error submitting the form:", error);
+            displayMessage("An error occurred while submitting the form.", "#d9534f");
+        }
+    });
 });
+
 
 
 

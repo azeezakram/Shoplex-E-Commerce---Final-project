@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const carousel = document.querySelector(".carousel");
     let currentIndex = 0;
     let productId = 0;
+    let stock = 0;
 
     document.querySelectorAll(".add-to-cart, .buy-now, .place-bid").forEach((button) => {
         button.addEventListener("click", function () {
@@ -14,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            
+
             fetch(`other-php/fetch_product_details.php?product_id=${productId}`)
                 .then((response) => {
                     if (!response.ok) {
@@ -24,14 +25,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 })
                 .then((data) => {
                     if (data.success) {
-                        
+
                         document.getElementById("modal-product-name").textContent = data.product_name;
                         data.description == null ? document.getElementById("modal-product-description").textContent = "No description" : document.getElementById("modal-product-description").textContent = data.description;;
                         document.getElementById("modal-discounted-price").textContent = "LKR. " + data.discounted_price;
 
                         const ratingContainer = document.getElementById("modal-product-rating");
 
-                        ratingContainer.innerHTML = ""; 
+                        ratingContainer.innerHTML = "";
 
                         if (data.product_rating && data.product_review_count) {
                             const rating = data.product_rating;
@@ -42,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 if (i <= rating) {
                                     star.classList.add("fa-star", "checked");
                                 } else {
-                                    star.classList.add("fa-star"); 
+                                    star.classList.add("fa-star");
                                 }
                                 ratingContainer.appendChild(star);
                             }
@@ -124,38 +125,38 @@ document.addEventListener("DOMContentLoaded", () => {
                                 document.querySelector('.highest-bid-price').innerText = parseFloat(data.bid_starting_price).toFixed(2);
                                 document.getElementById('place-bid-price-input').value = parseFloat(data.bid_starting_price).toFixed(2);
                             } else {
-                                
+
                                 let highest_bid = getHighestBidAmount(data, data.auction_history.auction_id);
                                 document.getElementById("modal-highest-bid-price").style.display = "inline-block";
-                                
+
                                 document.querySelector('.highest-bid-price').innerText = `${Number(highest_bid)}`;
 
                                 document.getElementById('place-bid-price-input').value = parseFloat(highest_bid);
-                                
+
                             }
 
                             if (data.bid_starting_price) {
                                 document.getElementById("modal-bid-starting-price").textContent = "LKR. " + parseFloat(data.bid_starting_price).toFixed(2);
-                                
+
                                 document.getElementById("modal-bid-starting-price").style.display = "inline-block";
-                                
+
                             } else {
                                 document.getElementById("modal-original-price").style.display = "none";
                             }
-                            
+
                             if (data.auction_history && data.auction_history.end_time) {
                                 // Ensure the end_time is parsed correctly
                                 const inputDate = data.auction_history.end_time;
                                 const inputDateTime = new Date(inputDate);
-                            
+
                                 // Check if the parsed date is valid
                                 if (!isNaN(inputDateTime.getTime())) {
                                     const currentDate = new Date();
                                     const dateOnly = inputDateTime.toISOString().split('T')[0];
-                            
+
                                     // Update the ending date
                                     document.getElementById("modal-bid-ending_date").innerText = dateOnly;
-                            
+
                                     // Determine bid status
                                     if (inputDateTime > currentDate) {
                                         document.getElementById("modal-bid-status").innerText = "Ongoing";
@@ -170,26 +171,34 @@ document.addEventListener("DOMContentLoaded", () => {
                             } else {
                                 // Handle missing or undefined end_time
                                 document.getElementById("modal-bid-ending_date").innerText = "Ending date not decided";
-                                document.getElementById("modal-bid-status").innerText = "Not available";
+                                document.getElementById("modal-bid-status").innerText = "Ended";
                             }
-                            
-                            
+
+
 
 
                         }
 
-                        if (data.stock) {
-                            if (data.stock > 10) {
-                                document.getElementById("modal-stock-info").textContent = "Availability: In Stock";
-                                document.getElementById("modal-stock-info").style.display = "inline";
+                        // Assuming `data.stock` is the stock quantity returned from the server
+                        stock = data.stock;
+
+                        const stockInfoElement = document.getElementById("modal-stock-info");
+
+                        if (stock !== undefined && stock !== null) {
+                            if (stock < 1) {
+                                stockInfoElement.textContent = "Out of stock";
+                                stockInfoElement.style.display = "inline";
+                            } else if (stock <= 10) {
+                                stockInfoElement.textContent = `Availability: Only ${stock} left in stock!`;
+                                stockInfoElement.style.display = "inline";
                             } else {
-                                document.getElementById("modal-stock-info").textContent = "Availability: " + data.stock;
-                                document.getElementById("modal-stock-info").style.display = "inline";
+                                stockInfoElement.textContent = "Availability: In Stock";
+                                stockInfoElement.style.display = "inline";
                             }
-
                         } else {
-                            document.getElementById("modal-stock-info").style.display = "none";
+                            stockInfoElement.style.display = "none"; // Hide the element if stock data is missing
                         }
+
 
 
                         const shippingFeeDetail = document.getElementById("modal-shipping-info");
@@ -243,7 +252,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         updateCarousel();
                         inputController(data);
 
-                        
+
 
 
                         // console.log(data.review_details);
@@ -251,7 +260,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         // document.getElementById('no-review-label').style.display = "none";
 
                         if (data.review_details && data.review_details.length > 0) {
-                            
+
                             document.getElementById('no-review-label').style.display = "none";
 
                             reviewsContainer.innerHTML = '';
@@ -260,36 +269,36 @@ document.addEventListener("DOMContentLoaded", () => {
                                 // Create review item container
                                 const reviewItem = document.createElement("div");
                                 reviewItem.classList.add("review-item");
-                
+
                                 // Add reviewer name
                                 const reviewerName = document.createElement("div");
                                 reviewerName.classList.add("reviewer-name");
                                 reviewerName.textContent = review.reviewer_name;
                                 reviewItem.appendChild(reviewerName);
-                
+
                                 // Add review rating
                                 const reviewRating = document.createElement("div");
                                 reviewRating.classList.add("review-rating");
                                 reviewRating.textContent = "⭐".repeat(review.rating); // Display stars
                                 reviewItem.appendChild(reviewRating);
-                
+
                                 // Add review comment
                                 const reviewComment = document.createElement("div");
                                 reviewComment.classList.add("review-content");
                                 reviewComment.textContent = review.review_content;
                                 reviewItem.appendChild(reviewComment);
-                
+
                                 // Add review date
                                 const reviewDate = document.createElement("div");
                                 reviewDate.classList.add("review-date");
                                 reviewDate.textContent = `Reviewed on: ${new Date(review.created_at).toLocaleDateString()}`;
                                 reviewItem.appendChild(reviewDate);
-                
+
                                 // Append the review item to the container
                                 reviewsContainer.appendChild(reviewItem);
                             });
 
-                        } 
+                        }
                         else {
                             // Show a message if no reviews are found
                             reviewsContainer.innerHTML = '';
@@ -333,12 +342,12 @@ document.addEventListener("DOMContentLoaded", () => {
             const bidAmount = parseFloat(record.bid_amount) || 0; // Ensure bid_amount is a number
             return bidAmount > max ? bidAmount : max;
         }, 0);
-        
+
         console.log(highestBid);
 
         return highestBid;
     }
-    
+
 
     // Carousel navigation
     function updateCarousel() {
@@ -367,40 +376,40 @@ document.addEventListener("DOMContentLoaded", () => {
     function inputController(data) {
         if (data.bid_activate == 0) {
             const quantityInput = document.getElementById("quantity-input");
-    
+
             if (quantityInput) {
                 const increaseButton = document.getElementById("increase-quantity");
                 const decreaseButton = document.getElementById("decrease-quantity");
-    
+
                 // Function to add event listeners to buttons
                 function attachEventListeners() {
                     increaseButton.addEventListener("click", () => {
                         const currentValue = parseInt(quantityInput.value);
-    
+
                         if (currentValue < 9) {
                             quantityInput.value = currentValue + 1;
                             decreaseButton.disabled = false; // Enable decrease button
                             decreaseButton.style.pointerEvents = "auto";
                             decreaseButton.style.opacity = "1";
                         }
-    
+
                         if (currentValue + 1 === 9) {
                             increaseButton.disabled = true;
                             increaseButton.style.pointerEvents = "none"; // Disable hover effect
                             increaseButton.style.opacity = "0.6"; // Optional: Dim button
                         }
                     });
-    
+
                     decreaseButton.addEventListener("click", () => {
                         const currentValue = parseInt(quantityInput.value);
-    
+
                         if (currentValue > 1) {
                             quantityInput.value = currentValue - 1;
                             increaseButton.disabled = false; // Enable increase button
                             increaseButton.style.pointerEvents = "auto";
                             increaseButton.style.opacity = "1";
                         }
-    
+
                         if (currentValue - 1 === 1) {
                             decreaseButton.disabled = true;
                             decreaseButton.style.pointerEvents = "none"; // Disable hover effect
@@ -408,107 +417,104 @@ document.addEventListener("DOMContentLoaded", () => {
                         }
                     });
                 }
-    
+
                 // Clone buttons and reset event listeners when closing the preview
                 function resetPreview() {
                     // Check if buttons exist before trying to clone them
                     const increaseButton = document.getElementById("increase-quantity");
                     const decreaseButton = document.getElementById("decrease-quantity");
-    
+
                     if (increaseButton && decreaseButton) {
                         const cloneIncreaseButton = increaseButton.cloneNode(true);
                         const cloneDecreaseButton = decreaseButton.cloneNode(true);
-    
+
                         increaseButton.parentNode.replaceChild(cloneIncreaseButton, increaseButton);
                         decreaseButton.parentNode.replaceChild(cloneDecreaseButton, decreaseButton);
-    
-                        // Reattach event listeners to the cloned buttons
+
+
                         attachEventListeners();
                     } else {
                         console.warn("Increase or decrease buttons not found for replacement.");
                     }
                 }
-    
-                // Initial button state
+
+
                 if (parseInt(quantityInput.value) === 8) {
                     increaseButton.disabled = true;
                     increaseButton.style.pointerEvents = "none";
                     increaseButton.style.opacity = "0.6";
                 }
-    
+
                 if (parseInt(quantityInput.value) === 1) {
                     decreaseButton.disabled = true;
                     decreaseButton.style.pointerEvents = "none";
                     decreaseButton.style.opacity = "0.6";
                 }
-    
+
                 attachEventListeners();
-    
-                
+
+
                 document.querySelector(".close-button").addEventListener("click", () => {
-                    
+
                     const modal = document.querySelector(".modal");
                     if (modal) {
                         modal.classList.remove("show");
                     }
-    
-                    
+
+
                     resetPreview();
                 });
             } else {
                 console.warn("Element with ID 'product-quantity' not found.");
             }
-                
+
         } else {
             const placeBidPriceInput = document.getElementById("place-bid-price-input");
-        
+
             const biddingRecords = data.bidding_records.filter(record => record.auction_id === data.auction_history.auction_id);
-        
+
             const highestBid = biddingRecords.reduce((max, record) => {
-                const bidAmount = parseFloat(record.bid_amount) || 0; // Ensure bid_amount is a number
+                const bidAmount = parseFloat(record.bid_amount) || 0;
                 return bidAmount > max ? bidAmount : max;
             }, 0);
-        
+
             if (placeBidPriceInput) {
                 const increaseBidPriceButton = document.getElementById("increase-bid-price");
                 const decreaseBidPriceButton = document.getElementById("decrease-bid-price");
-        
-                // Clear any existing event listeners
+
                 const cloneIncreaseButton = increaseBidPriceButton.cloneNode(true);
                 const cloneDecreaseButton = decreaseBidPriceButton.cloneNode(true);
-        
+
                 increaseBidPriceButton.parentNode.replaceChild(cloneIncreaseButton, increaseBidPriceButton);
                 decreaseBidPriceButton.parentNode.replaceChild(cloneDecreaseButton, decreaseBidPriceButton);
-        
-                // Assign new event listeners
+
                 cloneIncreaseButton.addEventListener("click", () => {
                     const currentValue = parseFloat(placeBidPriceInput.value);
-        
-                    // Allow increasing bid price beyond the highest bid
+
                     placeBidPriceInput.value = currentValue + 1;
                     cloneDecreaseButton.disabled = false; // Enable decrease button
                     cloneDecreaseButton.style.pointerEvents = "auto";
                     cloneDecreaseButton.style.opacity = "1";
                 });
-        
+
                 cloneDecreaseButton.addEventListener("click", () => {
                     const currentValue = parseFloat(placeBidPriceInput.value);
-        
+
                     if (currentValue > highestBid) {
                         placeBidPriceInput.value = currentValue - 1;
-                        cloneIncreaseButton.disabled = false; // Enable increase button
+                        cloneIncreaseButton.disabled = false;
                         cloneIncreaseButton.style.pointerEvents = "auto";
                         cloneIncreaseButton.style.opacity = "1";
                     }
-        
+
                     if (currentValue - 1 <= highestBid) {
                         cloneDecreaseButton.disabled = true;
-                        cloneDecreaseButton.style.pointerEvents = "none"; // Disable hover effect
-                        cloneDecreaseButton.style.opacity = "0.6"; // Optional: Dim button
+                        cloneDecreaseButton.style.pointerEvents = "none";
+                        cloneDecreaseButton.style.opacity = "0.6";
                     }
                 });
-        
-                // Initial button state
+
+
                 if (parseFloat(placeBidPriceInput.value) >= highestBid) {
                     cloneIncreaseButton.disabled = false;
                     cloneIncreaseButton.style.pointerEvents = "auto";
@@ -518,7 +524,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     cloneIncreaseButton.style.pointerEvents = "none";
                     cloneIncreaseButton.style.opacity = "0.6";
                 }
-        
+
                 if (parseFloat(placeBidPriceInput.value) <= data.auction_history.starting_price) {
                     cloneDecreaseButton.disabled = true;
                     cloneDecreaseButton.style.pointerEvents = "none";
@@ -532,19 +538,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.warn("Element with ID 'place-bid-price-input' not found.");
             }
         }
-        
+
     }
 
-    
 
-
-
-    // Close modal
     document.querySelector(".close-button").addEventListener("click", () => {
-        // Close the modal
+
         modal.classList.remove("show");
 
-        // Reset quantity input
         const quantityInput = document.getElementById("quantity-input");
         const increaseButton = document.getElementById("increase-quantity");
         const decreaseButton = document.getElementById("decrease-quantity");
@@ -552,23 +553,21 @@ document.addEventListener("DOMContentLoaded", () => {
         const decreaseBidPriceButton = document.getElementById("decrease-bid-price");
 
         if (quantityInput && increaseButton && decreaseButton) {
-            // Reset quantity value
             quantityInput.value = "1";
 
-            // Reset button states
-            increaseButton.disabled = false; // Enable the increase button
+            increaseButton.disabled = false;
             increaseButton.style.pointerEvents = "auto";
             increaseButton.style.opacity = "1";
 
-            decreaseButton.disabled = true; // Disable the decrease button
+            decreaseButton.disabled = true;
             decreaseButton.style.pointerEvents = "none";
             decreaseButton.style.opacity = "0.6";
 
-            increaseBidPriceButton.disabled = false; // Enable the increase button
+            increaseBidPriceButton.disabled = false;
             increaseBidPriceButton.style.pointerEvents = "auto";
             increaseBidPriceButton.style.opacity = "1";
 
-            decreaseBidPriceButton.disabled = true; // Disable the decrease button
+            decreaseBidPriceButton.disabled = true;
             decreaseBidPriceButton.style.pointerEvents = "none";
             decreaseBidPriceButton.style.opacity = "0.6";
         } else {
@@ -583,14 +582,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("custom-add-to-cart").addEventListener("click", () => {
         // alert("Clicked");
-
-        // const productId = button.dataset.productId;
+        
+        console.log(productId)
         const quantity = document.getElementById("quantity-input").value;
-
+        console.log(quantity)
+        console.log(stock)
         if (!productId || !quantity || quantity <= 0) {
             alert("Invalid product or quantity.");
             return;
         }
+        
+
+        if (stock > 0) {
+            if (quantity > stock) {
+                const successMessage = document.getElementById("success-message");
+                successMessage.classList.add("show");
+                successMessage.innerText = `Quantity exceeds available stock.`;
+                successMessage.style.backgroundColor = "red";
+                setTimeout(() => {
+                    successMessage.classList.remove("show");
+                }, 3000);
+                return;
+            }
+        } else {
+            const successMessage = document.getElementById("success-message");
+            successMessage.classList.add("show");
+            successMessage.innerText = `Product is out of stock.`;
+            successMessage.style.backgroundColor = "red";
+            setTimeout(() => {
+                successMessage.classList.remove("show");
+            }, 3000);
+            return;
+        }
+
+
         // alert("Processeing");
         fetch('other-php/add-to-cart.php', {
             method: 'POST',
@@ -652,9 +677,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 
-    // Show the product preview modal when "Buy Now" is clicked
-    document.getElementById("custom-buy-now").addEventListener("click", () => {
 
+    document.getElementById("custom-buy-now").addEventListener("click", () => {
 
         const quantity = parseInt(document.getElementById("quantity-input").value, 10);
         const priceAfterDiscount = parseFloat(document.getElementById("modal-discounted-price").textContent.replace("LKR. ", ""));
@@ -664,16 +688,25 @@ document.addEventListener("DOMContentLoaded", () => {
             ? parseFloat(shippingFeeElement.textContent.replace("(", "").replace(")", "").trim())
             : 0;
 
-        // Calculate the subtotal
+        if (quantity > stock) {
+            const successMessage = document.getElementById("success-message");
+            successMessage.classList.add("show");
+            successMessage.innerText = `Quantity exceeds available stock.`;
+            successMessage.style.backgroundColor = "red";
+            setTimeout(() => {
+                successMessage.classList.remove("show");
+            }, 3000);
+            return;
+        }
+
+
         const subtotal = priceAfterDiscount * quantity;
 
-        // Update modal with calculated values
         document.getElementById("modal-quantity-info").textContent = quantity;
         document.getElementById("modal-price-info").textContent = priceAfterDiscount.toFixed(2);
         document.getElementById("modal-shipping-fee-info").textContent = shippingFee.toFixed(2);
         document.getElementById("modal-total-info").textContent = (subtotal + shippingFee).toFixed(2);
 
-        // Show the order confirmation modal
         const orderConfirmationModal = document.getElementById("orderConfirmationModal");
         orderConfirmationModal.style.display = "flex";
 
@@ -685,17 +718,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         let isOrderPlaced = false;
 
-        // Handle the confirm order button click
         document.getElementById("confirm-order-btn").addEventListener("click", function () {
             if (isOrderPlaced) {
-                return; // Prevent placing the same order again
+                return;
             }
 
-            // Disable the confirm button to prevent further clicks
             this.disabled = true;
             this.textContent = "Processing...";
 
-            // Sending the order details to the server
             fetch('other-php/buy-now.php', {
                 method: 'POST',
                 headers: {
@@ -710,13 +740,13 @@ document.addEventListener("DOMContentLoaded", () => {
                         successMessage.classList.add("show");
                         successMessage.innerText = "Order has been placed successfully!";
                         successMessage.style.backgroundColor = "#11942f";
-                        // Hide the message after 3 seconds
+
                         setTimeout(() => {
                             successMessage.classList.remove("show");
                         }, 3000);
-                        // Hide the modal and reset the values
                         document.getElementById("orderConfirmationModal").style.display = "none";
-                        isOrderPlaced = true; // Mark the order as placed
+                        isOrderPlaced = true;
+                        setTimeout(() => location.reload(), 2000);
                     } else {
                         alert(data.message || "Failed to place the order.");
                     }
@@ -726,15 +756,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     alert("An error occurred. Please try again.");
                 })
                 .finally(() => {
-                    // Re-enable the button after the process is complete (in case of error or success)
+
                     document.getElementById("confirm-order-btn").disabled = false;
-                    document.getElementById("confirm-order-btn").textContent = "Confirm Order"; // Reset the text
+                    document.getElementById("confirm-order-btn").textContent = "Confirm Order";
                 });
         });
 
-        // Handle the cancel order button click
+
         document.getElementById("cancel-order-btn").addEventListener("click", () => {
-            // Close the modal if user cancels
+
             document.getElementById("orderConfirmationModal").style.display = "none";
         });
     });
@@ -762,14 +792,12 @@ document.addEventListener("DOMContentLoaded", () => {
             successMessage.classList.add("show");
             successMessage.innerText = `Bid amount should be higher than LKR. ${highestBid}!`;
             successMessage.style.backgroundColor = "red";
-            // Hide the message after 3 seconds
             setTimeout(() => {
                 successMessage.classList.remove("show");
             }, 3000);
             return;
         }
 
-        // alert("Processeing");
         fetch('other-php/place-bid.php', {
             method: 'POST',
             headers: {
@@ -778,9 +806,7 @@ document.addEventListener("DOMContentLoaded", () => {
             body: `product_id=${productId}&auction_id=${auctionId}&bid_amount=${placeBidInput}`,
         })
             .then((response) => {
-                // console.log("Response received:", response);
 
-                // Check if the response is not JSON
                 if (!response.ok || !response.headers.get('content-type')?.includes('application/json')) {
                     return response.text().then(text => {
                         console.error("Received non-JSON response:", text);
@@ -796,28 +822,27 @@ document.addEventListener("DOMContentLoaded", () => {
                     successMessage.classList.add("show");
                     successMessage.innerText = data.message;
                     successMessage.style.backgroundColor = "#11942f";
-                    // Hide the message after 3 seconds
+
                     setTimeout(() => {
                         successMessage.classList.remove("show");
                     }, 3000);
-                    // Hide the modal and reset the values
+
                     document.getElementById("orderConfirmationModal").style.display = "none";
-                    isOrderPlaced = true; // Mark the order as placed
+                    isOrderPlaced = true;
                 } else {
                     const successMessage = document.getElementById("success-message");
                     successMessage.classList.add("show");
                     successMessage.innerText = data.message;
                     successMessage.style.backgroundColor = "red";
-                    // Hide the message after 3 seconds
+
                     setTimeout(() => {
                         successMessage.classList.remove("show");
                     }, 3000);
-                    // alert(data.message || "Failed to add product to cart.");
-                    // alert(data.message); // This shows the error message from the PHP script
 
-                    // Optionally, redirect to the login page if necessary
+
+
                     if (data.message === 'Please log in to add items to your cart.') {
-                        window.location.href = "signin-page.php"; // Redirect to sign-in page
+                        window.location.href = "signin-page.php";
                     }
                 }
             })
@@ -827,6 +852,6 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
 
-        });
+    });
 
 });

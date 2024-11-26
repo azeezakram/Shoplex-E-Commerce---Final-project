@@ -1,15 +1,13 @@
 <?php
-// Include database connection
+
 include '../php-config/db-conn.php';
 
-// Start the session (make sure it's only called once)
 session_start();
 
 header('Content-Type: application/json');
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['success' => false, 'message' => 'Please log in to add items to your cart.']);
     exit;
@@ -22,44 +20,72 @@ $price_after_discount = doubleval($_POST['price_after_discount']);
 $subtotal = doubleval($_POST['subtotal']);
 $shipping_fee = doubleval($_POST['shipping_fee']);
 
-// Validate product_id and quantity
 if ($product_id <= 0 || $quantity <= 0) {
-    echo json_encode(['success' => false, 'message' => 'Invalid product or quantity.' . $product_id. " " . $quantity]);
+    echo json_encode(['success' => false, 'message' => 'Invalid product or quantity.']);
     exit;
 }
 
-// Disable auto-commit and begin the transaction
 $conn->autocommit(false);
 
 try {
-    
+    // Start by inserting the order into the orders table
     $createOrderQuery = $conn->prepare("INSERT INTO orders (buyer_id, total_amount, total_shipping_fee) VALUES (?, ?, ?)");
-    $createOrderQuery->bind_param("idd", $user_id, $subtotal, $shipping_fee);  // Bind the integer parameter
-    $createOrderQuery->execute();
+    $createOrderQuery->bind_param("idd", $user_id, $subtotal, $shipping_fee); 
+    if (!$createOrderQuery->execute()) {
+        throw new Exception("Failed to create the order.");
+    }
     $order_id = $conn->insert_id;
 
-    $status_name = "Pending"; // Define the status_name variable
+    // Fetch the status_id for "Pending" status
+    $status_name = "Pending"; 
     $getOrderStatusQuery = $conn->prepare("SELECT status_id FROM order_status WHERE status_name = ?");
-    $getOrderStatusQuery->bind_param("s", $status_name); // Bind the string parameter
-    $getOrderStatusQuery->execute();
+    $getOrderStatusQuery->bind_param("s", $status_name); 
+    if (!$getOrderStatusQuery->execute()) {
+        throw new Exception("Failed to fetch order status.");
+    }
 
-    $result = $getOrderStatusQuery->get_result(); // Get the result
-    $row = $result->fetch_assoc(); // Fetch the associative array
-    $status_id = intval($row['status_id']); // Access the status_id column and convert it to an integer
+    $result = $getOrderStatusQuery->get_result(); 
+    $row = $result->fetch_assoc(); 
+    if (!$row) {
+        throw new Exception("Invalid status name.");
+    }
+    $status_id = intval($row['status_id']); 
 
-
+    // Insert the order item
     $addOrderItemQuery = $conn->prepare("INSERT INTO order_item (order_id, product_id, quantity, price_after_discount, subtotal, shipping_fee, status_id) VALUES (?, ?, ?, ?, ?, ?, ?)");
     $addOrderItemQuery->bind_param("iiidddi", $order_id, $product_id, $quantity, $price_after_discount, $subtotal, $shipping_fee, $status_id); 
-    $addOrderItemQuery->execute();
-    echo json_encode(['success' => true, 'message' => 'Order has been placed successfully.']);
-    
+    if (!$addOrderItemQuery->execute()) {
+        throw new Exception("Failed to add order item.");
+    }
+
+    // Update product stock
+    $updateStockItemQuery = $conn->prepare("UPDATE product SET stock = stock - ? WHERE product_id = ? AND stock >= ?");
+    $updateStockItemQuery->bind_param("iii", $quantity, $product_id, $quantity); 
+    if (!$updateStockItemQuery->execute()) {
+        throw new Exception("Failed to update stock.");
+    }
+
+    // Check if stock was updated
+    if ($updateStockItemQuery->affected_rows === 0) {
+        throw new Exception("Insufficient stock for the requested quantity.");
+    }
 
     // Commit the transaction
     $conn->commit();
 
+    // Return success
+    echo json_encode(['success' => true, 'message' => 'Order has been placed successfully.']);
+
 } catch (Exception $e) {
-    // Roll back the transaction in case of error
+    // Rollback transaction and return error message
     $conn->rollback();
     echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+} finally {
+    // Close connections
+    $createOrderQuery->close();
+    $getOrderStatusQuery->close();
+    $addOrderItemQuery->close();
+    $updateStockItemQuery->close();
+    $conn->close();
 }
 ?>

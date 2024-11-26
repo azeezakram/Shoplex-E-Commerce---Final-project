@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const form = document.querySelector('form');
+    
+    // Email validation
     const emailInput = document.getElementById('email');
     const passwordInput = document.getElementById('password');
     const emailMessage = document.createElement('small');
@@ -9,21 +12,18 @@ document.addEventListener('DOMContentLoaded', () => {
     emailInput.insertAdjacentElement('afterend', emailMessage);
     passwordInput.insertAdjacentElement('afterend', passwordMessage);
 
-    // Email validation
     emailInput.addEventListener('input', () => {
         const email = emailInput.value.trim();
         const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
+        
         if (!emailPattern.test(email)) {
             emailMessage.textContent = 'Invalid email format.';
         } else {
-            // Clear message and check if email already exists
             emailMessage.textContent = '';
             checkEmailExists(email);
         }
     });
 
-    // Password validation
     passwordInput.addEventListener('input', () => {
         const password = passwordInput.value.trim();
         const hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(password);
@@ -46,18 +46,30 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Form submission validation
-    document.querySelector('form').addEventListener('submit', (event) => {
-        const email = emailInput.value.trim();
-        const password = passwordInput.value.trim();
+    form.addEventListener('submit', (event) => {
+        event.preventDefault(); 
 
-        if (emailMessage.textContent || passwordMessage.textContent || !email || !password) {
-            event.preventDefault(); // Prevent form submission
-            alert('Please correct the errors before submitting the form.');
-        }
+        const formData = new FormData(form);
+
+        fetch('add-user.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                alert(data.message);
+                window.location.href = data.redirect; 
+            } else {
+                alert(data.message); 
+            }
+        })
+        .catch(error => {
+            console.error('Error during form submission:', error);
+            alert('There was an error submitting the form.');
+        });
     });
 
-    // Function to check if email already exists
     function checkEmailExists(email) {
         fetch(`add-user.php?email=${encodeURIComponent(email)}`)
             .then(response => response.json())

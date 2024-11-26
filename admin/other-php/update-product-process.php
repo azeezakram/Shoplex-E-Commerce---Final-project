@@ -9,32 +9,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $parentCategoryId = intval($_POST['parentCategory']);
     $subCategoryId = intval($_POST['subCategory']);
 
-    // Handle price, check if it's present for normal products
     $price = isset($_POST['price']) ? number_format(floatval($_POST['price']), 2, '.', '') : null;
     $discount = number_format(floatval($_POST['discount']) / 100, 2, '.', '');
     $stock = intval($_POST['stock']);
     $shippingFee = number_format(floatval($_POST['shippingFee']), 2, '.', '');
 
-    // For bidding products
     $bidStartingPrice = isset($_POST['bidStartingPrice']) ? number_format(floatval($_POST['bidStartingPrice']), 2, '.', '') : null;
     $bidStartDate = $_POST['bidStartDate'] ?? null;
     $bidEndDate = $_POST['bidEndDate'] ?? null;
 
-    // Handle uploaded images
     $uploadedImages = [];
-    if (!empty($_FILES['images'])) {
-        $uploadDir = "/images/product-images/";
+    $uploadDir = "../../images/product-images/";
 
-        if (!file_exists($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
+    if (!file_exists($uploadDir)) {
+        if (!mkdir($uploadDir, 0777, true)) {
+            die("Failed to create upload directory: $uploadDir");
         }
+    }
 
+    if (isset($_FILES['images']) && !empty($_FILES['images']['name'][0])) {
         foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
-            $fileName = basename($_FILES['images']['name'][$key]);
-            $targetPath = $uploadDir . $fileName;
+            $originalName = basename($_FILES['images']['name'][$key]);
+            $sanitizedFilename = preg_replace('/[^a-zA-Z0-9._-]/', '_', $originalName);
+            $uniqueFilename = uniqid() . "_" . $sanitizedFilename;
+            $targetPath = $uploadDir . $uniqueFilename;
 
-            if (move_uploaded_file($tmpName, $targetPath)) {
-                $uploadedImages[] = $targetPath;
+            if (is_uploaded_file($tmpName)) {
+                if (move_uploaded_file($tmpName, $targetPath)) {
+                    $uploadedImages[] = "/images/product-images/" . $uniqueFilename;
+                }
             }
         }
     }
@@ -42,7 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $conn->begin_transaction();
 
-        // Update normal product
         if ($productType == "normal") {
             $updateProductQuery = "
                 UPDATE product SET 
@@ -69,7 +71,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             );
             $stmt->execute();
 
-            // Handle product images (delete old and insert new ones)
             if (!empty($uploadedImages)) {
                 $deleteExistingImagesQuery = "DELETE FROM product_picture WHERE product_id = ?";
                 $deleteStmt = $conn->prepare($deleteExistingImagesQuery);
@@ -81,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $imageStmt = $conn->prepare($addProductImageQuery);
 
                 foreach ($uploadedImages as $index => $imagePath) {
-                    $defaultPicture = ($index === 0) ? 1 : 0; // First image is default
+                    $defaultPicture = ($index === 0) ? 1 : 0;
                     $imageStmt->bind_param("isi", $productId, $imagePath, $defaultPicture);
                     $imageStmt->execute();
                 }
@@ -89,7 +90,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // Update bidding product
         if ($productType == "bidding") {
             $updateBiddingProductQuery = "
                 UPDATE product SET 
@@ -117,7 +117,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             );
             $stmt->execute();
 
-            // Update auction history for bidding products
             $updateAuctionHistoryQuery = "
                 UPDATE auction_history 
                 SET starting_bid = ?, start_time = ?, end_time = ? 
@@ -127,7 +126,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->bind_param("dssi", $bidStartingPrice, $bidStartDate, $bidEndDate, $productId);
             $stmt->execute();
 
-            // Handle images (delete old and insert new ones)
             if (!empty($uploadedImages)) {
                 $deleteExistingImagesQuery = "DELETE FROM product_picture WHERE product_id = ?";
                 $deleteStmt = $conn->prepare($deleteExistingImagesQuery);
@@ -147,12 +145,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // Commit transaction
+
         $conn->commit();
 
         echo json_encode(['status' => 'success']);
     } catch (Exception $e) {
-        // Rollback transaction on error
+       
         $conn->rollback();
         echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
     }

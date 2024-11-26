@@ -13,13 +13,13 @@ error_reporting(E_ALL);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Auction Histories</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    
+
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/auction-history-page.css">
 </head>
 
 <body>
-    
+
     <nav>
         <div class="side-navbar" id="sideNavBar">
             <!-- <span class="close-btn" id="closeBtn">&times;</span> -->
@@ -57,13 +57,13 @@ error_reporting(E_ALL);
 
                     // Display categories
                     foreach ($categories as $parent_id => $category): ?>
-                        <a href="#" class="subject parent-category" data-id="<?php echo $parent_id; ?>">
+                        <a href="index.php?category_id=<?php echo $parent_id; ?>" class="subject parent-category" data-id="<?php echo $parent_id; ?>">
                             <div><?php echo htmlspecialchars($category['name']); ?></div>
                         </a>
                         <?php if (!empty($category['children'])): ?>
                             <div class="subcategory-content">
                                 <?php foreach ($category['children'] as $child): ?>
-                                    <a href="#" class="subject child-category" data-id="<?php echo $child['id']; ?>" style="padding-left: 25px;">
+                                    <a href="index.php?category_id=<?php echo $child['id']; ?>" class="subject child-category" data-id="<?php echo $child['id']; ?>" style="padding-left: 25px;">
                                         <div><?php echo htmlspecialchars($child['name']); ?></div>
                                     </a>
                                 <?php endforeach; ?>
@@ -161,14 +161,17 @@ error_reporting(E_ALL);
                     </a>
                 </div>
 
-                <div class="mid-section">
-                    <input class="search-bar" type="text" placeholder="Search" />
-                    <button class="search-button">
-                        <img src="images/icons/search.png">
-                        <div class="tooltip">Search</div>
-                    </button>
+                <form method="GET" action=" " class="mid-section">
+                    <div class="mid-section">
+                        <input class="search-bar" type="text" name="search" name="search" placeholder="Search" />
+                        <button class="search-button">
+                            <img src="images/icons/search.png">
+                            <div class="tooltip">Search</div>
+                        </button>
+                    </div>
+                </form>
 
-                </div>
+
 
                 <div class="right-section">
                     <?php if (isset($_SESSION['user_id'])): ?>
@@ -184,13 +187,13 @@ error_reporting(E_ALL);
                                 <div class="tooltip">Order</div>
                             </a>
                         </div>
-                        <div class="right-button" id="notfication-button">
-                            <a href="#">
+                        <!-- <div class="right-button" id="notfication-button">
+                            <a href="message-centre-page.php">
                                 <img class="notfications-icon" src="images/icons/notification.png">
                                 <div class="notfication-count">5</div>
                                 <div class="tooltip">Notification</div>
                             </a>
-                        </div>
+                        </div> -->
                     <?php else: ?>
                         <div class="right-button" id="cart-button">
                             <a href="signin-page.php">
@@ -204,25 +207,43 @@ error_reporting(E_ALL);
                                 <div class="tooltip">Order</div>
                             </a>
                         </div>
-                        <div class="right-button" id="notfication-button">
+                        <!-- <div class="right-button" id="notfication-button">
                             <a href="signin-page.php">
                                 <img class="notfications-icon" src="images/icons/notification.png">
                                 <div class="notfication-count">5</div>
                                 <div class="tooltip">Notification</div>
                             </a>
-                        </div>
+                        </div> -->
                     <?php endif; ?>
 
                     <div class="right-button" id="profileButton">
+                        <?php
+                        if (session_status() === PHP_SESSION_NONE) {
+                            session_start();
+                        }
 
-                        <img class="current-user-picture" src="images/icons/profile.png"
-                            onclick="toggleProfilePopupBox()">
+                        $user = null;
+                        if (isset($_SESSION['user_id'])) {
+                            $userid = intval($_SESSION['user_id']);
+                            $query = "SELECT * FROM user WHERE user_id = ?";
+                            $stmt = $conn->prepare($query);
+                            $stmt->bind_param("i", $userid);
+                            $stmt->execute();
+                            $result = $stmt->get_result();
+                            $user = $result->fetch_assoc();
+                        }
 
+                        // Determine profile picture path
+                        $profilePicture = isset($_SESSION['user_id']) && !empty($user['profile_picture'])
+                            ? "../images/user-dp/" . htmlspecialchars($user['profile_picture'], ENT_QUOTES, 'UTF-8')
+                            : "images/icons/profile.png";
+                        ?>
+                        <img class="current-user-picture" src="<?php echo $profilePicture; ?>" onclick="toggleProfilePopupBox()">
                         <div class="profile-popup" id="profilePopup">
 
                             <div class="top-section">
                                 <?php if (isset($_SESSION['user_id'])): ?>
-                                    <span class="username"><?php echo $_SESSION['name']; ?></span>
+                                    <span class="username"><?php echo $user['name']; ?></span>
                                     <a href="php-config/logout.php">
                                         <button class="sigin-btn">Logout</button>
                                     </a>
@@ -255,8 +276,8 @@ error_reporting(E_ALL);
                                         <img src="images/icons/order.png">
                                         <div>Orders</div>
                                     </a>
-                                    
-                                    <a href="#">
+
+                                    <a href="message-centre-page.php">
                                         <img src="images/icons/message-center.png">
                                         <div>Message Center</div>
                                     </a>
@@ -283,7 +304,7 @@ error_reporting(E_ALL);
                                         <img src="images/icons/order.png">
                                         <div>Orders</div>
                                     </a>
-                                    
+
                                     <a href="signin-page.php">
                                         <img src="images/icons/message-center.png">
                                         <div>Message Center</div>
@@ -301,9 +322,9 @@ error_reporting(E_ALL);
             </div>
 
             <div class="bottom-bar">
-                
 
-                <div class="shortcut-links">
+
+                <!-- <div class="shortcut-links">
                     <?php if (isset($_SESSION['user_id'])): ?>
                         <a href="#">
                             <div>Today's Deals</div>
@@ -323,12 +344,8 @@ error_reporting(E_ALL);
                         </a>
                     <?php endif; ?>
 
-                    <!-- <a href="#">
-                        <div>
-                            Sell
-                        </div>
-                    </a> -->
-                </div>
+                    
+                </div> -->
 
             </div>
         </div>
@@ -341,7 +358,7 @@ error_reporting(E_ALL);
     </div>
 
     <script src="javascript/header.js"></script>
-    <script src="javascript/auction-history.js"></script>                  
+    <script src="javascript/auction-history.js"></script>
 </body>
 
 </html>

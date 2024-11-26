@@ -1,14 +1,14 @@
 <?php
 session_start();
 
-if (isset($_SESSION['user_id'])) {
+if (isset($_SESSION['admin_id'])) {
 
-    unset($_SESSION['user_id']);
-    unset($_SESSION['name']); 
+    unset($_SESSION['admin_id']);
+    unset($_SESSION['admin_name']); 
 }
 
-session_destroy(); 
+// session_destroy(); 
 
-header("Location: ../signin-page.php");
+header("Location: ../index.php");
 exit; 
 ?>

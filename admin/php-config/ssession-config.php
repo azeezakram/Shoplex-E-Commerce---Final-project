@@ -3,23 +3,24 @@
 function check_login($conn)
 {
 
-	if(isset($_SESSION['user_id']))
-	{
+    if (isset($_SESSION['admin_id'])) {
+        $admin_id = $_SESSION['admin_id'];
+        $admin_type_id = 4; 
 
-		$user_id = $_SESSION['user_id'];
-		$query = "SELECT * FROM user WHERE user_id = '$user_id' limit 1";
+        $query = "SELECT * FROM user WHERE user_id = ? AND user_type_id = ? LIMIT 1";
+        $stmt = $conn->prepare($query);
+        if (!$stmt) {
+            die("Failed to prepare statement: " . $conn->error);
+        }
+        $stmt->bind_param('ii', $admin_id, $admin_type_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-		$result = mysqli_query($conn,$query);
-		if($result && mysqli_num_rows($result) > 0)
-		{
+        if ($result && $result->num_rows > 0) {
+            return $result->fetch_assoc();
+        }
+    }
 
-			$user_data = mysqli_fetch_assoc($result);
-			return $user_data;
-		}
-	}
-
-	header("Location: index.php");
-	die;
-
+    header("Location: ../index.php");
+    die;
 }
-

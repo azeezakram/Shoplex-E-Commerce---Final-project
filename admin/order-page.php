@@ -1,6 +1,21 @@
 <?php
 include 'php-config/db-conn.php';
 session_start();
+
+if (isset($_SESSION['admin_id'])) {
+    $userId = $_SESSION['admin_id'];
+    $adminName = isset($_SESSION['admin_name']) ? $_SESSION['admin_name'] : 'Admin'; 
+
+    $sql = "SELECT email FROM user WHERE user_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $adminEmail = $result->fetch_assoc()['email'];
+} else {
+    header('Location: index.php');
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -19,7 +34,9 @@ session_start();
     <div class="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-header-content">
-                <span>Admin Panel</span>
+                <span>Admin Panel</span> 
+                <span style="font-weight: bold; color: #fff;"><?php echo htmlspecialchars($adminName); ?></span>
+                <span style="font-weight: bold; color: #fff;"><?php echo htmlspecialchars($adminEmail); ?></span>
             </div>
             <div class="hamburger" onclick="toggleSidebar()">
                 <div class="hamburger-line"></div>
@@ -33,9 +50,10 @@ session_start();
             <a href="inventory-page.php"><i class="fas fa-archive"></i> <span>Inventories</span></a>
             <a href="order-page.php" class="active"><i class="fas fa-box"></i> <span>Orders</span></a>
             <a href="bidding-record-page.php"><i class="fas fa-gavel"></i> <span>Bidding Records</span></a>
+            <a href="sales-analysis.php"><i class="fas fa-chart-line"></i> <span>Sales Analysis</span></a>
             <a href="message-page.php"><i class="fas fa-inbox"></i> <span>Messages</span></a>
             <a href="banner-page.php"><i class="fas fa-ad"></i> <span>Banners</span></a>
-            <a href="logout.php"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
+            <a href="php-config/logout.php"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
         </nav>
     </div>
 
@@ -44,7 +62,6 @@ session_start();
             <h1>Order Management</h1>
         </div>
 
-        <!-- Table for Orders -->
         <table id="ordersTable" class="inventory-table">
             <thead>
                 <tr>
@@ -87,7 +104,6 @@ session_start();
                 
                 $result = mysqli_query($conn, $query);
 
-                // Fetch order status options
                 $statusQuery = "SELECT status_id, status_name FROM order_status";
                 $statusResult = mysqli_query($conn, $statusQuery);
                 $statuses = [];
@@ -106,8 +122,7 @@ session_start();
                         $shippedDate = $row['shipped_date'] ?? "Not Shipped";
                         $expectedDeliveryDate = $row['expected_delivery_date'] ?? "N/A";
                         $deliveredDate = $row['delivered_date'] ?? "Not Delivered";
-                
-                        // Check if status is "Delivered" or "Shipped"
+
                         $isDisabled = ($statusName === "Delivered" || $statusName === "Shipped") ? "disabled" : "";
                 
                         echo "<tr>
@@ -120,7 +135,7 @@ session_start();
                                 <select class='status-dropdown' data-order-item-id='$orderItemId' $isDisabled>";
                         foreach ($statuses as $status) {
                             if ($status['status_name'] === "Delivered" && $statusName !== "Delivered") {
-                                continue; // Skip "Delivered" unless it is the current status
+                                continue; 
                             }
                             $selected = $status['status_name'] === $statusName ? "selected" : "";
                             echo "<option value='{$status['status_id']}' $selected>{$status['status_name']}</option>";

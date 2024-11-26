@@ -5,9 +5,9 @@ $data = json_decode(file_get_contents("php://input"), true);
 $orderItemId = $data['order_item_id'];
 $statusId = $data['status_id'];
 
-if ($statusId == 3) { // Assuming "Shipped" has status_id = 3
-    $shippedDate = date('Y-m-d'); // Only the date, no time included
-    $expectedDeliveryDate = date('Y-m-d', strtotime('+7 days')); // Calculate delivery date 7 days ahead
+if ($statusId == 3) { 
+    $shippedDate = date('Y-m-d'); 
+    $expectedDeliveryDate = date('Y-m-d', strtotime('+7 days')); 
 
     $query = "UPDATE order_item 
               SET status_id = ?, shipped_date = ?, expected_delivery_date = ?, delivered_date = NULL 

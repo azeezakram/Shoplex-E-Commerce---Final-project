@@ -1,6 +1,21 @@
 <?php
 include 'php-config/db-conn.php';
 session_start();
+
+if (isset($_SESSION['admin_id'])) {
+    $userId = $_SESSION['admin_id'];
+    $adminName = isset($_SESSION['admin_name']) ? $_SESSION['admin_name'] : 'Admin'; 
+
+    $sql = "SELECT email FROM user WHERE user_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $adminEmail = $result->fetch_assoc()['email'];
+} else {
+    header('Location: index.php');
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -20,7 +35,9 @@ session_start();
     <div class="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-header-content">
-                <span>Admin Panel</span>
+                <span>Admin Panel</span> 
+                <span style="font-weight: bold; color: #fff;"><?php echo htmlspecialchars($adminName); ?></span>
+                <span style="font-weight: bold; color: #fff;"><?php echo htmlspecialchars($adminEmail); ?></span>
             </div>
             <div class="hamburger" onclick="toggleSidebar()">
                 <div class="hamburger-line"></div>
@@ -34,9 +51,10 @@ session_start();
             <a href="inventory-page.php"><i class="fas fa-archive"></i> <span>Inventories</span></a>
             <a href="order-page.php"><i class="fas fa-box"></i> <span>Orders</span></a>
             <a href="bidding-record-page.php" class="active"><i class="fas fa-gavel"></i> <span>Bidding Records</span></a>
+            <a href="sales-analysis.php"><i class="fas fa-chart-line"></i> <span>Sales Analysis</span></a>
             <a href="message-page.php"><i class="fas fa-inbox"></i> <span>Messages</span></a>
             <a href="banner-page.php"><i class="fas fa-ad"></i> <span>Banners</span></a>
-            <a href="logout.php"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
+            <a href="php-config/logout.php"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
         </nav>
     </div>
 
@@ -45,7 +63,6 @@ session_start();
             <h1>Bidding Records Management</h1>
         </div>
 
-        <!-- Table for Bidding Records -->
         <table id="biddingRecordsTable" class="inventory-table">
             <thead>
                 <tr>
@@ -53,8 +70,8 @@ session_start();
 
                     <th>Product Name</th>
                     <th>Winner Bidder ID</th>
-                    <th>Starting Bid</th>
-                    <th>Ending Bid</th>
+                    <th>Starting Bid (Rs.)</th>
+                    <th>Ending Bid (Rs.)</th>
                     <th>Bidding Status</th>
                     <th>Start Date</th>
                     <th>End Date</th>
@@ -82,24 +99,18 @@ session_start();
                         $endTime = $row['end_time'];
                         $isEnd = $row['is_end'];
 
-                        $currentDate = date('Y-m-d H:i:s');  // Get the current date in the same format
+                        $currentDate = date('Y-m-d H:i:s');  
 
-                        // Determine status using is_end column
                         if ($isEnd) {
-                            // If is_end is true, auction has ended
                             $status = "Ended";
                         } elseif ($currentDate < $startTime || (is_null($endTime))) {
-                            // If current date is before the start time
                             $status = "Not Started";
                         } elseif ($currentDate >= $startTime && $currentDate <= $endTime) {
-                            // If current date is within the range of start_time and end_time or end_time is not set
                             $status = "Ongoing";
                         } else {
-                            // Default to "Ended" if no other conditions are met
                             $status = "Ended";
                         }
 
-                        // Output the auction data
                         echo "<tr>
                         <td>$auctionId</td>
                         <td>$productName</td>

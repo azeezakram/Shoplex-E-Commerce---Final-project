@@ -1,5 +1,5 @@
 <?php
-include '../php-config/db-conn.php'; 
+include '../php-config/db-conn.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $productType = $_POST['productType'];
@@ -11,37 +11,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['price'])) {
         $price = number_format(floatval($_POST['price']), 2, '.', '');
     } else {
-        
-        $price = null;  
+        $price = null;
     }
-    
-    $discount = number_format(floatval($_POST['discount'])/ 100 , 2, '.', '');
+
+    $discount = number_format(floatval($_POST['discount']) / 100, 2, '.', '');
     $stock = intval($_POST['stock']);
     $shippingFee = number_format(floatval($_POST['shippingFee']), 2, '.', '');
-
 
     $bidStartingPrice = isset($_POST['bidStartingPrice']) ? number_format(floatval($_POST['bidStartingPrice']), 2, '.', '') : null;
     $bidStartDate = $_POST['bidStartDate'] ?? null;
     $bidEndDate = $_POST['bidEndDate'] ?? null;
 
     $uploadedImages = [];
-    if (!empty($_FILES['images'])) {
-        $uploadDir = "/images/product-images/"; 
+    $uploadDir = "../../images/product-images/";
 
-        if (!file_exists($uploadDir)) {
-            mkdir($uploadDir, 0777, true); 
-        }
-    
-        foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
-            $fileName = basename($_FILES['images']['name'][$key]);
-            $targetPath = $uploadDir . $fileName;
-    
-            if (move_uploaded_file($tmpName, $targetPath)) { 
-                $uploadedImages[] = $targetPath;
-            } 
+    if (!file_exists($uploadDir)) {
+        if (!mkdir($uploadDir, 0777, true)) {
+            die("Failed to create upload directory: $uploadDir");
         }
     }
-    
+
+    if (isset($_FILES['images']) && !empty($_FILES['images']['name'][0])) {
+        foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
+            $originalName = basename($_FILES['images']['name'][$key]);
+            $sanitizedFilename = preg_replace('/[^a-zA-Z0-9._-]/', '_', $originalName);
+            $uniqueFilename = uniqid() . "_" . $sanitizedFilename;
+            $targetPath = $uploadDir . $uniqueFilename;
+
+            if (is_uploaded_file($tmpName)) {
+                if (move_uploaded_file($tmpName, $targetPath)) {
+                    $uploadedImages[] = "/images/product-images/" . $uniqueFilename;
+                }
+            }
+        }
+    }
 
     try {
         $conn->begin_transaction();
@@ -64,13 +67,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute();
             $productId = $conn->insert_id; // Get the last inserted product ID
 
-            // Insert product images if available
             if (!empty($uploadedImages)) {
                 $addProductImageQuery = "INSERT INTO product_picture (product_id, picture_path, default_picture) VALUES (?, ?, ?)";
                 $imageStmt = $conn->prepare($addProductImageQuery);
 
                 foreach ($uploadedImages as $index => $imagePath) {
-                    $defaultPicture = ($index === 0) ? 1 : 0; // Mark the first image as default
+                    $defaultPicture = ($index === 0) ? 1 : 0;
                     $imageStmt->bind_param("isi", $productId, $imagePath, $defaultPicture);
                     $imageStmt->execute();
                 }
@@ -109,12 +111,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             );
             $stmt->execute();
 
-            // Insert product images if available
             if (!empty($uploadedImages)) {
                 $addProductImageQuery = "INSERT INTO product_picture (product_id, picture_path, default_picture) VALUES (?, ?, ?)";
                 $imageStmt = $conn->prepare($addProductImageQuery);
+
                 foreach ($uploadedImages as $index => $imagePath) {
-                    $defaultPicture = ($index === 0) ? 1 : 0; // Mark the first image as default
+                    $defaultPicture = ($index === 0) ? 1 : 0;
                     $imageStmt->bind_param("isi", $productId, $imagePath, $defaultPicture);
                     $imageStmt->execute();
                 }
@@ -124,16 +126,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Commit transaction
         $conn->commit();
-
         echo json_encode(['status' => 'success']);
     } catch (Exception $e) {
         $conn->rollback();
         echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
     }
 
-    
-
     $stmt->close();
     $conn->close();
 }
-?>

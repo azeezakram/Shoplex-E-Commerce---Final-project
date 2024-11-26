@@ -1,6 +1,21 @@
 <?php
 include 'php-config/db-conn.php';
 session_start();
+
+if (isset($_SESSION['admin_id'])) {
+    $userId = $_SESSION['admin_id'];
+    $adminName = isset($_SESSION['admin_name']) ? $_SESSION['admin_name'] : 'Admin'; 
+
+    $sql = "SELECT email FROM user WHERE user_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $adminEmail = $result->fetch_assoc()['email'];
+} else {
+    header('Location: index.php');
+}
+
 ?>
 
 
@@ -21,7 +36,9 @@ session_start();
     <div class="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-header-content">
-                <span>Admin Panel</span>
+                <span>Admin Panel</span> 
+                <span style="font-weight: bold; color: #fff;"><?php echo htmlspecialchars($adminName); ?></span>
+                <span style="font-weight: bold; color: #fff;"><?php echo htmlspecialchars($adminEmail); ?></span>
             </div>
             <div class="hamburger" onclick="toggleSidebar()">
                 <div class="hamburger-line"></div>
@@ -35,11 +52,10 @@ session_start();
             <a href="inventory-page.php"><i class="fas fa-archive"></i> <span>Inventories</span></a>
             <a href="order-page.php"><i class="fas fa-box"></i> <span>Orders</span></a>
             <a href="bidding-record-page.php"><i class="fas fa-gavel"></i> <span>Bidding Records</span></a>
+            <a href="sales-analysis.php"><i class="fas fa-chart-line"></i> <span>Sales Analysis</span></a>
             <a href="message-page.php"><i class="fas fa-inbox"></i> <span>Messages</span></a>
             <a href="banner-page.php"><i class="fas fa-ad"></i> <span>Banners</span></a>
-            <!-- <a href="analytics.php"><i class="fas fa-chart-bar"></i> <span>Analytics</span></a> -->
-            <!-- <a href="settings.php"><i class="fas fa-cog"></i> <span>Settings</span></a> -->
-            <a href="logout.php"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
+            <a href="php-config/logout.php"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
         </nav>
     </div>
 
