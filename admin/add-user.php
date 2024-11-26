@@ -61,17 +61,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $profile_picture_path = null; // No file uploaded
     }
 
+
     $sql = "INSERT INTO user (user_type_id, name, email, password, profile_picture) VALUES (?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("issss", $user_type_id, $name, $email, $password, $profile_picture_path);
 
     if ($stmt->execute()) {
+        // Fetch the last inserted user_id
+        $inserted_user_id = $conn->insert_id;
 
-        echo json_encode(['status' => 'success', 'message' => 'User added successfully!', 'redirect' => 'user-page.php']);
+        if ($user_type_id == 1) {
+            // Insert the user_id into the buyer table as buyer_id
+            $buyer_sql = "INSERT INTO buyer (buyer_id) VALUES (?)";
+            $buyer_stmt = $conn->prepare($buyer_sql);
+            $buyer_stmt->bind_param("i", $inserted_user_id);
+
+            if ($buyer_stmt->execute()) {
+                echo json_encode(['status' => 'success', 'message' => 'User added successfully and buyer record created!', 'redirect' => 'user-page.php']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'User added but error creating buyer record: ' . $buyer_stmt->error]);
+            }
+        } else {
+            echo json_encode(['status' => 'success', 'message' => 'User added successfully!', 'redirect' => 'user-page.php']);
+        }
     } else {
-
         echo json_encode(['status' => 'error', 'message' => 'Error adding user: ' . $stmt->error]);
     }
+
+
 
     $stmt->close();
     $conn->close();

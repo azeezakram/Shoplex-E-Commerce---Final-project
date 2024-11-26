@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentIndex = 0;
     let productId = 0;
     let stock = 0;
+    let auctionEndDate;
 
     document.querySelectorAll(".add-to-cart, .buy-now, .place-bid").forEach((button) => {
         button.addEventListener("click", function () {
@@ -144,11 +145,13 @@ document.addEventListener("DOMContentLoaded", () => {
                                 document.getElementById("modal-original-price").style.display = "none";
                             }
 
+                            
+
                             if (data.auction_history && data.auction_history.end_time) {
                                 // Ensure the end_time is parsed correctly
                                 const inputDate = data.auction_history.end_time;
                                 const inputDateTime = new Date(inputDate);
-
+                                auctionEndDate = inputDateTime;
                                 // Check if the parsed date is valid
                                 if (!isNaN(inputDateTime.getTime())) {
                                     const currentDate = new Date();
@@ -781,6 +784,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!productId || !placeBidInput || placeBidInput <= 0) {
             alert("Invalid product or quantity.");
+            return;
+        }
+
+        const currentDate = new Date();
+        if (auctionEndDate == null) {
+            const successMessage = document.getElementById("success-message");
+            successMessage.classList.add("show");
+            successMessage.innerText = `Auction is ended. Wait untill auction start.`;
+            successMessage.style.backgroundColor = "red";
+            setTimeout(() => {
+                successMessage.classList.remove("show");
+            }, 3000);
             return;
         }
 
