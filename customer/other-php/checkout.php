@@ -44,7 +44,7 @@ while ($item = $cartItemsResult->fetch_assoc()) {
     $productDetail = $productDetailResult->fetch_assoc();
 
     // Calculate price after discount and subtotal
-    $price_after_discount = floatval($productDetail['price']) - floatval($productDetail['discount']);
+    $price_after_discount = floatval($productDetail['price']) - floatval($productDetail['price']) * floatval($productDetail['discount']);
     $shipping_fee = floatval($productDetail['shipping_fee']);
     $subtotal = $price_after_discount * $item['quantity'];
 

@@ -30,7 +30,6 @@ document.addEventListener("DOMContentLoaded", () => {
                         document.getElementById("modal-product-name").textContent = data.product_name;
                         data.description == null ? document.getElementById("modal-product-description").textContent = "No description" : document.getElementById("modal-product-description").textContent = data.description;;
                         document.getElementById("modal-discounted-price").textContent = "LKR. " + data.discounted_price;
-
                         const ratingContainer = document.getElementById("modal-product-rating");
 
                         ratingContainer.innerHTML = "";
@@ -86,8 +85,13 @@ document.addEventListener("DOMContentLoaded", () => {
                             document.querySelector(".quantity-controller").style.display = "block";
 
                             if (data.original_price) {
-                                document.getElementById("modal-original-price").textContent = "LKR. " + data.original_price;
-                                document.getElementById("modal-original-price").style.display = "inline";
+                                if (data.discount_percentage > 0) {
+                                    document.getElementById("modal-original-price").textContent = "LKR. " + data.original_price;
+                                    document.getElementById("modal-original-price").style.display = "inline";
+                                } else {
+                                    document.getElementById("modal-original-price").style.display = "none";
+                                }
+                                
                             } else {
                                 document.getElementById("modal-original-price").style.display = "none";
                             }
@@ -209,6 +213,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         shippingFeeDetail.innerHTML = "";
 
                         if (data.shipping_fee !== undefined) { // Explicitly check for undefined
+                            // console.log(data.shipping_fee)
                             if (data.shipping_fee > 0) {
                                 shippingFeeDetail.style.display = "inline";
 
@@ -684,7 +689,10 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("custom-buy-now").addEventListener("click", () => {
 
         const quantity = parseInt(document.getElementById("quantity-input").value, 10);
-        const priceAfterDiscount = parseFloat(document.getElementById("modal-discounted-price").textContent.replace("LKR. ", ""));
+        const priceElement = document.getElementById("modal-discounted-price");
+        const priceText = priceElement.textContent.trim().replace("LKR. ", "").replace(",", "");
+        const priceAfterDiscount = parseFloat(priceText);
+        // const priceAfterDiscount = parseFloat(document.getElementById("modal-discounted-price").textContent.replace("LKR. ", ""));
 
         let shippingFeeElement = document.querySelector(".shipping-fee");
         const shippingFee = shippingFeeElement

@@ -398,7 +398,7 @@ $cartItemResult = $cartItemStmt->get_result();
                     <?php
                     $grandTotal = 0;
                     while ($item = $cartItemResult->fetch_assoc()):
-                        $discountedPrice = $item['price'] - ($item['price'] * $item['discount'] / 100);
+                        $discountedPrice = $item['price'] - ($item['price'] * $item['discount']);
                         $subtotal = $discountedPrice * $item['quantity'];
                         $grandTotal += $subtotal + $item['shipping_fee'];
                     ?>

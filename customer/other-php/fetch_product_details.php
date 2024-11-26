@@ -87,7 +87,7 @@ if (isset($_GET['product_id'])) {
             'discount_percentage' => $discount > 0 ? $discount * 100 : 0,
             'pictures' => $pictures,
             'stock' => $stock,
-            'shipping_fee' => number_format($shippingFee, 2),
+            'shipping_fee' => $shippingFee,
             'bid_activate' => (int)$product['bid_activate'],
             'bid_starting_price' => (float)$product['bid_starting_price'],
             'review_details' => $reviewDetails // Add review details to the response
