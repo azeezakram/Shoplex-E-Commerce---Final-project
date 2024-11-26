@@ -6,7 +6,7 @@ session_start();
 
 if (isset($_SESSION['admin_id'])) {
     $userId = $_SESSION['admin_id'];
-    $adminName = isset($_SESSION['admin_name']) ? $_SESSION['admin_name'] : 'Admin'; 
+    $adminName = isset($_SESSION['admin_name']) ? $_SESSION['admin_name'] : 'Admin';
 
     $sql = "SELECT email FROM user WHERE user_id = ?";
     $stmt = $conn->prepare($sql);
@@ -37,19 +37,28 @@ if (isset($_GET['email'])) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    
+
     $user_type_id = $_POST['user_type_id'];
     $name = $_POST['name'];
     $email = $_POST['email'];
-    $password = password_hash($_POST['password'], PASSWORD_BCRYPT); 
+    $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
     $profile_picture = $_FILES['profile_picture']['name'];
-    // $target_dir = "../images/user-dp/"; 
-    $target_file = basename($_FILES['profile_picture']['name']);
 
-    if (!empty($profile_picture) && move_uploaded_file($_FILES['profile_picture']['tmp_name'], $target_file)) {
-        $profile_picture_path = $target_file;
+
+    $target_dir = "../images/user-dp/"; // Ensure this directory exists and is writable
+    $target_file = $target_dir . basename($profile_picture);
+
+    if (!empty($profile_picture)) {
+        // Move the uploaded file to the target directory
+        if (move_uploaded_file($_FILES['profile_picture']['tmp_name'], $target_file)) {
+            $profile_picture_path = basename($profile_picture); // Full path to the uploaded file
+        } else {
+            // Handle file upload error
+            $profile_picture_path = null;
+            error_log("Failed to upload profile picture: " . $_FILES['profile_picture']['error']);
+        }
     } else {
-        $profile_picture_path = null; 
+        $profile_picture_path = null; // No file uploaded
     }
 
     $sql = "INSERT INTO user (user_type_id, name, email, password, profile_picture) VALUES (?, ?, ?, ?, ?)";
@@ -66,7 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $stmt->close();
     $conn->close();
-    exit(); 
+    exit();
 }
 
 ?>
@@ -88,7 +97,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-header-content">
-                <span>Admin Panel</span> 
+                <span>Admin Panel</span>
                 <span style="font-weight: bold; color: #fff;"><?php echo htmlspecialchars($adminName); ?></span>
                 <span style="font-weight: bold; color: #fff;"><?php echo htmlspecialchars($adminEmail); ?></span>
             </div>
